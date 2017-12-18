@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>simpleimage - Simple Image Upload</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <script src="assets/js/home.bundle.js"></script>
+</head>
+
+<body>
+    <div id="top-nav">
+        <% if (user === undefined) { %>
+        <%- include("guest-menu-view", {fromUrl}) %>
+        <% } else { %>
+        <%- include("user-menu-view",{user,fromUrl}) %>
+        <% } %>
+    </div>
+    <div id="contents">
+        <div id="upload-center">
+            <table id="upload-interact">
+                <tr>
+                    <td valign="bottom">
+                        <div id="upload-area">
+                            <span id="upload-preview">
+                                <span>No file selected</span>
+                            </span>
+                            <span class="button" id="select-button">
+                                <form action="/upload" id="upload" method="POST" enctype="multipart/form-data">
+                                    <input type="file" accept=".png, .jpg, .jpeg, .zip" id="select-me" value="">
+                                </form>
+                                Select
+                            </span>
+                            <span class="button" id="upload-button">
+                                Upload
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

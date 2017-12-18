@@ -1,0 +1,22 @@
+body {
+    overflow: visible;
+}
+
+.user-view {
+    background: grey;
+}
+
+#user-container {
+    position: absolute;
+    top: 10vh;
+    left: 10vw;
+    margin-bottom: 40px;
+}
+
+#container {
+    position: relative;
+}
+
+#comments-container {
+    background-color: greenyellow;
+}

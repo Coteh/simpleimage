@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title><%= id %> - simpleimage</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/image-style.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <script src="/assets/js/image.bundle.js"></script>
+    <script>
+        requestComments(<%= id %>);
+    </script>
+</head>
+
+<body>
+    <div id="top-nav">
+        <% if (user === undefined) { %>
+        <%- include("guest-menu-view", {fromUrl}) %>
+        <% } else { %>
+        <%- include("user-menu-view", {user,fromUrl}) %>
+        <% } %>
+    </div>
+    <div id="contents">
+        <div id="image-container">
+            <img src="<%= imageSrc %>" class="image-view"><br/>
+            <span class="info">Uploaded by 
+                <% if (author != null) { %>
+                    <a href="/users/<%= author %>"><%= (user !== undefined && author === user.username) ? "you" : author %></a>
+                <% } else { %>
+                    anonymous
+                <% } %>
+                on <%= uploadedDate.toString() %></span><br/>
+            <span class="info" id="comment-count">0 comments</span>
+            <form id="comment" action="/comment?response=html" method="POST">
+                <input type="hidden" name="imageID" value="<%= id %>">
+                <input type="hidden" name="userID" value="0">
+                <textarea name="comment" placeholder="Add a comment"></textarea>
+                <input type="submit" value="Submit">
+            </form>
+            <div id="comments-container"></div>
+        </div>
+    </div>
+</body>
+
+</html>

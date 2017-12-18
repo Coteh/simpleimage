@@ -1,0 +1,23 @@
+body {
+    overflow: visible;
+}
+
+.image-view {
+    max-width: 75%;
+    text-align: center;
+}
+
+#image-container {
+    position: absolute;
+    top: 30vh;
+    left: 30vw;
+    margin-bottom: 40px;
+}
+
+#container {
+    position: relative;
+}
+
+#comments-container {
+    background-color: greenyellow;
+}

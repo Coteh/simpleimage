@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title><%= user.username %> - simpleimage</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/user-style.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <script src="/assets/js/user.bundle.js"></script>
+    <script>
+        requestCommentsUser("<%= user.username %>", function(comments, numOfComments) {
+            $("#comment-count").text(numOfComments);
+        });
+
+        $(document).ready(function() {
+            $("#join-date").text(timeUTCToLocal('"<%= user.join_date %>"'));
+        });
+    </script>
+</head>
+
+<body>
+    <div id="top-nav">
+        <% if (sessionUser === undefined) { %>
+        <%- include("guest-menu-view", {fromUrl}) %>
+        <% } else { %>
+        <%- include("user-menu-view", {user:sessionUser,fromUrl}) %>
+        <% } %>
+    </div>
+    <div id="contents">
+        <div id="user-container">
+            <div class="user-view">
+                <span>Username: <span id="username"><%= user.username %></span></span><br/>
+                <span>Join Date: <span id="join-date"></span></span><br/>
+                <span>Comment Count: <span id="comment-count"></span></span>
+            </div>
+            <div id="comments-container"></div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+var commentCount = 0;
+
+var updateCommentsCounter = function() {
+    $("#comment-count").text(commentCount.toString() + " comment" + ((commentCount != 1) ? "s" : ""));
+};
+
+var onCommentsLoaded = function() {
+    var commentsElements;
+    var parentElement = document.getElementById("comments-container");
+    if (this.status !== 200) {
+        commentsElements = "<div id='comments'>ERROR: Could not get comments.</div>"
+    } else {
+        commentsElements = this.responseText;
+    }
+    parentElement.innerHTML = commentsElements;
+    convertTimeElementsToLocalTime(parentElement);
+    commentCount = numberOfCommentHTMLElements(commentsElements);
+    updateCommentsCounter();
+};
+
+var onCommentSubmitted = function() {
+    var submittedComment;
+    var parentElement = document.getElementById("comments-container");
+    if (this.status !== 200) {
+        jsonObj = JSON.parse(this.responseText);
+        submittedComment = "<div id='comments'>ERROR: " + jsonObj.message + "</div>"
+    } else {
+        jsonObj = JSON.parse(this.responseText);
+        submittedComment = jsonObj.message;
+        commentCount++;
+        updateCommentsCounter();
+    }
+    parentElement.innerHTML += submittedComment;
+    convertTimeElementsToLocalTime(parentElement);
+};
+
+window.requestComments = function(imageID) {
+    var req = new XMLHttpRequest();
+    req.onload = onCommentsLoaded;
+    req.open("get", "/images/" + imageID + "/comments?type=html");
+    req.send();
+};
+
+var submitComment = function() {
+    var form = $("form[id='comment']");
+    var action = form.get(0).action;
+    var req = new XMLHttpRequest();
+
+    req.onload = onCommentSubmitted;
+    req.open("post", action);
+    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    req.send(form.serialize());
+};
+
+$(document).ready(function() {
+    $("form[id='comment']").on("submit", function(e) {
+        e.preventDefault();
+        submitComment();
+        return false;
+    });
+});

@@ -1,0 +1,7 @@
+<span id="user-nav">
+    <%= user.username %>
+    <form id="logout-form" method="POST" action="/logout">
+        <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
+        <a href="#" onclick="document.getElementById('logout-form').submit();">Logout</a>
+    </form>
+</span>

@@ -1,0 +1,29 @@
+{
+  "name": "simpleimage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "build": "webpack"
+  },
+  "author": "James Cote (Coteh)",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "connect-redis": "^3.3.2",
+    "copy-webpack-plugin": "^4.1.1",
+    "dotenv": "^4.0.0",
+    "ejs": "^2.5.7",
+    "ejs-lint": "^0.3.0",
+    "express": "^4.14.0",
+    "express-session": "^1.15.6",
+    "mime-types": "^2.1.17",
+    "mongodb": "^2.2.9",
+    "multer": "^1.2.0",
+    "validator": "^9.2.0",
+    "webpack": "^3.7.1"
+  }
+}

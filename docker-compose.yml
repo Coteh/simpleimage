@@ -1,0 +1,18 @@
+version: '3'
+services:
+    si_app:
+        build: .
+        image: coteh/simpleimage
+        container_name: si-app
+        ports:
+            - "8080:9001"
+    si_db:
+        image: mongo:latest
+        container_name: si-db
+        ports:
+            - "27017:27017"
+    si_sessions:
+        image: redis:4.0.6
+        container_name: si-sessions
+        ports:
+            - "6379:6379"
