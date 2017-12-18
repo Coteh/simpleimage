@@ -69,3 +69,6 @@ data/
 
 # bundled web files
 public/
+
+# Mac OS DS_Store
+.DS_Store
