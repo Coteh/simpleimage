@@ -20,17 +20,18 @@ var onCommentsLoaded = function() {
 
 var onCommentSubmitted = function() {
     var submittedComment;
-    var parentElement = document.getElementById("comments-container");
+    var parentElement = document.querySelector("#comments-container #comments");
     if (this.status !== 200) {
         jsonObj = JSON.parse(this.responseText);
-        submittedComment = "<div id='comments'>ERROR: " + jsonObj.message + "</div>"
+        submittedComment = "<div class='comment' style='background:orangered;'>ERROR: " + jsonObj.message + "</div>"
+        parentElement.innerHTML = submittedComment + parentElement.innerHTML;
     } else {
         jsonObj = JSON.parse(this.responseText);
         submittedComment = jsonObj.message;
         commentCount++;
         updateCommentsCounter();
+        parentElement.innerHTML += submittedComment;
     }
-    parentElement.innerHTML += submittedComment;
     convertTimeElementsToLocalTime(parentElement);
 };
 
