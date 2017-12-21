@@ -1,3 +1,4 @@
+<% if (responseType === "html") { %>
 <!DOCTYPE html>
 <html>
 
@@ -7,6 +8,7 @@
         Login - simpleimage</title>
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/user-style.css">
+    <link rel="stylesheet" href="/assets/css/form-style.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
     <!-- <script src="/assets/js/login.bundle.js"></script> -->
@@ -16,20 +18,24 @@
 </head>
 
 <body>
+<% } %>
     <div id="contents">
         <div id="login-container">
             <div class="login-view">
+                <h2>Login</h2>
                 <form action="/login" method="POST" id="login">
                     Username:
-                    <input type="text" name="username"></input>
+                    <input type="text" name="username"></input><br>
                     Password:
                     <input type="password" name="password"></input>
-                    <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
+                    <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input><br>
                     <input type="submit"></input>
                 </form>
             </div>
         </div>
     </div>
+<% if (responseType === "html") { %>
 </body>
 
 </html>
+<% } %>

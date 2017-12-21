@@ -7,6 +7,7 @@
         Register - simpleimage</title>
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/user-style.css">
+    <link rel="stylesheet" href="/assets/css/form-style.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
     <!-- <script src="/assets/js/register.bundle.js"></script> -->
@@ -19,15 +20,16 @@
     <div id="contents">
         <div id="register-container">
             <div class="register-view">
+                <h2>Register</h2>
                 <form action="/register" method="POST" id="register">
                     Username: 
-                    <input type="text" name="username"></input>
+                    <input type="text" name="username"></input><br>
                     Password:
-                    <input type="password" name="password"></input>
+                    <input type="password" name="password"></input><br>
                     Password:
-                    <input type="password" name="passwordConfirm"></input>
+                    <input type="password" name="passwordConfirm"></input><br>
                     Email:
-                    <input type="text" name="email"></input>
+                    <input type="text" name="email"></input><br>
                     <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
                     <input type="submit"></input>
                 </form>

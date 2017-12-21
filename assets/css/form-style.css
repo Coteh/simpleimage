@@ -1,0 +1,7 @@
+form input {
+    margin: 10px 10px 10px 10px;
+}
+
+.register-view, .login-view {
+    color: white;
+}
