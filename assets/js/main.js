@@ -15,10 +15,16 @@ window.showOverlay = function(html) {
     overlayBackdrop.className = "activated";
 };
 
+window.errorOverlay = function(html) {
+    showOverlay(html);
+    var overlayBackdrop = document.getElementById("overlay-backdrop");
+    overlayBackdrop.classList.add("error");
+}
+
 var onLoginLoaded = function() {
     if (this.status !== 200) {
         //TODO
-        showOverlay("Error");
+        errorOverlay("<div>Error</div>");
     } else {
         var jsonObj = JSON.parse(this.responseText);
         showOverlay(jsonObj.html);

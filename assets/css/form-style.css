@@ -33,3 +33,7 @@ form input {
     z-index: 299;
     background-color: rgb(87, 87, 87);
 }
+
+#overlay-backdrop.activated.error {
+    background-color: red;
+}
