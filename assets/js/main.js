@@ -1,11 +1,27 @@
-var onLoginLoaded = function() {
+window.clearOverlay = function() {
     var overlayContainer = document.getElementById("overlay-container");
+    var overlayBackdrop = document.getElementById("overlay-backdrop");
+    overlayContainer.innerHTML = "";
+    overlayContainer.className = "";
+    overlayBackdrop.className = "";
+};
+
+window.showOverlay = function(html) {
+    var overlayContainer = document.getElementById("overlay-container");
+    var overlayBackdrop = document.getElementById("overlay-backdrop");
+    overlayContainer.innerHTML = "<button onclick='clearOverlay();'>X</button>"
+    overlayContainer.innerHTML += html;
+    overlayContainer.className = "open";
+    overlayBackdrop.className = "activated";
+};
+
+var onLoginLoaded = function() {
     if (this.status !== 200) {
         //TODO
-        overlayContainer.innerHTML = "Error";
+        showOverlay("Error");
     } else {
         var jsonObj = JSON.parse(this.responseText);
-        overlayContainer.innerHTML = jsonObj.html;
+        showOverlay(jsonObj.html);
     }
 };
 

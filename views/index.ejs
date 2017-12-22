@@ -12,6 +12,8 @@
 </head>
 
 <body>
+    <div id="overlay-backdrop">
+    </div>
     <div id="top-nav">
         <% if (user === undefined) { %>
         <%- include("guest-menu-view", {fromUrl}) %>
@@ -20,8 +22,7 @@
         <% } %>
     </div>
     <div id="contents">
-        <div id="overlay-container" style="position:absolute;">
-            
+        <div id="overlay-container">
         </div>
         <div id="upload-center">
             <table id="upload-interact">
