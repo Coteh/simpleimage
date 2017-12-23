@@ -14,13 +14,7 @@
 <body>
     <div id="overlay-backdrop">
     </div>
-    <div id="top-nav">
-        <% if (user === undefined) { %>
-        <%- include("guest-menu-view", {fromUrl}) %>
-        <% } else { %>
-        <%- include("user-menu-view",{user,fromUrl}) %>
-        <% } %>
-    </div>
+    <%- include("top-nav-view", {user,fromUrl}) %>
     <div id="contents">
         <div id="overlay-container">
         </div>

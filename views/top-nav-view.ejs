@@ -1,0 +1,7 @@
+<div id="top-nav">
+    <% if (user === undefined) { %>
+    <%- include("guest-menu-view", {fromUrl}) %>
+    <% } else { %>
+    <%- include("user-menu-view",{user,fromUrl}) %>
+    <% } %>
+</div>
