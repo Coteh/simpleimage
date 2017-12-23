@@ -21,13 +21,7 @@
 </head>
 
 <body>
-    <div id="top-nav">
-        <% if (sessionUser === undefined) { %>
-        <%- include("guest-menu-view", {fromUrl}) %>
-        <% } else { %>
-        <%- include("user-menu-view", {user:sessionUser,fromUrl}) %>
-        <% } %>
-    </div>
+    <%- include("top-nav-view", {sessionUser,fromUrl}) %>
     <div id="contents">
         <div id="user-container">
             <div class="user-view">
