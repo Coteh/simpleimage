@@ -17,6 +17,15 @@ form input {
     padding: 20px;
 }
 
+#notification-overlay-container.open {
+    position: absolute;
+    top: 10vh;
+    left: 40vw;
+    z-index: 301;
+    background-color: rgb(17, 168, 50);
+    padding: 20px;
+}
+
 /* BACKDROPS */
 
 #overlay-backdrop {

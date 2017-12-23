@@ -19,7 +19,7 @@
         <div id="login-container">
             <div class="login-view">
                 <h2>Login</h2>
-                <form action="/login" method="POST" id="login">
+                <form action="/login?type=<%= responseType %>" method="POST" id="login">
                     Username:
                     <input type="text" name="username"></input><br>
                     Password:

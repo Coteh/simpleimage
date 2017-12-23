@@ -6,6 +6,12 @@ window.clearOverlay = function() {
     overlayBackdrop.className = "";
 };
 
+window.clearNotification = function() {
+    var notificationOverlayContainer = document.getElementById("notification-overlay-container");
+    notificationOverlayContainer.innerHTML = "";
+    notificationOverlayContainer.className = "";
+}
+
 window.showOverlay = function(html) {
     var overlayContainer = document.getElementById("overlay-container");
     var overlayBackdrop = document.getElementById("overlay-backdrop");
@@ -21,19 +27,26 @@ window.errorOverlay = function(html) {
     overlayBackdrop.classList.add("error");
 }
 
-var onOverlayLoaded = function() {
+var onOverlayLoaded = function(progressEvent, callback) {
+    var err;
     if (this.status !== 200) {
+        err = {
+            message: this.responseText || "An error occurred"
+        }
         //TODO
-        errorOverlay("<div>Error</div>");
+        errorOverlay("<div>" + err.message + "</div>");
     } else {
         var jsonObj = JSON.parse(this.responseText);
         showOverlay(jsonObj.html);
     }
+    callback(err);
 };
 
 window.openLogin = function(fromUrl) {
     var req = new XMLHttpRequest();
-    req.onload = onOverlayLoaded;
+    req.onload = function(progressEvent) {
+        onOverlayLoaded.call(this, progressEvent, onLoginLoaded);
+    };
     req.open("get", "/login?responseType=json&fromUrl=" + fromUrl);
     req.send();
 };
@@ -44,3 +57,40 @@ window.openRegister = function(fromUrl) {
     req.open("get", "/register?responseType=json&fromUrl=" + fromUrl);
     req.send();
 };
+
+/*--------------------------------------------*/
+
+var onLoginSubmitted = function() {
+    var notificationOverlayContainer = document.getElementById("notification-overlay-container");
+    var jsonObj;
+    if (this.status !== 200) {
+        jsonObj = JSON.parse(this.responseText);
+        notificationOverlayContainer.innerHTML = "<button onclick='clearNotification();'>X</button>"
+        notificationOverlayContainer.innerHTML += jsonObj.message;
+        notificationOverlayContainer.className = "open";
+    } else {
+        window.location.reload(true);
+    }
+};
+
+window.submitLogin = function(e) {
+    var form = e.target;
+    var action = form.action;
+    var req = new XMLHttpRequest();
+
+    req.onload = onLoginSubmitted;
+    req.open("post", action);
+    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    req.send($(form).serialize());
+};
+
+function onLoginLoaded(err) {
+    if (err) {
+        return;
+    }
+    $("form[id='login']").on("submit", function (e) {
+        e.preventDefault();
+        submitLogin(e);
+        return false;
+    });
+}
