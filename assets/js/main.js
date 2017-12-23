@@ -21,7 +21,7 @@ window.errorOverlay = function(html) {
     overlayBackdrop.classList.add("error");
 }
 
-var onLoginLoaded = function() {
+var onOverlayLoaded = function() {
     if (this.status !== 200) {
         //TODO
         errorOverlay("<div>Error</div>");
@@ -33,7 +33,14 @@ var onLoginLoaded = function() {
 
 window.openLogin = function(fromUrl) {
     var req = new XMLHttpRequest();
-    req.onload = onLoginLoaded;
+    req.onload = onOverlayLoaded;
     req.open("get", "/login?responseType=json&fromUrl=" + fromUrl);
+    req.send();
+};
+
+window.openRegister = function(fromUrl) {
+    var req = new XMLHttpRequest();
+    req.onload = onOverlayLoaded;
+    req.open("get", "/register?responseType=json&fromUrl=" + fromUrl);
     req.send();
 };
