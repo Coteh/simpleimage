@@ -12,20 +12,32 @@ window.clearNotification = function() {
     notificationOverlayContainer.className = "";
 }
 
-window.showOverlay = function(html) {
+window.showOverlay = function(html, options) {
     var overlayContainer = document.getElementById("overlay-container");
     var overlayBackdrop = document.getElementById("overlay-backdrop");
     overlayContainer.innerHTML = "<button onclick='clearOverlay();'>X</button>"
     overlayContainer.innerHTML += html;
     overlayContainer.className = "open";
     overlayBackdrop.className = "activated";
+    if (options !== undefined) {
+        if (options.error) {
+            overlayBackdrop.classList.add("error");
+            overlayContainer.classList.add("error");
+        }
+    }
 };
 
-window.errorOverlay = function(html) {
-    showOverlay(html);
-    var overlayBackdrop = document.getElementById("overlay-backdrop");
-    overlayBackdrop.classList.add("error");
-}
+window.showNotification = function(message, options) {
+    var notificationOverlayContainer = document.getElementById("notification-overlay-container");
+    notificationOverlayContainer.innerHTML = "<button onclick='clearNotification();'>X</button><br><br>"
+    notificationOverlayContainer.innerHTML += message;
+    notificationOverlayContainer.className = "open";
+    if (options !== undefined) {
+        if (options.error) {
+            notificationOverlayContainer.classList.add("error");
+        }
+    }
+};
 
 var onOverlayLoaded = function(progressEvent, callback) {
     var err;
@@ -34,7 +46,9 @@ var onOverlayLoaded = function(progressEvent, callback) {
             message: this.responseText || "An error occurred"
         }
         //TODO
-        errorOverlay("<div>" + err.message + "</div>");
+        showOverlay("<div>" + err.message + "</div>", {
+            error: true
+        });
     } else {
         var jsonObj = JSON.parse(this.responseText);
         showOverlay(jsonObj.html);
@@ -61,13 +75,12 @@ window.openRegister = function(fromUrl) {
 /*--------------------------------------------*/
 
 var onLoginSubmitted = function() {
-    var notificationOverlayContainer = document.getElementById("notification-overlay-container");
     var jsonObj;
     if (this.status !== 200) {
         jsonObj = JSON.parse(this.responseText);
-        notificationOverlayContainer.innerHTML = "<button onclick='clearNotification();'>X</button>"
-        notificationOverlayContainer.innerHTML += jsonObj.message;
-        notificationOverlayContainer.className = "open";
+        showNotification(jsonObj.message, {
+            error: true
+        });
     } else {
         window.location.reload(true);
     }

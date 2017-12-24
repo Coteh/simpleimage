@@ -8,6 +8,12 @@ form input {
 
 /* CONTAINERS */
 
+#overlay-container,
+#notification-overlay-container {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
 #overlay-container.open {
     position: absolute;
     top: 40vh;
@@ -15,6 +21,7 @@ form input {
     z-index: 300;
     background-color: rgb(17, 133, 168);
     padding: 20px;
+    opacity: 1;
 }
 
 #notification-overlay-container.open {
@@ -24,6 +31,12 @@ form input {
     z-index: 301;
     background-color: rgb(17, 168, 50);
     padding: 20px;
+    opacity: 0.8;
+}
+
+#overlay-container.open.error,
+#notification-overlay-container.open.error {
+    background-color: red;
 }
 
 /* BACKDROPS */
@@ -44,5 +57,5 @@ form input {
 }
 
 #overlay-backdrop.activated.error {
-    background-color: red;
+    background-color: rgb(128, 0, 0);
 }
