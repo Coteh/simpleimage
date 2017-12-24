@@ -8,6 +8,8 @@ h2 {
 
 .user-view {
     background: grey;
+    padding: 20px;
+    line-height: 20px;
 }
 
 #user-container {
