@@ -1,0 +1,12 @@
+#comments-container {
+    background-color: greenyellow;
+    border: 2px solid green;
+}
+
+#comments-container .comment {
+    padding: 20px;
+}
+
+#comments-container .comment:not(:last-child) {
+    border-bottom: 2px solid green;
+}

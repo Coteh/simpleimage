@@ -2,6 +2,10 @@ body {
     overflow: visible;
 }
 
+h2 {
+    color: white;
+}
+
 .user-view {
     background: grey;
 }
@@ -15,8 +19,4 @@ body {
 
 #container {
     position: relative;
-}
-
-#comments-container {
-    background-color: greenyellow;
 }
