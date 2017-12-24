@@ -23,12 +23,15 @@ var onFileSelected = function() {
 }
 
 var onFileUploaded = function() {
-    console.log(this.responseText);
     json = JSON.parse(this.responseText);
     fileSelect.value = "";
-    if (json.status === "error") {
+    if (this.status === 500) {
         console.error("An error ocurred: " + json.message);
         uploadPreview.style.boxShadow = "";
+        uploadPreview.classList.add("error");
+        showNotification(json.message, {
+            error: true
+        });
         return;
     }
     window.location.href = window.location.origin + "/images/" + json.id;
@@ -46,6 +49,8 @@ var uploadFile = function(file) {
     var action = form.attr("action");
     var req = new XMLHttpRequest();
     var formData = new FormData();
+
+    uploadPreview.classList.remove("error");
 
     req.onload = onFileUploaded;
     req.onprogress = onFileProgress;
