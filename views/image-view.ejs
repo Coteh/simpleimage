@@ -6,6 +6,7 @@
     <title><%= id %> - simpleimage</title>
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/image-style.css">
+    <link rel="stylesheet" href="/assets/css/form-style.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
     <script src="/assets/js/image.bundle.js"></script>
@@ -15,8 +16,14 @@
 </head>
 
 <body>
+    <div id="overlay-backdrop">
+    </div>
     <%- include("top-nav-view", {user,fromUrl}) %>
     <div id="contents">
+        <div id="notification-overlay-container">
+        </div>
+        <div id="overlay-container">
+        </div>
         <div id="image-container">
             <img src="<%= imageSrc %>" class="image-view"><br/>
             <span class="info">Uploaded by 
