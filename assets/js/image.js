@@ -23,8 +23,9 @@ var onCommentSubmitted = function() {
     var parentElement = document.querySelector("#comments-container #comments");
     if (this.status !== 200) {
         jsonObj = JSON.parse(this.responseText);
-        submittedComment = "<div class='comment' style='background:orangered;'>ERROR: " + jsonObj.message + "</div>"
-        parentElement.innerHTML = submittedComment + parentElement.innerHTML;
+        showNotification(jsonObj.message, {
+            error: true
+        });
     } else {
         jsonObj = JSON.parse(this.responseText);
         submittedComment = jsonObj.message;
