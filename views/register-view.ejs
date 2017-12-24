@@ -17,7 +17,7 @@
         <div id="register-container">
             <div class="register-view">
                 <h2>Register</h2>
-                <form action="/register" method="POST" id="register">
+                <form action="/register?type=<%= responseType %>" method="POST" id="register">
                     Username: 
                     <input type="text" name="username"></input><br>
                     Password:

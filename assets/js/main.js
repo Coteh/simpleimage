@@ -67,7 +67,9 @@ window.openLogin = function(fromUrl) {
 
 window.openRegister = function(fromUrl) {
     var req = new XMLHttpRequest();
-    req.onload = onOverlayLoaded;
+    req.onload = function (progressEvent) {
+        onOverlayLoaded.call(this, progressEvent, onLoginLoaded);
+    };
     req.open("get", "/register?responseType=json&fromUrl=" + fromUrl);
     req.send();
 };
@@ -101,7 +103,7 @@ function onLoginLoaded(err) {
     if (err) {
         return;
     }
-    $("form[id='login']").on("submit", function (e) {
+    $("form[id='login'],form[id='register']").on("submit", function (e) {
         e.preventDefault();
         submitLogin(e);
         return false;
