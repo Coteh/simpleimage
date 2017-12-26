@@ -11,8 +11,12 @@
     border-bottom: 2px solid green;
 }
 
+#comments-container #comments.message,
+#comments-container #comments.error {
+    padding: 20px;
+}
+
 #comments-container .error {
     background-color: red;
     border: 2px solid rgb(128, 0, 0);
-    padding: 20px;
 }

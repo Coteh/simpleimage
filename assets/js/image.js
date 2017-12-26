@@ -12,7 +12,11 @@ var onCommentsLoaded = function() {
         commentsElements = "<div id='comments' class='error'>Could not load comments: " + jsonObj.message + "</div>"
     } else {
         var jsonObj = JSON.parse(this.responseText);
-        commentsElements = jsonObj.results;
+        if (jsonObj.message !== undefined) {
+            commentsElements = "<div id='comments' class='message'>" + jsonObj.message + "</div>"
+        } else {
+            commentsElements = jsonObj.results;
+        }
     }
     parentElement.innerHTML = commentsElements;
     convertTimeElementsToLocalTime(parentElement);
