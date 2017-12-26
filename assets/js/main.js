@@ -15,14 +15,17 @@ window.clearNotification = function() {
 window.showOverlay = function(html, options) {
     var overlayContainer = document.getElementById("overlay-container");
     var overlayBackdrop = document.getElementById("overlay-backdrop");
-    overlayContainer.innerHTML = "<button onclick='clearOverlay();'>X</button>"
-    overlayContainer.innerHTML += html;
+    overlayContainer.innerHTML = html;
     overlayContainer.className = "open";
     overlayBackdrop.className = "activated";
     if (options !== undefined) {
         if (options.error) {
             overlayBackdrop.classList.add("error");
             overlayContainer.classList.add("error");
+        }
+        if (options.close) {
+            overlayContainer.innerHTML = "<button onclick='clearOverlay();'>X</button>"
+                                + overlayContainer.innerHTML;
         }
     }
 };
@@ -47,11 +50,14 @@ var onOverlayLoaded = function(progressEvent, callback) {
         }
         //TODO
         showOverlay("<div>" + err.message + "</div>", {
-            error: true
+            error: true,
+            close: true
         });
     } else {
         var jsonObj = JSON.parse(this.responseText);
-        showOverlay(jsonObj.html);
+        showOverlay(jsonObj.html, {
+            close: true
+        });
     }
     callback(err);
 };
