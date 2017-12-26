@@ -8,9 +8,11 @@ var onCommentsLoaded = function() {
     var commentsElements;
     var parentElement = document.getElementById("comments-container");
     if (this.status !== 200) {
-        commentsElements = "<div id='comments'>ERROR: Could not get comments.</div>"
+        var jsonObj = JSON.parse(this.responseText);
+        commentsElements = "<div id='comments' class='error'>Could not load comments: " + jsonObj.message + "</div>"
     } else {
-        commentsElements = this.responseText;
+        var jsonObj = JSON.parse(this.responseText);
+        commentsElements = jsonObj.results;
     }
     parentElement.innerHTML = commentsElements;
     convertTimeElementsToLocalTime(parentElement);
@@ -41,7 +43,7 @@ var onCommentSubmitted = function() {
 window.requestComments = function(imageID) {
     var req = new XMLHttpRequest();
     req.onload = onCommentsLoaded;
-    req.open("get", "/images/" + imageID + "/comments?type=html");
+    req.open("get", "/images/" + imageID + "/comments?type=json&responseType=html");
     req.send();
 };
 
