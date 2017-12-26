@@ -31,7 +31,9 @@ var onCommentSubmitted = function() {
         submittedComment = jsonObj.message;
         commentCount++;
         updateCommentsCounter();
-        parentElement.innerHTML += submittedComment;
+        var formattedCmt = $(submittedComment)
+            .css("background-color", "#FFEB3B");
+        parentElement.innerHTML = formattedCmt.get(0).outerHTML + parentElement.innerHTML;
     }
     convertTimeElementsToLocalTime(parentElement);
 };
