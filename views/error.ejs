@@ -5,12 +5,24 @@
     <meta charset="utf-8">
     <title>simpleimage - Simple Image Upload</title>
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/error.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <%= message %>
+    <div id="error-container">
+        <h2>Oops</h2>
+        <div id="error-pane">
+            An error occurred. Here is the error message:
+            <br>
+            <br>
+            <i><%= message %></i>
+            <br>
+            <br>
+            <a href="/">Click here to return to the homepage</a>
+        </div>
+    </div>
 </body>
 
 </html>
