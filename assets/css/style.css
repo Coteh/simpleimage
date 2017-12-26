@@ -69,9 +69,10 @@ input[type="file"] {
 }
 
 #top-nav {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
+    z-index: 400;
 }
 
 #top-nav a,
@@ -80,4 +81,9 @@ input[type="file"] {
     text-decoration: none;
     font-size: 24px;
     margin: 0 20px;
+}
+
+#top-nav #title {
+    left: 0;
+    position: fixed;
 }
