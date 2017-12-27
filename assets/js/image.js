@@ -41,7 +41,8 @@ var onCommentSubmitted = function() {
         updateCommentsCounter();
         var formattedCmt = $(submittedComment)
             .css("background-color", "#FFEB3B");
-        parentElement.innerHTML = formattedCmt.get(0).outerHTML + parentElement.innerHTML;
+        parentElement.innerHTML = formattedCmt.get(0).outerHTML + ((commentCount > 1) ? parentElement.innerHTML : "");
+        parentElement.classList.remove("message");
     }
     convertTimeElementsToLocalTime(parentElement);
 };
