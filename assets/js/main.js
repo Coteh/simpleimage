@@ -114,4 +114,5 @@ function onLoginLoaded(err) {
         submitLogin(e);
         return false;
     });
+    $("input[name='username']").focus();
 }
