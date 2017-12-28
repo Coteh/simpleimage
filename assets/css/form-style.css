@@ -19,6 +19,7 @@ form input {
     top: 40vh;
     left: calc((100vw - 50vw) / 2);
     width: 50vw;
+    max-width: 50vw;
     z-index: 300;
     background-color: rgb(17, 133, 168);
     padding: 20px;
@@ -30,6 +31,7 @@ form input {
     top: 10vh;
     left: calc((100vw - 30vw) / 2);
     width: 30vw;
+    max-width: 30vw;
     z-index: 301;
     background-color: rgb(17, 168, 50);
     padding: 20px;

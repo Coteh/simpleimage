@@ -14,3 +14,11 @@ window.convertTimeElementsToLocalTime = function(elem) {
 window.numberOfCommentHTMLElements = function(parentElement) {
     return $(parentElement).children().length;
 };
+
+window.setScalableWidth = function(elem, width, units) {
+    if (units === undefined) {
+        units = "px";
+    }
+    elem.style.width = width.toString() + units;
+    elem.style.left = "calc((100vw - " + width.toString() + units + ") / 2)";
+};
