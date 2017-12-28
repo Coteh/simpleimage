@@ -31,7 +31,7 @@ form input {
     z-index: 301;
     background-color: rgb(17, 168, 50);
     padding: 20px;
-    opacity: 0.8;
+    opacity: 1;
 }
 
 #overlay-container.open.error,
