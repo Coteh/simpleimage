@@ -17,7 +17,8 @@ form input {
 #overlay-container.open {
     position: fixed;
     top: 40vh;
-    left: 40vw;
+    left: calc((100vw - 50vw) / 2);
+    width: 50vw;
     z-index: 300;
     background-color: rgb(17, 133, 168);
     padding: 20px;
@@ -27,7 +28,8 @@ form input {
 #notification-overlay-container.open {
     position: fixed;
     top: 10vh;
-    left: 40vw;
+    left: calc((100vw - 30vw) / 2);
+    width: 30vw;
     z-index: 301;
     background-color: rgb(17, 168, 50);
     padding: 20px;
