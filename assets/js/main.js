@@ -124,5 +124,5 @@ function onLoginLoaded(err) {
         return false;
     });
     $("input[name='username']").focus();
-    setScalableWidth($("#overlay-container").get(0), 200);
+    setScalableWidth($("#overlay-container").get(0), 300);
 }
