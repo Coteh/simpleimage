@@ -26,7 +26,9 @@
         <div id="overlay-container">
         </div>
         <div id="image-container">
-            <img src="<%= imageSrc %>" class="image-view"><br/>
+            <a href="<%= imageSrc %>">
+                <img src="<%= imageSrc %>" class="image-view"><br/>
+            </a>
             <span class="info">Uploaded by 
                 <% if (author != null) { %>
                     <a href="/users/<%= author %>"><%= (user !== undefined && author === user.username) ? "you" : author %></a>
