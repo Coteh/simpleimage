@@ -12,6 +12,7 @@ form input {
 #notification-overlay-container {
     opacity: 0;
     transition: opacity 0.25s ease;
+    border-radius: 8px;
 }
 
 #overlay-container.open {
