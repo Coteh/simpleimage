@@ -1,16 +1,25 @@
 window.clearOverlay = function() {
     var overlayContainer = document.getElementById("overlay-container");
+    if (overlayContainer == null) {
+        console.error("Cannot clear overlay. No overlay container exists on this page.");
+        return;
+    }
     var overlayBackdrop = document.getElementById("overlay-backdrop");
     overlayContainer.innerHTML = "";
     overlayContainer.className = "";
     overlayBackdrop.className = "";
+    clearNotification();
 };
 
 window.clearNotification = function() {
     var notificationOverlayContainer = document.getElementById("notification-overlay-container");
+    if (notificationOverlayContainer == null) {
+        console.error("Cannot clear notification overlay. No notification overlay container exists on this page.");
+        return;
+    }
     notificationOverlayContainer.innerHTML = "";
     notificationOverlayContainer.className = "";
-}
+};
 
 window.showOverlay = function(html, options) {
     var overlayContainer = document.getElementById("overlay-container");
