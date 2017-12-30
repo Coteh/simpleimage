@@ -31,7 +31,7 @@
             </a>
             <span class="info">Uploaded by 
                 <% if (author != null) { %>
-                    <a href="/users/<%= author %>"><%= (user !== undefined && author === user.username) ? "you" : author %></a>
+                    <a class="user<%= (user !== undefined && author === user.username) ? " you" : "" %>" href="/users/<%= author %>"><%= (user !== undefined && author === user.username) ? "you" : author %></a>
                 <% } else { %>
                     anonymous
                 <% } %>

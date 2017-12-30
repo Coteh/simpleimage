@@ -20,6 +20,14 @@ body {
 }
 
 #image-container a {
-    color: #6bf3ff;
+    color: white;
     text-decoration: none;
+}
+
+#image-container a.user {
+    color: #6bf3ff;
+}
+
+#image-container a.user.you {
+    color: #6bff72;
 }
