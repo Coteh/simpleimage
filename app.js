@@ -1,5 +1,5 @@
-const ImageDatabase = require('./lib/ImageDatabase');
-const Server = require('./lib/Server');
+const ImageDatabase = require("./lib/ImageDatabase");
+const Server = require("./lib/Server");
 
 ImageDatabase.startDatabaseClient(function(err) {
     if (err) {
