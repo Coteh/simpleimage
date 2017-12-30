@@ -18,3 +18,8 @@ body {
 #container {
     position: relative;
 }
+
+#image-container a {
+    color: #6bf3ff;
+    text-decoration: none;
+}
