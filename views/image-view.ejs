@@ -37,7 +37,7 @@
                 <% } %>
                 on <%= uploadedDate.toString() %></span><br/>
             <% if (user !== undefined && author === user.username) { %>
-                <span id="delete" class="info" style="cursor:pointer" onclick="confirmDeleteImage(<%= id %>);">Delete</span><br/>
+                <span id="delete" class="info" style="cursor:pointer" onclick="confirmDeleteImage('<%= id %>');">Delete</span><br/>
             <% } %>
             <span class="info" id="comment-count">0 comments</span>
             <form id="comment" action="/comment?type=json&response=html" method="POST">
