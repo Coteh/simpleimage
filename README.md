@@ -4,9 +4,15 @@ A simple image hosting web application that I created and implemented using Node
 
 ## Features
 
-- Upload bmp, png, jpeg, and gif images
-- Comment on images
-- Delete your images (Must have an account)
+* Upload bmp, png, jpeg, and gif images
+* Comment on images
+* Image page
+    * Image upload date
+    * Total number of comments on image
+* Delete your images (Must have an account)
+* User profile page
+    * Join date
+    * Comment history and total number of comments posted
 
 ## Installation
 
@@ -35,12 +41,12 @@ docker-compose up
 
 ### Known Limitations
 
-- None yet
+* None yet
 
 ### Future Additions
 
-- User preferences menu
-- Ability to change email, password, and/or username
-- Image galleries
-- Custom image IDs
-- Delete account
+* User preferences menu
+* Ability to change email, password, and/or username
+* Image galleries
+* Custom image IDs
+* Delete account
