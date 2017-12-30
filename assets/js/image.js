@@ -80,7 +80,7 @@ window.confirmDeleteImage = function(imageID) {
         + "Are you sure you want to delete this image? "
         + "This action cannot be undone."
         + "<div id='delete-confirm-yesno'>"
-        + "<button onclick='deleteImage(" + imageID + ");'>Yes</button>"
+        + "<button onclick='deleteImage(\"" + imageID + "\");'>Yes</button>"
         + "<button onclick='clearOverlay();'>Cancel</button>"
         + "</div></div>";
     showOverlay(html, {
