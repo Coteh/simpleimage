@@ -87,3 +87,8 @@ input[type="file"] {
     left: 0;
     position: fixed;
 }
+
+.head-icon {
+    font-size: 32px;
+    vertical-align: middle;
+}

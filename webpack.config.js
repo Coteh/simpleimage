@@ -16,6 +16,10 @@ module.exports = {
             {
                 from: 'assets/css',
                 to: 'assets/css'
+            },
+            {
+                from: 'assets/font',
+                to: 'assets/font'
             }
         ])
     ]
