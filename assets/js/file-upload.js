@@ -14,6 +14,9 @@ var onFileSelected = function() {
         var image = document.createElement("img");
         image.src = window.URL.createObjectURL(files[i]);
         image.className = "image-preview";
+        image.onload = function() {
+            image.style.top = (-this.height + 15) + "px";
+        };
         uploadPreview.appendChild(image);
         uploadPreview.className = "selected";
         currentFile = files[i];
