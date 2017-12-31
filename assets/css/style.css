@@ -54,6 +54,7 @@ input[type="file"] {
     user-select: none;
     cursor: pointer;
     border: 2px solid black;
+    border-radius: 8px;
 }
 
 #select-button {
