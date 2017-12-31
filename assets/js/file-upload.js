@@ -69,9 +69,7 @@ $(document).ready(function() {
     fileSelect.addEventListener("change", onFileSelected);
 
     $("#select-button").on('click', function (evt) {
-        if (evt.target.tagName === "SPAN") {
-            fileSelect.click();
-        }
+        fileSelect.click();
     });
 
     $("#upload-button").on("click", function () {

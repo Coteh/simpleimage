@@ -59,7 +59,6 @@ input[type="file"] {
     padding: 20px;
     user-select: none;
     cursor: pointer;
-    border: 2px solid black;
     border-radius: 8px;
     width: 20px;
     height: 20px;
@@ -99,5 +98,5 @@ input[type="file"] {
 }
 
 .head-icon {
-    font-size: 32px;
+    font-size: 20px;
 }
