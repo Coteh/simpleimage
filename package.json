@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test mocha",
     "start": "node app.js",
     "build": "webpack"
   },
@@ -26,5 +26,8 @@
     "multer": "^1.2.0",
     "validator": "^9.2.0",
     "webpack": "^3.7.1"
+  },
+  "devDependencies": {
+    "mocha": "^4.1.0"
   }
 }
