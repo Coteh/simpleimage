@@ -63,23 +63,43 @@ describe("util", function() {
         });
         describe("getValidImageTypes", function () {
             it("should return the image types supported by simpleimage", function() {
-                assert.fail("Not implemented");
+                var results = util.getValidImageTypes();
+                assert.equal(results.indexOf("png") >= 0, true);
+                assert.equal(results.indexOf("jpg") >= 0, true);
+                assert.equal(results.indexOf("jpeg") >= 0, true);
+                assert.equal(results.indexOf("gif") >= 0, true);
+                assert.equal(results.indexOf("bmp") >= 0, true);
             });
         });
         describe("getValidImageTypesString", function () {
             it("should return a string form of the images supported by simpleimage", function() {
-                assert.fail("Not implemented");
+                var supportedTypes = ["png", "jpg", "jpeg", "gif", "bmp"];
+                var str = util.getValidImageTypesString();
+                var strArr = str.split(/, */);
+                assert.equal(strArr.length === supportedTypes.length, true);
+                var filteredArr = strArr.filter(function(value) {
+                    return (supportedTypes.indexOf(value) === -1);
+                });
+                assert.equal(filteredArr.length === 0, true);
             });
         });
         describe("createJSONResponseObject", function () {
             it("should create an object containing passed in status and message", function() {
-                assert.fail("Not implemented");
+                var status = "success";
+                var message = "This was a success.";
+                var obj = util.createJSONResponseObject(status, message);
+                assert.deepStrictEqual(obj, {
+                    status,
+                    message
+                });
             });
             it("should have a status of 'error' if undefined passed as status", function() {
-                assert.fail("Not implemented");
+                var obj = util.createJSONResponseObject(undefined, "My message here");
+                assert.strictEqual(obj.status, "error");
             });
             it("should not contain a message property if undefined passed as message", function() {
-                assert.fail("Not implemented");
+                var obj = util.createJSONResponseObject("success", undefined);
+                assert.strictEqual(obj.message, undefined);
             });
         });
         describe("sanitizeText", function () {
@@ -106,23 +126,15 @@ describe("util", function() {
         });
         describe("getRedirectPath", function () {
             it("should return a relative path string given a production url", function() {
-                assert.fail("Not implemented");
+                var myURL = "https://www.simpleimage.com/images/test";
+                assert.strictEqual(util.getRedirectPath(myURL), "/images/test");
             });
             it("should return root path string given 'home' string as url", function() {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.getRedirectPath("home"), "/");
             });
             it("should return root path string given undefined as url", function () {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.getRedirectPath(undefined), "/");
             });
         });
     });
 });
-
-
-
-
-
-
-
-
-
