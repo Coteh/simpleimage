@@ -76,7 +76,7 @@ window.openLogin = function(fromUrl) {
     req.onload = function(progressEvent) {
         onOverlayLoaded.call(this, progressEvent, onLoginLoaded);
     };
-    req.open("get", "/login?responseType=json&fromUrl=" + fromUrl);
+    req.open("get", "/login?responseType=json");
     req.send();
 };
 
@@ -85,7 +85,7 @@ window.openRegister = function(fromUrl) {
     req.onload = function (progressEvent) {
         onOverlayLoaded.call(this, progressEvent, onLoginLoaded);
     };
-    req.open("get", "/register?responseType=json&fromUrl=" + fromUrl);
+    req.open("get", "/register?responseType=json");
     req.send();
 };
 

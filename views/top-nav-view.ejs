@@ -3,7 +3,7 @@
         <a href="/">simpleimage</a>
     </span>
     <% if (user === undefined) { %>
-    <%- include("guest-menu-view", {fromUrl}) %>
+    <%- include("guest-menu-view") %>
     <% } else { %>
     <%- include("user-menu-view",{user,fromUrl}) %>
     <% } %>
