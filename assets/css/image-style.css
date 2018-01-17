@@ -31,3 +31,19 @@ body {
 #image-container a.user.you {
     color: #6bff72;
 }
+
+.action-link {
+    cursor: pointer;
+}
+
+#image-container .action-link.delete {
+    color: #ff6b6b;
+}
+
+#image-container .action-link.login {
+    color: #6b9aff;
+}
+
+#image-container .action-link.register {
+    color: #fdff6b;
+}
