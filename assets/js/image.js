@@ -37,12 +37,16 @@ var onCommentSubmitted = function() {
     } else {
         var jsonObj = JSON.parse(this.responseText);
         submittedComment = jsonObj.message;
+        
         commentCount++;
         updateCommentsCounter();
+
         var formattedCmt = $(submittedComment)
             .css("background-color", "#FFEB3B");
         parentElement.innerHTML = formattedCmt.get(0).outerHTML + ((commentCount > 1) ? parentElement.innerHTML : "");
         parentElement.classList.remove("message");
+
+        $("form[id='comment'] textarea").val("");
     }
     convertTimeElementsToLocalTime(parentElement);
 };
