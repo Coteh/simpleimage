@@ -50,3 +50,4 @@ docker-compose up
 * Image galleries
 * Custom image IDs
 * Delete account
+* Mobile layout
