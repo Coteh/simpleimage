@@ -71,7 +71,7 @@ var onOverlayLoaded = function(progressEvent, callback) {
     callback(err);
 };
 
-window.openLogin = function(fromUrl) {
+window.openLogin = function() {
     var req = new XMLHttpRequest();
     req.onload = function(progressEvent) {
         onOverlayLoaded.call(this, progressEvent, onLoginLoaded);
@@ -80,7 +80,7 @@ window.openLogin = function(fromUrl) {
     req.send();
 };
 
-window.openRegister = function(fromUrl) {
+window.openRegister = function() {
     var req = new XMLHttpRequest();
     req.onload = function (progressEvent) {
         onOverlayLoaded.call(this, progressEvent, onLoginLoaded);
