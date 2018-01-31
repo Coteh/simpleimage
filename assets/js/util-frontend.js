@@ -3,7 +3,7 @@ window.timeUTCToLocal = function(timeStr) {
 }
 
 window.convertTimeElementsToLocalTime = function(elem) {
-    var timeElem = $(".time", elem)
+    var timeElem = $(".time", elem);
     timeElem.each(function (index, elem) {
         $elem = $(elem);
         var timeText = $elem.text();

@@ -13,6 +13,9 @@
     <script src="/assets/js/image.bundle.js"></script>
     <script>
         requestComments("<%= id %>");
+        $(document).ready(function() {
+            convertTimeElementsToLocalTime(document.getElementById("image-container"));
+        });
     </script>
 </head>
 
@@ -35,7 +38,7 @@
                 <% } else { %>
                     anonymous
                 <% } %>
-                on <%= uploadedDate.toString() %></span><br/>
+                on <span class="time"><%= uploadedDate.toString() %></span></span><br/>
             <% if (user !== undefined && author === user.username) { %>
                 <span id="delete" class="info action-link delete" onclick="confirmDeleteImage('<%= id %>');">Delete</span><br/>
             <% } %>
