@@ -5,7 +5,7 @@ services:
         image: coteh/simpleimage
         container_name: si-app
         ports:
-            - "8080:9001"
+            - "8080:3010"
     si_db:
         image: mongo:latest
         container_name: si-db

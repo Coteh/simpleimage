@@ -25,7 +25,7 @@ npm install
 # Build web components with webpack
 npm build
 
-# Run the app (Navigate to http://localhost:9001 on your browser)
+# Run the app (Navigate to http://localhost:3010 on your browser)
 npm start
 ~~~
 
@@ -37,6 +37,8 @@ docker-compose build
 
 # Run Docker containers in Docker Compose environment
 docker-compose up
+
+# Navigate to http://localhost:8080 on your browser
 ~~~
 
 ### Known Limitations
