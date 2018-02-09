@@ -1,4 +1,4 @@
-version: '3'
+version: "3.2"
 services:
     si_app:
         build: .
@@ -11,8 +11,23 @@ services:
         container_name: si-db
         ports:
             - "27017:27017"
+        volumes:
+            -   type: volume
+                source: configdb
+                target: /data/configdb
+                volume:
+                    nocopy: true
+            -   type: volume
+                source: db
+                target: /data/db
+                volume:
+                    nocopy: true
     si_sessions:
         image: redis:4.0.6
         container_name: si-sessions
         ports:
             - "6379:6379"
+
+volumes:
+    configdb:
+    db:
