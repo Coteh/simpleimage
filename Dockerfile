@@ -11,7 +11,7 @@ RUN npm install
 
 COPY . .
 
-ENV NODE_ENV prod
+ENV NODE_ENV production
 
 EXPOSE 3010
 CMD [ "npm", "start" ]
