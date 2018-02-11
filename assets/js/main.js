@@ -126,3 +126,20 @@ function onLoginLoaded(err) {
     $("input[name='username']").focus();
     setScalableWidth($("#overlay-container").get(0), 300);
 }
+
+// By defining window.onunload, browsers
+// will disable their caching system (back-forward caching)
+// (Firefox, Safari, and Opera use bfcache, Chrome does not cache)
+window.clearBrowserCache = function() {
+    // Most browsers will check if onunload event is defined
+    // before it decides to clear the back-forward cache
+    window.onunload = function() {};
+    // Safari does not, so instead persisted state is checked
+    // when pageshow event is triggered
+    // https://stackoverflow.com/a/13123626/9292680
+    window.onpageshow = function(e) {
+        if (e.persisted) {
+            window.location.reload(true);
+        }
+    };
+}
