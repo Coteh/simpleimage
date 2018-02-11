@@ -131,7 +131,7 @@ function onLoginLoaded(err) {
 // will disable their caching system (back-forward caching)
 // (Firefox, Safari, and Opera use bfcache, Chrome does not cache)
 window.clearBrowserCache = function() {
-    // Most browsers will check if onunload event is defined
+    // Most browsers will check if unload event is defined
     // before it decides to clear the back-forward cache
     window.onunload = function() {};
     // Safari does not, so instead persisted state is checked
