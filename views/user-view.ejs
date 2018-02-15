@@ -17,7 +17,7 @@
         });
 
         $(document).ready(function() {
-            $("#join-date").text(timeUTCToLocal('"<%= user.join_date %>"'));
+            $("#join-date").text(timeUTCToLocal("<%= user.join_date %>"));
         });
     </script>
 </head>
