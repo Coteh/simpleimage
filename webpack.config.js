@@ -20,6 +20,14 @@ module.exports = {
             {
                 from: 'assets/font',
                 to: 'assets/font'
+            },
+            {
+                from: 'assets/images',
+                to: 'assets/images'
+            },
+            {
+                from: 'favicon.ico',
+                to: 'favicon.ico'
             }
         ])
     ]

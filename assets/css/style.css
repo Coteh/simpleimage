@@ -97,6 +97,15 @@ input[type="file"] {
     position: fixed;
 }
 
+#top-nav #title .logo {
+    background: url(/assets/images/logo.svg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 200px;
+    height: 38px;
+}
+
 .head-icon {
     font-size: 20px;
 }

@@ -47,3 +47,8 @@ body {
 #image-container .action-link.register {
     color: #fdff6b;
 }
+
+#top-nav #title .logo {
+    width: 100px;
+    height: 19px;
+}
