@@ -1,4 +1,4 @@
-# simpleimage
+# ![simpleimage logo](assets/logo.svg "simpleimage")
 
 A simple image hosting web application that I created and implemented using Node.js and Express, with MongoDB as the database.
 
