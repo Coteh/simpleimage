@@ -107,3 +107,9 @@ input[type="file"] {
 .head-icon {
     font-size: 20px;
 }
+
+#footer {
+    color: white;
+    bottom: 0;
+    left: 50%;
+}
