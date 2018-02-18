@@ -1,10 +1,14 @@
 <div id="top-nav">
-    <span id="title">
-        <a href="/"><div class="logo"></div></a>
-    </span>
-    <% if (user === undefined) { %>
-    <%- include("guest-menu-view") %>
-    <% } else { %>
-    <%- include("user-menu-view",{user,fromUrl}) %>
-    <% } %>
+    <div class="nav-content">
+        <nav>
+            <div id="title" class="nav-item">
+                <a href="/"><div class="logo"></div></a>
+            </div>
+            <% if (user === undefined) { %>
+            <%- include("guest-menu-view") %>
+            <% } else { %>
+            <%- include("user-menu-view",{user,fromUrl}) %>
+            <% } %>
+        </nav>
+    </div>
 </div>

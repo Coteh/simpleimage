@@ -82,6 +82,7 @@ input[type="file"] {
     top: 0;
     right: 0;
     z-index: 298;
+    width: 100%;
 }
 
 #top-nav a,
@@ -94,7 +95,6 @@ input[type="file"] {
 
 #top-nav #title {
     left: 0;
-    position: fixed;
 }
 
 #top-nav #title .logo {
@@ -102,6 +102,34 @@ input[type="file"] {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
+    width: 200px;
+    height: 38px;
+}
+
+#top-nav.mini #title .logo {
+    width: 100px;
+    height: 19px;
+}
+
+#top-nav .nav-content {
+    margin: 0px 30px;
+    position: relative;
+}
+
+#top-nav .nav-item {
+    display: inline-block;
+    position: absolute;
+}
+
+#top-nav .nav-item.login {
+    right: 120px;
+    top: 30px;
+}
+
+#top-nav .nav-item.register,
+#top-nav .nav-item.user {
+    right: 0;
+    top: 30px;
 }
 
 .head-icon {
