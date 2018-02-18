@@ -126,3 +126,19 @@ function onLoginLoaded(err) {
     $("input[name='username']").focus();
     setScalableWidth($("#overlay-container").get(0), 300);
 }
+
+/*--------------------------------------------*/
+
+function checkForPageScroll() {
+    if ($(window).scrollTop() >= 360) {
+        $("#top-nav").addClass("mini");
+    } else {
+        $("#top-nav").removeClass("mini");
+    }
+}
+
+$(function() {
+    $(window).scroll(function() {
+        checkForPageScroll();
+    })
+});

@@ -104,21 +104,31 @@ input[type="file"] {
     background-size: contain;
     width: 200px;
     height: 38px;
+    transition-property: transform;
+    transition-duration: 1s;
 }
 
 #top-nav.mini #title .logo {
-    width: 100px;
-    height: 19px;
+    transform: scale(0.7);
 }
 
 #top-nav .nav-content {
     margin: 0px 30px;
     position: relative;
+    top: 0;
+    transition-property: top;
+    transition-duration: 1s;
+}
+
+#top-nav.mini .nav-content {
+    top: -20px;
 }
 
 #top-nav .nav-item {
     display: inline-block;
     position: absolute;
+    transition-property: transform;
+    transition-duration: 1s;
 }
 
 #top-nav .nav-item.login {
@@ -129,6 +139,17 @@ input[type="file"] {
 #top-nav .nav-item.register,
 #top-nav .nav-item.user {
     right: 0;
+    top: 30px;
+}
+
+#top-nav.mini .nav-item.login {
+    transform: scale(0.7);
+    top: 30px;
+}
+
+#top-nav.mini .nav-item.register,
+#top-nav.mini .nav-item.user {
+    transform: scale(0.7);
     top: 30px;
 }
 
