@@ -132,6 +132,11 @@ input[type="file"] {
     top: 30px;
 }
 
+#top-nav .nav-composite a,
+#top-nav .nav-composite span {
+    margin: 0;
+}
+
 .head-icon {
     font-size: 20px;
 }

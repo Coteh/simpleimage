@@ -1,6 +1,9 @@
 <div class="nav-item user">
-    <a>
-        <%= user.username %>
+    <a href="#" class="nav-composite">
+        <span class="collecticon collecticon-user head-icon"></span>
+        <span>
+            <%= user.username %>
+        </span>
     </a>
     <form id="logout-form" method="POST" action="/logout">
         <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
