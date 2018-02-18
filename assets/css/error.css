@@ -13,3 +13,7 @@ h2 {
     padding: 20px;
     background-color: red;
 }
+
+#footer {
+    position: absolute;
+}
