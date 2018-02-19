@@ -1,12 +1,21 @@
-<div class="nav-item user nav-right-1 nav-button">
-    <span class="nav-composite noselect">
-        <span class="collecticon collecticon-user head-icon"></span>
-        <span>
-            <%= user.username %>
+<div id="user-menu" class="nav-item nav-menu nav-right-1">
+    <div class="nav-item nav-sub user nav-button">
+        <span class="nav-composite noselect">
+            <span class="collecticon collecticon-user head-icon"></span>
+            <span>
+                <%= user.username %>
+            </span>
         </span>
-    </span>
-    <form id="logout-form" method="POST" action="/logout">
-        <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
-        <a href="#" class="noselect" onclick="document.getElementById('logout-form').submit();">Logout</a>
-    </form>
+    </div>
+    <a href="/users/<%= user.username %>">
+        <div class="nav-menu-item">
+            <span>Profile</span>
+        </div>
+    </a>
+    <div class="nav-menu-item">
+        <form id="logout-form" method="POST" action="/logout">
+            <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
+            <a href="#" class="noselect" onclick="document.getElementById('logout-form').submit();">Logout</a>
+        </form>
+    </div>
 </div>

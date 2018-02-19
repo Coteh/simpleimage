@@ -145,6 +145,10 @@ input[type="file"] {
     transition: transform 1s, left 1s, right 1s, background-color 0.2s;
 }
 
+#top-nav .nav-item.nav-sub {
+    position: relative;
+}
+
 #top-nav .nav-item.nav-right-1 {
     right: 0;
     top: 30px;
@@ -176,9 +180,26 @@ input[type="file"] {
     background-color: rgb(182, 182, 0);
 }
 
+#top-nav .nav-composite {
+    margin: 0 10px;
+}
+
 #top-nav .nav-composite a,
 #top-nav .nav-composite span {
     margin: 0;
+}
+
+#top-nav .nav-item.nav-menu a,
+#top-nav .nav-item.nav-menu span {
+    margin: 0;
+}
+
+.nav-item.nav-menu .nav-menu-item {
+    display: none;
+}
+
+.nav-item.nav-menu.nav-active .nav-menu-item {
+    display: block;
 }
 
 .head-icon {

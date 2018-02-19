@@ -137,8 +137,23 @@ function checkForPageScroll() {
     }
 }
 
+/*--------------------------------------------*/
+
+function activateMenu(elem, activate) {
+    if (activate) {
+        elem.addClass("nav-active");
+    } else {
+        elem.removeClass("nav-active");
+    }
+}
+
+/*--------------------------------------------*/
+
 $(function() {
     $(window).scroll(function() {
         checkForPageScroll();
-    })
+    });
+    $("#top-nav #user-menu").click(function() {
+        activateMenu($(this), !$(this).hasClass("nav-active"));
+    });
 });
