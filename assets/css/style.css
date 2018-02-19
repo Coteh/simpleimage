@@ -108,6 +108,10 @@ input[type="file"] {
     transition-duration: 1s;
 }
 
+#top-nav.mini #title {
+    left: -30px;
+}
+
 #top-nav.mini #title .logo {
     transform: scale(0.7);
 }
@@ -127,7 +131,7 @@ input[type="file"] {
 #top-nav .nav-item {
     display: inline-block;
     position: absolute;
-    transition-property: transform;
+    transition-property: transform left right;
     transition-duration: 1s;
 }
 
@@ -144,12 +148,14 @@ input[type="file"] {
 
 #top-nav.mini .nav-item.login {
     transform: scale(0.7);
+    right: 60px;
     top: 30px;
 }
 
 #top-nav.mini .nav-item.register,
 #top-nav.mini .nav-item.user {
     transform: scale(0.7);
+    right: -30px;
     top: 30px;
 }
 
