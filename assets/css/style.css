@@ -141,32 +141,39 @@ input[type="file"] {
 #top-nav .nav-item {
     display: inline-block;
     position: absolute;
-    transition-property: transform left right;
-    transition-duration: 1s;
+    cursor: pointer;
+    transition: transform 1s, left 1s, right 1s, background-color 0.2s;
 }
 
-#top-nav .nav-item.login {
-    right: 120px;
-    top: 30px;
-}
-
-#top-nav .nav-item.register,
-#top-nav .nav-item.user {
+#top-nav .nav-item.nav-right-1 {
     right: 0;
     top: 30px;
 }
 
-#top-nav.mini .nav-item.login {
+#top-nav .nav-item.nav-right-2 {
+    right: 125px;
+    top: 30px;
+}
+
+#top-nav.mini .nav-item.nav-right-1 {
+    transform: scale(0.7);
+    right: -30px;
+    top: 30px;
+}
+
+#top-nav.mini .nav-item.nav-right-2 {
     transform: scale(0.7);
     right: 60px;
     top: 30px;
 }
 
-#top-nav.mini .nav-item.register,
-#top-nav.mini .nav-item.user {
-    transform: scale(0.7);
-    right: -30px;
-    top: 30px;
+#top-nav .nav-item.nav-button {
+    background-color: #222425;
+    border-radius: 8px;
+}
+
+#top-nav .nav-item.nav-button:hover {
+    background-color: rgb(182, 182, 0);
 }
 
 #top-nav .nav-composite a,
@@ -182,4 +189,15 @@ input[type="file"] {
     color: white;
     bottom: 0;
     left: 50%;
+}
+
+/* https://stackoverflow.com/a/4407335/9292680 */
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }

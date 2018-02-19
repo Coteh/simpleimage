@@ -1,12 +1,12 @@
-<div class="nav-item user">
-    <a href="#" class="nav-composite">
+<div class="nav-item user nav-right-1 nav-button">
+    <span class="nav-composite noselect">
         <span class="collecticon collecticon-user head-icon"></span>
         <span>
             <%= user.username %>
         </span>
-    </a>
+    </span>
     <form id="logout-form" method="POST" action="/logout">
         <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
-        <a href="#" onclick="document.getElementById('logout-form').submit();">Logout</a>
+        <a href="#" class="noselect" onclick="document.getElementById('logout-form').submit();">Logout</a>
     </form>
 </div>
