@@ -194,6 +194,37 @@ input[type="file"] {
     margin: 0;
 }
 
+#top-nav .nav-menu .nav-menu-items {
+    position: absolute;
+    top: 60px;
+    z-index: -1;
+    transition: height 1s ease, padding 1s ease, top 1s;
+    background-color: #4f5559;
+    padding: 0px 20px;
+    width: 80px;
+    height: 0px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+#top-nav.mini .nav-menu .nav-menu-items {
+    top: 50px;
+}
+
+#top-nav .nav-menu .nav-menu-items .nav-menu-item {
+    opacity: 0.0;
+    transition: opacity 1s;
+}
+
+#top-nav .nav-menu.nav-active .nav-menu-items {
+    padding: 20px 20px;
+    height: 80px;
+}
+
+#top-nav .nav-menu.nav-active .nav-menu-items .nav-menu-item {
+    opacity: 1.0;
+}
+
 .nav-item.nav-menu .nav-menu-item {
     display: none;
 }
