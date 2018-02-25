@@ -83,7 +83,7 @@ window.openLogin = function() {
 window.openRegister = function() {
     var req = new XMLHttpRequest();
     req.onload = function (progressEvent) {
-        onOverlayLoaded.call(this, progressEvent, onLoginLoaded);
+        onOverlayLoaded.call(this, progressEvent, onRegisterLoaded);
     };
     req.open("get", "/register?responseType=json");
     req.send();
@@ -118,13 +118,28 @@ function onLoginLoaded(err) {
     if (err) {
         return;
     }
-    $("form[id='login'],form[id='register']").on("submit", function (e) {
+    $("form[id='login']").on("submit", function (e) {
         e.preventDefault();
         submitLogin(e);
         return false;
     });
     $("input[name='username']").focus();
     setScalableWidth($("#overlay-container").get(0), 300);
+    setScalableHeight($("#overlay-container").get(0), 200);
+}
+
+function onRegisterLoaded(err) {
+    if (err) {
+        return;
+    }
+    $("form[id='register']").on("submit", function (e) {
+        e.preventDefault();
+        submitLogin(e);
+        return false;
+    });
+    $("input[name='username']").focus();
+    setScalableWidth($("#overlay-container").get(0), 300);
+    setScalableHeight($("#overlay-container").get(0), 300);
 }
 
 /*--------------------------------------------*/
