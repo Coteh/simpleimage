@@ -20,11 +20,17 @@
             <div class="login-view">
                 <h2>Login</h2>
                 <form action="/login?type=<%= responseType %>" method="POST" id="login">
-                    Username:
-                    <input type="text" name="username"></input><br>
-                    Password:
-                    <input type="password" name="password"></input>
-                    <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input><br>
+                    <table>
+                        <tr>
+                            <td><span>Username:</span></td>
+                            <td><input type="text" name="username"></input></td>
+                        </tr>
+                        <tr>
+                            <td><span>Password:</span></td>
+                            <td><input type="password" name="password"></input></td>
+                        </tr>
+                    </table>
+                    <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
                     <input type="submit"></input>
                 </form>
             </div>
