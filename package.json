@@ -7,7 +7,8 @@
     "test": "NODE_ENV=test mocha",
     "start": "node app.js",
     "build-client": "webpack",
-    "dev-server": "nodemon"
+    "dev-server": "nodemon",
+    "start-dev": "chmod +x ./run-dev.sh && ./run-dev.sh"
   },
   "author": "James Cote (Coteh)",
   "license": "MIT",
