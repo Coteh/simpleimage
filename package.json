@@ -6,7 +6,8 @@
   "scripts": {
     "test": "NODE_ENV=test mocha",
     "start": "node app.js",
-    "build": "webpack"
+    "build": "webpack",
+    "dev": "nodemon"
   },
   "author": "James Cote (Coteh)",
   "license": "MIT",
@@ -28,6 +29,7 @@
     "webpack": "^3.7.1"
   },
   "devDependencies": {
-    "mocha": "^4.1.0"
+    "mocha": "^4.1.0",
+    "nodemon": "^1.15.1"
   }
 }
