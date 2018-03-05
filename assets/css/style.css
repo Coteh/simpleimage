@@ -139,7 +139,6 @@ input[type="file"] {
 }
 
 #top-nav .nav-item {
-    display: inline-block;
     position: absolute;
     cursor: pointer;
     transition: transform 1s, left 1s, right 1s, background-color 0.2s;
@@ -196,7 +195,7 @@ input[type="file"] {
 
 #top-nav .nav-menu .nav-menu-items {
     position: absolute;
-    top: 60px;
+    top: 0px;
     z-index: -1;
     transition: height 1s ease, padding 1s ease, top 1s;
     background-color: #4f5559;
@@ -211,18 +210,16 @@ input[type="file"] {
     top: 50px;
 }
 
-#top-nav .nav-menu .nav-menu-items .nav-menu-item {
-    opacity: 0.0;
-    transition: opacity 1s;
-}
-
 #top-nav .nav-menu.nav-active .nav-menu-items {
     padding: 20px 20px;
     height: 80px;
+    top: 60px;
 }
 
-#top-nav .nav-menu.nav-active .nav-menu-items .nav-menu-item {
-    opacity: 1.0;
+#top-nav .nav-item.nav-menu .nav-item.nav-menu-item {
+    position: relative;
+    text-align: center;
+    margin-bottom: 8px;
 }
 
 .nav-item.nav-menu .nav-menu-item {
