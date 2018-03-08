@@ -221,6 +221,22 @@ input[type="file"] {
     margin-bottom: 8px;
 }
 
+@media (min-width: 768px) {
+    #top-nav #mobile-menu {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    #top-nav #user-menu {
+        display: none;
+    }
+}
+
+#top-nav .nav-item.nav-drawer.nav-active {
+    
+}
+
 .nav-item.nav-menu .nav-menu-item {
     display: none;
 }

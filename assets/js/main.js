@@ -168,7 +168,9 @@ $(function() {
     $(window).scroll(function() {
         checkForPageScroll();
     });
-    $("#top-nav #user-menu").click(function() {
+    var activateFunc = function () {
         activateMenu($(this), !$(this).hasClass("nav-active"));
-    });
+    };
+    $("#top-nav #user-menu").click(activateFunc);
+    $("#top-nav #mobile-menu").click(activateFunc);
 });
