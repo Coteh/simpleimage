@@ -72,3 +72,6 @@ public/
 
 # Mac OS DS_Store
 .DS_Store
+
+# Session Store on dev
+sessions/
