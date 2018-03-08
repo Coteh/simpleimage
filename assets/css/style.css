@@ -195,7 +195,7 @@ input[type="file"] {
 
 #top-nav .nav-menu .nav-menu-items {
     position: absolute;
-    top: 0px;
+    top: 60px;
     z-index: -1;
     transition: height 1s ease, padding 1s ease, top 1s;
     background-color: #4f5559;
@@ -213,7 +213,6 @@ input[type="file"] {
 #top-nav .nav-menu.nav-active .nav-menu-items {
     padding: 20px 20px;
     height: 80px;
-    top: 60px;
 }
 
 #top-nav .nav-item.nav-menu .nav-item.nav-menu-item {
