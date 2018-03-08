@@ -1,3 +1,3 @@
 {
-    "ignore": ["assets/js/*.js", "test/*.js"]
+    "ignore": ["assets/js/*.js", "test/*.js", "sessions/"]
 }
