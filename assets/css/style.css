@@ -1,6 +1,11 @@
+html {
+    height: 100%;
+}
+
 body {
     background-color: #1d1f20;
     overflow: hidden;
+    height: 100%;
 }
 
 form[id="upload"] {
