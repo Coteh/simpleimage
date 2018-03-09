@@ -132,6 +132,10 @@ input[type="file"] {
     position: relative;
 }
 
+#top-nav .nav-item.nav-static {
+    cursor: default;
+}
+
 #top-nav .nav-item.nav-right-1 {
     right: 0;
     top: 30px;
@@ -194,12 +198,22 @@ input[type="file"] {
     top: 88px;
     left: 0;
     transition: visibility 1s ease, opacity 1s ease;
-    background-color: green;
+    background-color: #4f5559;
     width: 100vw;
+}
+
+#mobile-menu a, #mobile-menu span {
+    margin: 0;
 }
 
 #mobile-menu .nav-item {
     position: relative;
+    margin: 8px 0;
+    padding: 20px;
+}
+
+#mobile-menu .nav-item.nav-button {
+    border-radius: 0px;
 }
 
 @media (min-width: 769px) {

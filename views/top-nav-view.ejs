@@ -16,7 +16,7 @@
     </div>
     <div id="mobile-menu">
         <% if (user === undefined) { %>
-        <!-- guest-mobile-menu-view -->
+        <%- include("guest-mobile-menu-view") %>
         <% } else { %>
         <%- include("user-mobile-menu-view",{user,fromUrl}) %>
         <% } %>
