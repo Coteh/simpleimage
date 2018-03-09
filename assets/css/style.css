@@ -189,8 +189,21 @@ input[type="file"] {
     margin-bottom: 8px;
 }
 
+#mobile-menu {
+    position: absolute;
+    top: 88px;
+    left: 0;
+    transition: visibility 1s ease, opacity 1s ease;
+    background-color: green;
+    width: 100vw;
+}
+
+#mobile-menu .nav-item {
+    position: relative;
+}
+
 @media (min-width: 768px) {
-    #top-nav #mobile-menu {
+    #top-nav #mobile-menu-button, #mobile-menu {
         display: none;
     }
 
@@ -230,6 +243,16 @@ input[type="file"] {
 @media (max-width: 768px) {
     #top-nav #user-menu {
         display: none;
+    }
+
+    #mobile-menu {
+        visibility: hidden;
+        opacity: 0.0;
+    }
+
+    #mobile-menu.nav-active {
+        visibility: visible;
+        opacity: 1.0;
     }
 }
 

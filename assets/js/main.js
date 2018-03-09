@@ -172,5 +172,8 @@ $(function() {
         activateMenu($(this), !$(this).hasClass("nav-active"));
     };
     $("#top-nav #user-menu").click(activateFunc);
-    $("#top-nav #mobile-menu").click(activateFunc);
+    $("#top-nav #mobile-menu-button").click(function () {
+        activateMenu($("#mobile-menu"), !$(this).hasClass("nav-active"));
+        activateMenu($(this), !$(this).hasClass("nav-active"));
+    });
 });
