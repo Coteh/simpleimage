@@ -199,7 +199,7 @@ input[type="file"] {
     left: 0;
     transition: visibility 1s ease, opacity 1s ease;
     background-color: #4f5559;
-    width: 100vw;
+    width: 100%;
 }
 
 #mobile-menu a, #mobile-menu span {
