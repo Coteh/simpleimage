@@ -202,7 +202,7 @@ input[type="file"] {
     position: relative;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 769px) {
     #top-nav #mobile-menu-button, #mobile-menu {
         display: none;
     }
@@ -241,7 +241,7 @@ input[type="file"] {
 }
 
 @media (max-width: 768px) {
-    #top-nav #user-menu {
+    #top-nav #user-menu, #top-nav #guest-menu {
         display: none;
     }
 
