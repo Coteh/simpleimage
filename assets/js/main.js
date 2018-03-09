@@ -176,4 +176,10 @@ $(function() {
         activateMenu($("#mobile-menu"), !$(this).hasClass("nav-active"));
         activateMenu($(this), !$(this).hasClass("nav-active"));
     });
+    $(document.body).bind("touchstart", function (e) {
+        if ($(e.target).closest("#top-nav").length === 0) {
+            activateMenu($("#mobile-menu"), false);
+            activateMenu($("#top-nav #mobile-menu-button"), false);
+        }
+    });
 });
