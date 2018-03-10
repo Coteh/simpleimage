@@ -33,7 +33,7 @@ window.showOverlay = function(html, options) {
             overlayContainer.classList.add("error");
         }
         if (options.close) {
-            overlayContainer.innerHTML = "<button onclick='clearOverlay();'>X</button>"
+            overlayContainer.innerHTML = "<span class=\"collecticon collecticon-xmark head-icon\" onclick='clearOverlay();'></span>"
                                 + overlayContainer.innerHTML;
         }
     }
@@ -41,7 +41,7 @@ window.showOverlay = function(html, options) {
 
 window.showNotification = function(message, options) {
     var notificationOverlayContainer = document.getElementById("notification-overlay-container");
-    notificationOverlayContainer.innerHTML = "<button onclick='clearNotification();'>X</button><br><br>"
+    notificationOverlayContainer.innerHTML = "<span class=\"collecticon collecticon-xmark head-icon\" onclick='clearNotification();'></span><br><br>"
     notificationOverlayContainer.innerHTML += message;
     notificationOverlayContainer.className = "open";
     if (options !== undefined) {
