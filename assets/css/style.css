@@ -24,6 +24,7 @@ input[type="file"] {
 
 #contents {
     position: relative;
+    height: 100%;
 }
 
 #upload-center {
