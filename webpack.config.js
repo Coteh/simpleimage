@@ -2,7 +2,7 @@ var path = require("path");
 var CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-    watch: true,
+    watch: (process.env.NODE_ENV !== "production"),
     entry: {
         'assets/js/home.bundle': ['./assets/js/main.js', './assets/js/file-upload.js', './assets/js/util-frontend.js'],
         'assets/js/image.bundle': ['./assets/js/main.js', './assets/js/image.js', './assets/js/util-frontend.js'],

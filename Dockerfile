@@ -2,6 +2,8 @@ FROM node
 
 WORKDIR /usr/src/simpleimage
 
+ENV NODE_ENV production
+
 COPY package.json package-lock.json ./
 
 RUN apt-get update
@@ -11,7 +13,7 @@ RUN npm install
 
 COPY . .
 
-ENV NODE_ENV production
+RUN npm run build-client
 
 EXPOSE 3010
 CMD [ "npm", "start" ]
