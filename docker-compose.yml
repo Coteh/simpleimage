@@ -4,8 +4,6 @@ services:
         build: .
         image: coteh/simpleimage
         container_name: si-app
-        environment:
-            - MONGODB_URI=mongodb://si_db:27017/simpleimage
         ports:
             - "8080:3010"
     si_db:
