@@ -4,6 +4,8 @@ services:
         build: .
         image: coteh/simpleimage
         container_name: si-app
+        environment:
+            - DB_HOST=si_db
         ports:
             - "8080:3010"
     si_db:
