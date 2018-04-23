@@ -22,8 +22,11 @@ A simple image hosting web application that I created and implemented using Node
 # Install dependencies
 npm install
 
-# Build web components with webpack
+# Build web components with webpack (and watch for changes when in development mode)
 npm build:client
+
+# Run local MongoDB database
+mongod --dbpath ./data/
 
 # Run the app
 npm start
