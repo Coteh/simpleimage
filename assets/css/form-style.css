@@ -1,9 +1,22 @@
+/* INPUT FORMS */
+
 form input {
     margin: 10px 10px 10px 10px;
 }
 
 .register-view, .login-view {
     color: white;
+}
+
+.input-form {
+    font-size: 18px;
+}
+
+.input-form input[type="text"],
+.input-form input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 18px;
 }
 
 /* CONTAINERS */
