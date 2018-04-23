@@ -4,11 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha",
+    "build:client": "webpack",
     "start": "node app.js",
-    "build-client": "webpack",
-    "dev-server": "nodemon",
-    "start-dev": "chmod +x ./run-dev.sh && ./run-dev.sh"
+    "start:dev": "nodemon",
+    "test": "NODE_ENV=test mocha"
   },
   "author": "James Cote (Coteh)",
   "license": "MIT",

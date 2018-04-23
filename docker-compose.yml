@@ -1,13 +1,21 @@
 version: "3.2"
 services:
     si_app:
-        build: .
+        build:
+            context: .
+            args:
+                - NODE_ENV=production
         image: coteh/simpleimage
         container_name: si-app
+        command: bash -c "npm run build:client && npm start"
+        environment:
+            - NODE_ENV=production
         env_file:
             - .env
         ports:
             - "8080:3010"
+        depends_on:
+            - "si_db"
     si_db:
         image: mongo:latest
         container_name: si-db
