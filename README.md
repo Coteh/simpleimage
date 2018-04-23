@@ -23,22 +23,42 @@ A simple image hosting web application that I created and implemented using Node
 npm install
 
 # Build web components with webpack
-npm build
+npm build:client
 
 # Run the app (Navigate to http://localhost:3010 on your browser)
 npm start
+# or, run the app in development mode
+npm run start:dev
 ~~~
 
-### Serving with Docker
+### Serving with Docker (in development)
+
+~~~sh
+# Build Docker images
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
+# or, run
+make dev
+
+# Run Docker containers in Docker Compose environment
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+# or, run
+make deploy-dev
+
+# Navigate to http://localhost:8080 on your browser
+~~~
+
+### Serving with Docker (in production)
 
 ~~~sh
 # Build Docker images
 docker-compose build
+# or, run
+make prod
 
 # Run Docker containers in Docker Compose environment
 docker-compose up
-
-# Navigate to http://localhost:8080 on your browser
+# or, run
+make deploy-prod
 ~~~
 
 ### Known Limitations
