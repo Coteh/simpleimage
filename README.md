@@ -16,7 +16,7 @@ A simple image hosting web application that I created and implemented using Node
 
 ## Installation
 
-### Building Locally
+### Building and Running Locally
 
 ~~~sh
 # Install dependencies
@@ -25,10 +25,12 @@ npm install
 # Build web components with webpack
 npm build:client
 
-# Run the app (Navigate to http://localhost:3010 on your browser)
+# Run the app
 npm start
 # or, run the app in development mode
 npm run start:dev
+
+# Navigate to http://localhost:3010 on your browser
 ~~~
 
 ### Serving with Docker (in development)
