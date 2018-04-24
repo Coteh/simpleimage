@@ -6,6 +6,11 @@ body {
     background-color: #1d1f20;
     overflow: hidden;
     height: 100%;
+    font-family: 'Roboto', serif;
+}
+
+h1,h2,h3,h4,h5 {
+    font-weight: lighter;
 }
 
 form[id="upload"] {
