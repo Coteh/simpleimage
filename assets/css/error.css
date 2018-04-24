@@ -1,12 +1,23 @@
+body {
+    margin: 0;
+}
+
 h2 {
     color: white;
 }
 
 #error-container {
     position: absolute;
-    top: 40vh;
-    left: 40vw;
-    width: 400px;
+    width: 100%;
+}
+
+#error-container a {
+    color: white;
+    text-decoration: none;
+}
+
+#error-container .error-backdrop {
+    margin-left: 20px;
 }
 
 #error-pane {

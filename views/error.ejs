@@ -13,7 +13,9 @@
 
 <body>
     <div id="error-container">
-        <h2>Oops</h2>
+        <div class="error-backdrop">
+            <h2>Oops</h2>
+        </div>
         <div id="error-pane">
             An error occurred. Here is the error message:
             <br>
@@ -21,7 +23,7 @@
             <i><%= message %></i>
             <br>
             <br>
-            <a href="/">Click here to return to the homepage</a>
+            <a href="/"><span class="collecticon collecticon-arrow-return head-icon"> Return to Homepage</span></a>
         </div>
     </div>
     <%- include("footer") %>
