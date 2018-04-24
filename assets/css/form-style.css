@@ -57,6 +57,12 @@ form input {
     background-color: red;
 }
 
+/* NOTIFICATION */
+
+.notification-message {
+    margin: 8px 0px;
+}
+
 /* BACKDROPS */
 
 #overlay-backdrop {

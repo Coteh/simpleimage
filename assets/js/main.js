@@ -21,6 +21,13 @@ window.clearNotification = function() {
     notificationOverlayContainer.className = "";
 };
 
+window.constructCloseButton = function(html, onClose) {
+    var closeButton = document.createElement("span");
+    closeButton.className = "collecticon collecticon-xmark head-icon";
+    closeButton.addEventListener("click", onClose);
+    html.insertBefore(closeButton, html.firstChild);
+};
+
 window.showOverlay = function(html, options) {
     var overlayContainer = document.getElementById("overlay-container");
     var overlayBackdrop = document.getElementById("overlay-backdrop");
@@ -33,22 +40,24 @@ window.showOverlay = function(html, options) {
             overlayContainer.classList.add("error");
         }
         if (options.close) {
-            overlayContainer.innerHTML = "<span class=\"collecticon collecticon-xmark head-icon\" onclick='clearOverlay();'></span>"
-                                + overlayContainer.innerHTML;
+            constructCloseButton(overlayContainer, clearOverlay);
         }
     }
 };
 
 window.showNotification = function(message, options) {
     var notificationOverlayContainer = document.getElementById("notification-overlay-container");
-    notificationOverlayContainer.innerHTML = "<span class=\"collecticon collecticon-xmark head-icon\" onclick='clearNotification();'></span><br><br>"
-    notificationOverlayContainer.innerHTML += message;
+    var errorMessage = document.createElement("div");
+    errorMessage.innerText = message;
+    errorMessage.className = "notification-message";
     notificationOverlayContainer.className = "open";
     if (options !== undefined) {
         if (options.error) {
             notificationOverlayContainer.classList.add("error");
         }
     }
+    constructCloseButton(notificationOverlayContainer, clearNotification);
+    notificationOverlayContainer.appendChild(errorMessage);
 };
 
 var onOverlayLoaded = function(progressEvent, callback) {
