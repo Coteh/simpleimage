@@ -23,9 +23,18 @@ window.clearNotification = function() {
 
 window.constructCloseButton = function(html, onClose) {
     var closeButton = document.createElement("span");
-    closeButton.className = "collecticon collecticon-xmark head-icon";
-    closeButton.addEventListener("click", onClose);
-    html.insertBefore(closeButton, html.firstChild);
+    closeButton.className = "collecticon collecticon-xmark head-icon close-button";
+    
+    var closeText = document.createElement("span");
+    closeText.innerText = " Close";
+    
+    var closeElement = this.document.createElement("div");
+    closeElement.className = "pointer-element";
+    closeElement.appendChild(closeButton);
+    closeElement.appendChild(closeText);
+    closeElement.addEventListener("click", onClose);
+
+    html.insertBefore(closeElement, html.firstChild);
 };
 
 window.showOverlay = function(html, options) {
