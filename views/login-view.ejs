@@ -8,7 +8,6 @@
         Login - simpleimage
     </title>
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/user-style.css">
     <link rel="stylesheet" href="/assets/css/form-style.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
@@ -20,7 +19,7 @@
         <div id="login-container">
             <div class="login-view">
                 <h2>Login</h2>
-                <form action="/login?type=<%= responseType %>" method="POST" id="login" class="input-form">
+                <form action="/login?type=<%= responseType %>" method="POST" id="login-form" class="input-form">
                     <table>
                         <tr>
                             <td>
@@ -44,7 +43,8 @@
                         </tr>
                     </table>
                     <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
-                    <span class="button">Submit</span>
+                    <span class="button submit-button">Submit</span>
+                    <input type="submit" style="display: none"/>
                 </form>
                 <div id="register-from-login">
                     Don't have an account?

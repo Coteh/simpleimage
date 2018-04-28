@@ -136,7 +136,7 @@ function onLoginLoaded(err) {
     if (err) {
         return;
     }
-    $("form[id='login']").on("submit", function (e) {
+    $("form[id='login-form']").on("submit", function (e) {
         e.preventDefault();
         submitLogin(e);
         return false;
@@ -144,21 +144,30 @@ function onLoginLoaded(err) {
     $("input[name='username']").focus();
     setScalableWidth($("#overlay-container").get(0), 300);
     setScalableHeight($("#overlay-container").get(0), 450);
-    $("#register-via-login-button").click(openRegister);
+    $("#register-via-login-button").click(function(e) {
+        clearOverlay(e);
+        openRegister(e);
+    });
+    $("form[id='login-form'] .submit-button").click(function() {
+        $("form[id='login-form']").submit();
+    });
 }
 
 function onRegisterLoaded(err) {
     if (err) {
         return;
     }
-    $("form[id='register']").on("submit", function (e) {
+    $("form[id='register-form']").on("submit", function (e) {
         e.preventDefault();
         submitLogin(e);
         return false;
     });
     $("input[name='username']").focus();
-    setScalableWidth($("#overlay-container").get(0), 300);
-    setScalableHeight($("#overlay-container").get(0), 300);
+    setScalableWidth($("#overlay-container").get(0), 420);
+    setScalableHeight($("#overlay-container").get(0), 400);
+    $("form[id='register-form'] .submit-button").click(function (e) {
+        $("form[id='register-form']").submit();
+    });
 }
 
 /*--------------------------------------------*/

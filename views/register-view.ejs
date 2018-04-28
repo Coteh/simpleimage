@@ -1,3 +1,4 @@
+<% if (responseType === "html") { %>
 <!DOCTYPE html>
 <html>
 
@@ -7,18 +8,18 @@
         Register - simpleimage
     </title>
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/user-style.css">
     <link rel="stylesheet" href="/assets/css/form-style.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
 </head>
 
 <body>
+<% } %>
     <div id="contents">
         <div id="register-container">
             <div class="register-view">
                 <h2>Register</h2>
-                <form action="/register?type=<%= responseType %>" method="POST" id="register" class="input-form">
+                <form action="/register?type=<%= responseType %>" method="POST" id="register-form" class="input-form">
                     <table>
                         <tr>
                             <td><span>Username:</span></td>
@@ -38,11 +39,14 @@
                         </tr>
                     </table>
                     <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
-                    <input type="submit"></input>
+                    <span class="button submit-button">Submit</span>
+                    <input type="submit" style="display: none" />
                 </form>
             </div>
         </div>
     </div>
+<% if (responseType === "html") { %>
 </body>
 
 </html>
+<% } %>
