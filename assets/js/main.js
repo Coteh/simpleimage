@@ -206,6 +206,8 @@ $(function() {
     $(window).scroll(function() {
         checkForPageScroll();
     });
+    //Sometimes, window scroll event does not fire on page load...
+    checkForPageScroll();
     var activateFunc = function () {
         activateMenu($(this), !$(this).hasClass("nav-active"));
     };
@@ -220,5 +222,4 @@ $(function() {
             activateMenu($("#top-nav #mobile-menu-button"), false);
         }
     });
-    checkForPageScroll();
 });
