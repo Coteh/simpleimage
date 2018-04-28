@@ -220,4 +220,5 @@ $(function() {
             activateMenu($("#top-nav #mobile-menu-button"), false);
         }
     });
+    checkForPageScroll();
 });
