@@ -151,6 +151,11 @@ function onLoginLoaded(err) {
     $("form[id='login-form'] .submit-button").click(function() {
         $("form[id='login-form']").submit();
     });
+    $("form[id='login-form'] input").on("keydown", function (e) {
+        if (e.which === 13) {
+            $("form[id='login-form']").submit();
+        }
+    });
 }
 
 function onRegisterLoaded(err) {
@@ -167,6 +172,11 @@ function onRegisterLoaded(err) {
     setScalableHeight($("#overlay-container").get(0), 400);
     $("form[id='register-form'] .submit-button").click(function (e) {
         $("form[id='register-form']").submit();
+    });
+    $("form[id='register-form'] input").on("keydown", function(e) {
+        if (e.which === 13) {
+            $("form[id='register-form']").submit();
+        }
     });
 }
 
