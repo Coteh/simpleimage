@@ -5,7 +5,7 @@ form input {
 }
 
 .register-view, .login-view {
-    color: white;
+    color: black;
 }
 
 .input-form {
@@ -35,7 +35,7 @@ form input {
     width: 50vw;
     max-width: 50vw;
     z-index: 300;
-    background-color: rgb(17, 133, 168);
+    background-color: rgb(214, 214, 214);
     padding: 20px;
     opacity: 1;
 }
@@ -83,4 +83,11 @@ form input {
 
 #overlay-backdrop.activated.error {
     background-color: rgb(128, 0, 0);
+}
+
+/* SPECIAL SECTIONS */
+
+#register-from-login {
+    margin-top: 24px;
+    line-height: 30px;
 }

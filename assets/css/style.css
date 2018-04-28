@@ -75,17 +75,33 @@ input[type="file"] {
     user-select: none;
     cursor: pointer;
     border-radius: 8px;
-    width: 20px;
-    height: 20px;
+    width: auto;
+    height: auto;
     text-align: center;
+    display: inline-block;
+
+    background: rgb(200, 200, 200); /* Old browsers */
+    background: -moz-linear-gradient(top, rgb(200, 200, 200) 0%, rgb(150, 150, 150) 40%, rgb(125, 125, 125) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgb(200, 200, 200) 0%,rgb(150, 150, 150) 40%,rgb(125, 125, 125) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgb(200, 200, 200) 0%,rgb(150, 150, 150) 40%,rgb(125, 125, 125) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 #select-button {
-    background-color: yellow;
+    width: 20px;
+    height: 20px;
+    background: yellow; /* Old browsers */
+    background: -moz-linear-gradient(top, yellow 0%, rgb(199, 199, 0) 40%, rgb(100, 100, 0) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, yellow 0%,rgb(199, 199, 0) 40%,rgb(100, 100, 0) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, yellow 0%,rgb(199, 199, 0) 40%,rgb(100, 100, 0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 #upload-button {
-    background-color: green;
+    width: 20px;
+    height: 20px;
+    background: rgb(0, 150, 0); /* Old browsers */
+    background: -moz-linear-gradient(top, rgb(0, 150, 0) 0%, rgb(0, 125, 0) 40%, rgb(0, 80, 0) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgb(0, 150, 0) 0%,rgb(0, 125, 0) 40%,rgb(0, 80, 0) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgb(0, 150, 0) 0%,rgb(0, 125, 0) 40%,rgb(0, 80, 0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 .info {
@@ -305,8 +321,7 @@ input[type="file"] {
     border-radius: 20px;
     background-color: slategrey;
     color: white;
-    font-size: 16px;
-    padding: 4px;
+    font-size: 20px;
 }
 
 #footer {

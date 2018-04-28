@@ -23,7 +23,7 @@ window.clearNotification = function() {
 
 window.constructCloseButton = function(html, onClose) {
     var closeButton = document.createElement("span");
-    closeButton.className = "collecticon collecticon-xmark head-icon close-button";
+    closeButton.className = "collecticon collecticon-circle-xmark head-icon close-button";
     
     var closeText = document.createElement("span");
     closeText.innerText = " Close";
@@ -143,7 +143,8 @@ function onLoginLoaded(err) {
     });
     $("input[name='username']").focus();
     setScalableWidth($("#overlay-container").get(0), 300);
-    setScalableHeight($("#overlay-container").get(0), 200);
+    setScalableHeight($("#overlay-container").get(0), 450);
+    $("#register-via-login-button").click(openRegister);
 }
 
 function onRegisterLoaded(err) {
