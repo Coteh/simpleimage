@@ -27,7 +27,7 @@
     <div id="overlay-backdrop">
     </div>
     <%- include("top-nav-view", {user:sessionUser,fromUrl}) %>
-    <div id="contents">
+    <div id="contents" class="page-contents">
         <div id="notification-overlay-container">
         </div>
         <div id="overlay-container">
@@ -45,8 +45,8 @@
                 <h2>Comment History</h2>
             </div>
             <div id="comments-container"></div>
-            <%- include("footer") %>
         </div>
+        <%- include("footer") %>
     </div>
 </body>
 

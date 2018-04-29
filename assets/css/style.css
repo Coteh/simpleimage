@@ -5,7 +5,7 @@ html {
 body {
     background-color: #1d1f20;
     overflow: hidden;
-    height: 100%;
+    height: auto;
     font-family: 'Roboto', serif;
 }
 
@@ -29,7 +29,10 @@ input[type="file"] {
 
 #contents {
     position: relative;
-    height: 100%;
+}
+
+#contents.page-contents {
+    margin: 120px 40px 20px 40px;
 }
 
 #upload-center {
@@ -325,6 +328,8 @@ input[type="file"] {
 }
 
 #footer {
+    margin-top: 40px;
+    text-align: center;
     color: white;
     bottom: 0;
     left: 50%;

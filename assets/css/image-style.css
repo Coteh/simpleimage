@@ -3,16 +3,12 @@ body {
 }
 
 .image-view {
-    max-width: 100%;
-    text-align: center;
+    display: block;
+    margin: auto;
 }
 
 #image-container {
-    position: absolute;
-    top: 30vh;
-    left: 30vw;
-    margin-bottom: 40px;
-    width: 500px;
+
 }
 
 #container {
