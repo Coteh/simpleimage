@@ -5,6 +5,8 @@ body {
 .image-view {
     display: block;
     margin: auto;
+    width: 100%;
+    height: auto;
 }
 
 #image-container {
