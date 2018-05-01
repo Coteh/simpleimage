@@ -1,3 +1,8 @@
-#footer {
-    position: absolute;
+body {
+    overflow: visible;
+}
+
+#contents {
+    min-width: 100%;
+    display: inline-block;
 }

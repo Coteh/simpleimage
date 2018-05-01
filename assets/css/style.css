@@ -36,15 +36,10 @@ input[type="file"] {
 }
 
 #upload-center {
-    position: absolute;
-    top: 40vh;
-    left: 40vw;
-    height: 100px;
-}
-
-#upload-interact {
-    height: 100%;
-    border-collapse: collapse;
+    height: 25vh;
+    margin: 0 auto;
+    margin-top: 400px;
+    width: 360px;
 }
 
 #upload-area {
@@ -331,8 +326,6 @@ input[type="file"] {
     margin-top: 40px;
     text-align: center;
     color: white;
-    bottom: 0;
-    left: 50%;
 }
 
 /* https://stackoverflow.com/a/4407335/9292680 */

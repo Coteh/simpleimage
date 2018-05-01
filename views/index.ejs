@@ -23,28 +23,22 @@
         <div id="overlay-container">
         </div>
         <div id="upload-center">
-            <table id="upload-interact">
-                <tr>
-                    <td valign="bottom">
-                        <div id="upload-area">
-                            <div id="upload-preview">
-                            </div>
-                            <div class="button" id="select-button">
-                                <form action="/upload?type=json" id="upload" method="POST" enctype="multipart/form-data">
-                                    <input type="file" accept=".gif, .png, .jpg, .jpeg, .bmp" id="select-me" value="">
-                                </form>
-                                <span class="collecticon collecticon-picture head-icon"></span>
-                            </div>
-                            <div class="button" id="upload-button">
-                                <span class="collecticon collecticon-upload head-icon"></span>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+            <div id="upload-area">
+                <div id="upload-preview">
+                </div>
+                <div class="button" id="select-button">
+                    <form action="/upload?type=json" id="upload" method="POST" enctype="multipart/form-data">
+                        <input type="file" accept=".gif, .png, .jpg, .jpeg, .bmp" id="select-me" value="">
+                    </form>
+                    <span class="collecticon collecticon-picture head-icon"></span>
+                </div>
+                <div class="button" id="upload-button">
+                    <span class="collecticon collecticon-upload head-icon"></span>
+                </div>
+            </div>
         </div>
+        <%- include("footer") %>
     </div>
-    <%- include("footer") %>
 </body>
 
 </html>
