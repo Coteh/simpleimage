@@ -70,6 +70,7 @@ input[type="file"] {
 
 .button {
     padding: 20px;
+    margin: 2px;
     user-select: none;
     cursor: pointer;
     border-radius: 8px;
