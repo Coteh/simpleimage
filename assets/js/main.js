@@ -7,6 +7,7 @@ window.clearOverlay = function() {
     var overlayBackdrop = document.getElementById("overlay-backdrop");
     overlayContainer.innerHTML = "";
     overlayContainer.className = "";
+    overlayContainer.style = "";
     overlayBackdrop.className = "";
     clearNotification();
 };
@@ -19,6 +20,7 @@ window.clearNotification = function() {
     }
     notificationOverlayContainer.innerHTML = "";
     notificationOverlayContainer.className = "";
+    notificationOverlayContainer.style = "";
 };
 
 window.constructCloseButton = function(html, onClose) {
