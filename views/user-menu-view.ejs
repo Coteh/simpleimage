@@ -8,16 +8,18 @@
         </span>
     </div>
     <div class="nav-menu-items">
-        <a href="/users/<%= user.username %>">
+        <a href="/users/<%= user.username %>" class="noselect">
             <div class="nav-item nav-button nav-menu-item">
                 <span>Profile</span>
             </div>
         </a>
-        <div class="nav-item nav-button nav-menu-item">
-            <form id="logout-form" method="POST" action="/logout">
-                <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
-                <a href="#" class="noselect" onclick="document.getElementById('logout-form').submit();">Logout</a>
-            </form>
-        </div>
+        <a href="#" class="noselect" onclick="document.getElementById('logout-form').submit();">
+            <div class="nav-item nav-button nav-menu-item">
+                <form id="logout-form" method="POST" action="/logout">
+                    <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
+                </form>
+                <span>Logout</span>
+            </div>
+        </a>
     </div>
 </div>
