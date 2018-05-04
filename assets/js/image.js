@@ -109,4 +109,7 @@ $(document).ready(function() {
         submitComment();
         return false;
     });
+    $("form[id='comment'] .submit-button").click(function () {
+        $("form[id='comment']").submit();
+    });
 });

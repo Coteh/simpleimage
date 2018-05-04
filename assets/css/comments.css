@@ -20,3 +20,15 @@
     background-color: red;
     border: 2px solid rgb(128, 0, 0);
 }
+
+.comment-box {
+    font-size: 16px;
+    width: 50%;
+    height: 120px;
+}
+
+@media (max-width: 768px) {
+    .comment-box {
+        width: 100%;
+    }
+}
