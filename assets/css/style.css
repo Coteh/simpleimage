@@ -174,7 +174,7 @@ input[type="file"] {
 }
 
 #top-nav .nav-item.nav-right-2 {
-    right: 125px;
+    right: 136px;
     top: 30px;
 }
 
@@ -273,7 +273,7 @@ input[type="file"] {
 
     #top-nav.mini .nav-item.nav-right-2 {
         transform: scale(0.7);
-        right: 60px;
+        right: 68px;
         top: 30px;
     }
 
