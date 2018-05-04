@@ -60,15 +60,16 @@ window.showOverlay = function(html, options) {
 };
 
 window.showNotification = function(message, options) {
+    if (options && options.clear) {
+        clearNotification();
+    }
     var notificationOverlayContainer = document.getElementById("notification-overlay-container");
     var errorMessage = document.createElement("div");
     errorMessage.innerText = message;
     errorMessage.className = "notification-message";
     notificationOverlayContainer.className = "open";
-    if (options !== undefined) {
-        if (options.error) {
-            notificationOverlayContainer.classList.add("error");
-        }
+    if (options && options.error) {
+        notificationOverlayContainer.classList.add("error");
     }
     if (!window.isNotificationOpen) {
         constructCloseButton(notificationOverlayContainer, clearNotification);
@@ -122,7 +123,8 @@ var onLoginSubmitted = function() {
     if (this.status !== 200) {
         jsonObj = JSON.parse(this.responseText);
         showNotification(jsonObj.message, {
-            error: true
+            error: true,
+            clear: true
         });
     } else {
         window.location.reload(true);
