@@ -34,7 +34,7 @@ window.constructCloseButton = function(html, onClose) {
     closeText.innerText = " Close";
     
     var closeElement = this.document.createElement("div");
-    closeElement.className = "pointer-element";
+    closeElement.className = "pointer-element container-close-button";
     closeElement.appendChild(closeButton);
     closeElement.appendChild(closeText);
     closeElement.addEventListener("click", onClose);

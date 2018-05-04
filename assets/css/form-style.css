@@ -67,6 +67,11 @@ form input {
     background-color: red;
 }
 
+#overlay-container .container-close-button,
+#notification-overlay-container .container-close-button {
+    display: inline-block;
+}
+
 /* NOTIFICATION */
 
 .notification-message {
