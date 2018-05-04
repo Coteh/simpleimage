@@ -1,3 +1,5 @@
+window.isNotificationOpen = false;
+
 window.clearOverlay = function() {
     var overlayContainer = document.getElementById("overlay-container");
     if (overlayContainer == null) {
@@ -21,6 +23,7 @@ window.clearNotification = function() {
     notificationOverlayContainer.innerHTML = "";
     notificationOverlayContainer.className = "";
     notificationOverlayContainer.style = "";
+    window.isNotificationOpen = false;
 };
 
 window.constructCloseButton = function(html, onClose) {
@@ -67,8 +70,11 @@ window.showNotification = function(message, options) {
             notificationOverlayContainer.classList.add("error");
         }
     }
-    constructCloseButton(notificationOverlayContainer, clearNotification);
+    if (!window.isNotificationOpen) {
+        constructCloseButton(notificationOverlayContainer, clearNotification);
+    }
     notificationOverlayContainer.appendChild(errorMessage);
+    window.isNotificationOpen = true;
 };
 
 var onOverlayLoaded = function(progressEvent, callback) {
