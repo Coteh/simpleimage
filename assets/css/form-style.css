@@ -14,7 +14,7 @@ form input {
 
 .input-form input[type="text"],
 .input-form input[type="password"] {
-    width: 100%;
+    width: auto;
     padding: 8px;
     font-size: 18px;
 }
@@ -30,14 +30,24 @@ form input {
 
 #overlay-container.open {
     position: fixed;
-    top: 40vh;
-    left: calc((100vw - 50vw) / 2);
-    width: 50vw;
     max-width: 50vw;
     z-index: 300;
     background-color: rgb(214, 214, 214);
     padding: 20px;
     opacity: 1;
+}
+
+@media (max-width: 768px) {
+    /* !important is used here to
+        override the opened container's
+        calculated left and width
+        (which are at the element level)
+        for mobile devices */
+    #overlay-container.open {
+        left: 0 !important;
+        width: 100% !important;
+        max-width: initial;
+    }
 }
 
 #notification-overlay-container.open {
