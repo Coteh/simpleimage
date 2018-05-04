@@ -37,19 +37,6 @@ form input {
     opacity: 1;
 }
 
-@media (max-width: 768px) {
-    /* !important is used here to
-        override the opened container's
-        calculated left and width
-        (which are at the element level)
-        for mobile devices */
-    #overlay-container.open {
-        left: 0 !important;
-        width: 100% !important;
-        max-width: initial;
-    }
-}
-
 #notification-overlay-container.open {
     position: fixed;
     top: 10vh;
@@ -60,6 +47,20 @@ form input {
     background-color: rgb(17, 168, 50);
     padding: 20px;
     opacity: 1;
+}
+
+@media (max-width: 768px) {
+    /* !important is used here to
+        override the opened container's
+        calculated left and width
+        (which are at the element level)
+        for mobile devices */
+    #overlay-container.open,
+    #notification-overlay-container.open {
+        left: 0 !important;
+        width: 100% !important;
+        max-width: initial;
+    }
 }
 
 #overlay-container.open.error,
