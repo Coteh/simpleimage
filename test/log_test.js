@@ -18,7 +18,7 @@ describe("log", function() {
         });
     });
 
-    describe("external", function() {
-
-    });
+    // describe("external", function() {
+    //     assert.fail("Not implemented");
+    // });
 });
