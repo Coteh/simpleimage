@@ -2,16 +2,10 @@ body {
     overflow: visible;
 }
 
-@media (max-width: 768px) {
-    .image-view {
-        width: 100%;
-        height: auto;
-    }
-}
-
 .image-view {
     display: block;
     margin: auto;
+    max-width: 100%;
 }
 
 #image-container {
