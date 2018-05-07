@@ -19,6 +19,11 @@ form input {
     font-size: 18px;
 }
 
+.input-form .input-field-error {
+    border-radius: 8px;
+    border: 2px solid red;
+}
+
 /* CONTAINERS */
 
 #overlay-container,

@@ -118,14 +118,44 @@ window.openRegister = function() {
 
 /*--------------------------------------------*/
 
-var onLoginSubmitted = function() {
+var onLoginSubmitted = function(form) {
     var jsonObj;
     if (this.status !== 200) {
         jsonObj = JSON.parse(this.responseText);
+
+        // Show error message on notification overlay
         showNotification(jsonObj.message, {
             error: true,
             clear: true
         });
+
+        // Clear out error style from all input fields.
+        for (inputFieldIndex in form.elements) {
+            if (form.elements[inputFieldIndex].classList) {
+                form.elements[inputFieldIndex].classList.remove("input-field-error");
+            }
+        }
+
+        // If there's an additional info specified with this error,
+        // attempt to grab the field (or fields) property, associate with name
+        // of corresponding input field, and append error style to it.
+        if (jsonObj.additionalInfo) {
+            var fieldObj = jsonObj.additionalInfo.field || jsonObj.additionalInfo.fields;
+            var fieldElems;
+            if (typeof fieldObj === "object") {
+                fieldElems = fieldObj.reduce(function(obj, field) {
+                    obj.push(form.elements[field]);
+                    return obj;
+                },[]);
+            } else {
+                fieldElems = [ form.elements[fieldObj] ];
+            }
+            fieldElems.forEach(function(fieldElem) {
+                if (fieldElem) {
+                    fieldElem.classList.add("input-field-error");
+                }
+            });
+        }
     } else {
         window.location.reload(true);
     }
@@ -136,7 +166,9 @@ window.submitLogin = function(e) {
     var action = form.action;
     var req = new XMLHttpRequest();
 
-    req.onload = onLoginSubmitted;
+    req.onload = function() {
+        onLoginSubmitted.bind(this)(form);
+    };
     req.open("post", action);
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     req.send($(form).serialize());
