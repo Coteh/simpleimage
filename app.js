@@ -1,5 +1,5 @@
-const ImageDatabase = require("./lib/ImageDatabase");
-const Server = require("./lib/Server");
+const ImageDatabase = require("./lib/database-ops");
+const Server = require("./lib/server");
 
 var port = process.env.PORT || 3010;
 
