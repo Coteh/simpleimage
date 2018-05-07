@@ -1,17 +1,17 @@
-const ImageDatabase = require("./lib/database-ops");
-const Server = require("./lib/server");
+const databaseOps = require("./lib/database-ops");
+const server = require("./lib/server");
 
 var port = process.env.PORT || 3010;
 
-ImageDatabase.startDatabaseClient(function(err) {
+databaseOps.startDatabaseClient(function(err) {
     if (err) {
         console.error(err);
         return;
     }
-    Server.setOptions({
+    server.setOptions({
         rootDirName: __dirname
     });
-    Server.runServer(port, function(err) {
+    server.runServer(port, function(err) {
         if (err) {
             console.error("Could not run server due to an error:");
             console.error(err);
