@@ -62,8 +62,35 @@ describe("action history", function() {
             });
         });
 
-        it("should provide an error if undefined is passed as any of the arguments", function(done) {
-            assert.fail("Not implemented");
+        it("should provide an error if undefined or null is passed as action entry", function(done) {
+            actionHistory.writeActionHistory(undefined, function (err, result) {
+                assert.ok(err);
+                assert.equal(result, null);
+                assert.equal(err.message, "No action entry provided.");
+                actionHistory.writeActionHistory(null, function (err, result) {
+                    assert.ok(err);
+                    assert.equal(result, null);
+                    assert.equal(err.message, "No action entry provided.");
+                    done();
+                });
+            });
+        });
+
+        it("should not produce an error if undefined is passed as callback argument", function() {
+            var testData = {
+                type: "UPLOAD_IMAGE",
+                item: "ImageID",
+                username: "si_user",
+                ipAddress: "127.0.0.1",
+                info: {
+                    request_url: "upload",
+                    author: "si_user"
+                }
+            };
+            // Testing all paths of writeActionHistory
+            // where callback is called
+            actionHistory.writeActionHistory(testData);
+            actionHistory.writeActionHistory(null);
         });
     });
 });
