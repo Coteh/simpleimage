@@ -32,6 +32,7 @@
   "devDependencies": {
     "mocha": "^4.1.0",
     "nodemon": "^1.15.1",
+    "proxyquire": "^2.0.1",
     "session-file-store": "^1.2.0"
   }
 }
