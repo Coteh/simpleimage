@@ -32,11 +32,6 @@ describe("action history", function() {
                 }
             };
             actionHistory.writeActionHistory(testData, function (err, result) {
-                if (err) {
-                    assert.fail(err);
-                    done();
-                    return;
-                }
                 assert.ifError(err);
                 assert.ok(result);
                 assert.equal(result.type, testData.type);
@@ -49,7 +44,22 @@ describe("action history", function() {
         });
 
         it("should produce an error if required information for an action history is not provided", function(done) {
-            assert.fail("Not implemented");
+            // type is missing here, which is a required field
+            var testData = {
+                item: "ImageID",
+                username: "si_user",
+                ipAddress: "127.0.0.1",
+                info: {
+                    request_url: "upload",
+                    author: "si_user"
+                }
+            };
+            actionHistory.writeActionHistory(testData, function (err, result) {
+                assert.ok(err);
+                assert.equal(result, null);
+                assert.equal(err.message, "Provided action history entry is missing the following required fields: type");
+                done();
+            });
         });
 
         it("should provide an error if undefined is passed as any of the arguments", function(done) {
