@@ -17,7 +17,7 @@ services:
         depends_on:
             - "si_db"
     si_db:
-        image: mongo:latest
+        image: mongo:3.6.4
         container_name: si-db
         ports:
             - "27017:27017"
@@ -32,6 +32,13 @@ services:
                 target: /data/db
                 volume:
                     nocopy: true
+            -   type: bind
+                source: ./mongo-entrypoint
+                target: /docker-entrypoint-initdb.d
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+            - MONGO_INITDB_DATABASE=${MONGO_INITIAL_DATABASE}
     si_sessions:
         image: redis:4.0.6
         container_name: si-sessions
