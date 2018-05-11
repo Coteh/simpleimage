@@ -136,5 +136,19 @@ describe("util", function() {
                 assert.strictEqual(util.getRedirectPath(undefined), "/");
             });
         });
+        describe("convertImageBinaryToBase64", function () {
+            it("should convert binary image data to base64 equivalent", function() {
+                assert.fail("Not implemented");
+            });
+            it("should return undefined if undefined is passed as binary image data", function() {
+                assert.fail("Not implemented");
+            });
+            it("should return undefined if null is passed as binary image data", function () {
+                assert.fail("Not implemented");
+            });
+            it("should return undefined if malformed binary image data is passed in", function() {
+                assert.fail("Not implemented");
+            });
+        });
     });
 });
