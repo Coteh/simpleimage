@@ -147,10 +147,14 @@ describe("util", function() {
                 assert.equal(actualImageFileBase64, expectedImageFileBase64, "The base64 strings don't match.");
             });
             it("should return undefined if undefined is passed as binary image data", function() {
-                assert.fail("Not implemented");
+                var imageBase64 = util.convertImageBinaryToBase64(undefined);
+
+                assert.equal(imageBase64, undefined);
             });
             it("should return undefined if null is passed as binary image data", function () {
-                assert.fail("Not implemented");
+                var imageBase64 = util.convertImageBinaryToBase64(null);
+
+                assert.equal(imageBase64, undefined);
             });
             it("should return undefined if malformed binary image data is passed in", function() {
                 assert.fail("Not implemented");
