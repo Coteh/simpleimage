@@ -157,7 +157,9 @@ describe("util", function() {
                 assert.equal(imageBase64, undefined);
             });
             it("should return undefined if malformed binary image data is passed in", function() {
-                assert.fail("Not implemented");
+                var imageBase64 = util.convertImageBinaryToBase64(new Buffer("Test"));
+
+                assert.equal(imageBase64, undefined);
             });
         });
     });
