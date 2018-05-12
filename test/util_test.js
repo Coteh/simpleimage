@@ -1,5 +1,6 @@
 const assert = require("assert");
 const util = require("../lib/util");
+const fs = require("fs");
 
 var testTransform = function(text) {
     return "Transformed";
@@ -138,7 +139,12 @@ describe("util", function() {
         });
         describe("convertImageBinaryToBase64", function () {
             it("should convert binary image data to base64 equivalent", function() {
-                assert.fail("Not implemented");
+                var imageFile = fs.readFileSync("./test/assets/Black_tea_pot_cropped.jpg");
+                var expectedImageFileBase64 = fs.readFileSync("./test/assets/Black_tea_pot_cropped.jpg.txt").toString();
+
+                var actualImageFileBase64 = util.convertImageBinaryToBase64(imageFile);
+
+                assert.equal(actualImageFileBase64, expectedImageFileBase64, "The base64 strings don't match.");
             });
             it("should return undefined if undefined is passed as binary image data", function() {
                 assert.fail("Not implemented");
