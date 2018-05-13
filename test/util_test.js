@@ -6,7 +6,37 @@ var testTransform = function(text) {
     return "Transformed";
 };
 
+var imagesArr = [];
+
 describe("util", function() {
+    before(function() {
+        const imageInfoArr = [
+            {
+                fileName: "Black_tea_pot_cropped.jpg",
+                mimeType: "image/jpeg",
+                id: "test"
+            },
+            {
+                fileName: "Man_o'war_cove_near_lulworth_dorset_arp.jpg",
+                mimeType: "image/jpeg",
+                id: "test2"
+            },
+            {
+                fileName: "1525676723.png",
+                mimeType: "image/png",
+                id: "test3"
+            }
+        ];
+        imageInfoArr.forEach(function(item) {
+            var imageFile = fs.readFileSync("./test/assets/" + item.fileName + "");
+            var expectedImageFileBase64 = fs.readFileSync("./test/assets/" + item.fileName + ".txt").toString();
+            imagesArr.push(Object.assign({
+                imageBuffer: imageFile,
+                imageBase64: expectedImageFileBase64
+            }, item));
+        });
+    });
+
     describe("internal functions", function() {
         describe("encodeHTML", function () {
             it("should encode '<', '>', and '&' characters", function () {
@@ -139,8 +169,9 @@ describe("util", function() {
         });
         describe("convertImageBinaryToBase64", function () {
             it("should convert binary image data to base64 equivalent", function() {
-                var imageFile = fs.readFileSync("./test/assets/Black_tea_pot_cropped.jpg");
-                var expectedImageFileBase64 = fs.readFileSync("./test/assets/Black_tea_pot_cropped.jpg.txt").toString();
+                var image = imagesArr[0];
+                var imageFile = image.imageBuffer;
+                var expectedImageFileBase64 = image.imageBase64;
 
                 var actualImageFileBase64 = util.convertImageBinaryToBase64(imageFile);
 
