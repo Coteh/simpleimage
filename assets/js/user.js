@@ -2,7 +2,7 @@ var onUserCommentsLoaded = function (callback) {
     var commentsElements;
     var parentElement = document.getElementById("comments-container");
     if (this.status !== 200) {
-        commentsElements = "<div id='comments'>ERROR: Could not get comments.</div>"
+        commentsElements = "<div id='comments'>ERROR: Could not get comments.</div>";
     } else {
         commentsElements = this.responseText;
     }
@@ -13,6 +13,20 @@ var onUserCommentsLoaded = function (callback) {
     }
 };
 
+var onUserImagesLoaded = function (callback) {
+    var imagesElement = document.createElement("div");
+    var parentElement = document.getElementById("images-container");
+    if (this.status !== 200) {
+        imagesElement.innerHTML = "<span>ERROR: Could not get images.</span>";
+    } else {
+        imagesElement.innerHTML = this.responseText;
+    }
+    parentElement.appendChild(imagesElement);
+    if (callback !== undefined) {
+        callback(imagesElement, 0);
+    }
+};
+
 window.requestCommentsUser = function (username, callback) {
     var req = new XMLHttpRequest();
     req.onload = function() {
@@ -20,5 +34,15 @@ window.requestCommentsUser = function (username, callback) {
         func();
     };
     req.open("get", "/users/" + username + "/comments?type=html");
+    req.send();
+};
+
+window.requestImagesUser = function (username, callback) {
+    var req = new XMLHttpRequest();
+    req.onload = function() {
+        var func = onUserImagesLoaded.bind(this, callback);
+        func();
+    };
+    req.open("get", "/users/" + username + "/images?type=html");
     req.send();
 };
