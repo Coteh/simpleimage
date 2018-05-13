@@ -16,6 +16,10 @@ body {
     
 }
 
+#user-container .user-view #join-date {
+    margin-left: 4px;
+}
+
 #container {
     position: relative;
 }

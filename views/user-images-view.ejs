@@ -19,11 +19,13 @@
 </head>
 
 <body>
-    <% images.forEach(function(image) { %>
-        <a href="/images/<%= image.id %>">
-            <img style="max-width:200px; max-height: 200px;" src="data:<%= image.mimeType %>;base64,<%= image.data %>">
-        </a>
-    <% }); %>
+    <div id="user-images">
+        <% images.forEach(function(image) { %>
+            <a href="/images/<%= image.id %>">
+                <img style="max-width:200px; max-height: 200px;" src="data:<%= image.mimeType %>;base64,<%= image.data %>">
+            </a>
+        <% }); %>
+    </div>
 </body>
 
 </html>

@@ -25,7 +25,7 @@ var onUserImagesLoaded = function (callback) {
     parentElement.appendChild(imagesElement);
     placeholderElement.style = "display:none;";
     if (callback !== undefined) {
-        callback(imagesElement, 0);
+        callback(imagesElement, $("#user-images", imagesElement).children().length);
     }
 };
 
