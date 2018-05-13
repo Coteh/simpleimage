@@ -16,12 +16,14 @@ var onUserCommentsLoaded = function (callback) {
 var onUserImagesLoaded = function (callback) {
     var imagesElement = document.createElement("div");
     var parentElement = document.getElementById("images-container");
+    var placeholderElement = document.getElementById("images-placeholder");
     if (this.status !== 200) {
         imagesElement.innerHTML = "<span>ERROR: Could not get images.</span>";
     } else {
         imagesElement.innerHTML = this.responseText;
     }
     parentElement.appendChild(imagesElement);
+    parentElement.removeChild(placeholderElement);
     if (callback !== undefined) {
         callback(imagesElement, 0);
     }
