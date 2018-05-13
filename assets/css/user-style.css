@@ -19,3 +19,7 @@ body {
 #container {
     position: relative;
 }
+
+#images-container {
+    height: 100%;
+}

@@ -23,7 +23,7 @@ var onUserImagesLoaded = function (callback) {
         imagesElement.innerHTML = this.responseText;
     }
     parentElement.appendChild(imagesElement);
-    parentElement.removeChild(placeholderElement);
+    placeholderElement.style = "display:none;";
     if (callback !== undefined) {
         callback(imagesElement, 0);
     }
