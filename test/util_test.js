@@ -162,5 +162,22 @@ describe("util", function() {
                 assert.equal(imageBase64, undefined);
             });
         });
+        describe("constructBase64ImageArray", function() {
+            it("should construct a set of base64 images (data + info) given array of image info from DB", function() {
+                assert.fail("Not implemented");
+            });
+            it("should return undefined if undefined is passed as array of image info", function () {
+                assert.fail("Not implemented");
+            });
+            it("should return undefined if null is passed as array of image info", function () {
+                assert.fail("Not implemented");
+            });
+            it("should return undefined if malformed image data was encountered in the array of image info passed in", function() {
+                assert.fail("Not implemented");
+            });
+            it("should return an array of 0 images if an array of 0 image infos is passed in", function() {
+                assert.fail("Not implemented");
+            });
+        });
     });
 });
