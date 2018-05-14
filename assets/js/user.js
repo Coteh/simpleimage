@@ -36,15 +36,22 @@ var onUserImagesLoaded = function (callback) {
     parentElement.appendChild(imagesElement);
 
     var userImagesCount = $("#user-images", imagesElement).children().length;
-    var loadedCount = 0;
 
-    $(".user-image").on("load", function() {
-        loadedCount++;
-        if (loadedCount >= userImagesCount) {
-            placeholderElement.style.display = "none";
-            imagesElement.style.display = "";
-        }
-    });
+    if (userImagesCount === 0) {
+        imagesElement.innerHTML = "<div class='info-box'>This user has not uploaded any images.</div>";
+        placeholderElement.style.display = "none";
+        imagesElement.style.display = "";
+    } else {
+        var loadedCount = 0;
+
+        $(".user-image").on("load", function () {
+            loadedCount++;
+            if (loadedCount >= userImagesCount) {
+                placeholderElement.style.display = "none";
+                imagesElement.style.display = "";
+            }
+        });
+    }
 
     if (callback !== undefined) {
         callback(imagesElement, userImagesCount);
