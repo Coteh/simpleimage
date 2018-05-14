@@ -205,18 +205,19 @@ input[type="file"] {
     position: absolute;
     top: 60px;
     z-index: -1;
-    transition: height 1s ease, padding 1s ease, top 1s;
+    transition: max-height 1s ease-out, padding 1s ease, top 1s;
     background-color: #4f5559;
     padding: 0px 20px;
     width: 80px;
-    height: 0px;
+    max-height: 0;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
 }
 
 #top-nav .nav-menu.nav-active .nav-menu-items {
     padding: 20px 20px;
-    height: 80px;
+    max-height: 500px;
+    transition: max-height 1s ease-in;
 }
 
 #top-nav .nav-item.nav-menu .nav-item.nav-menu-item {

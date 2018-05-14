@@ -22,12 +22,14 @@
     <div id="overlay-backdrop">
     </div>
     <%- include("top-nav-view", {user:sessionUser,fromUrl}) %>
-    <div id="user-images">
-        <% images.forEach(function(image) { %>
-            <a href="/images/<%= image.id %>">
-                <img style="max-width:200px; max-height: 200px;" src="data:<%= image.mimeType %>;base64,<%= image.data %>">
-            </a>
-        <% }); %>
+    <div id="contents" class="page-contents">
+        <div id="user-images">
+            <% images.forEach(function(image) { %>
+                <a href="/images/<%= image.id %>">
+                    <img style="max-width:200px; max-height: 200px;" src="data:<%= image.mimeType %>;base64,<%= image.data %>">
+                </a>
+            <% }); %>
+        </div>
     </div>
 </body>
 
