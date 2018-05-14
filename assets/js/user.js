@@ -21,7 +21,14 @@ var onUserImagesLoaded = function (callback) {
     imagesElement.style.display = "none";
 
     if (this.status !== 200) {
-        imagesElement.innerHTML = "<span>ERROR: Could not get images.</span>";
+        imagesElement.innerHTML = "<div class='info-box'>Could not get images due to an error.</div>";
+        placeholderElement.style.display = "none";
+        imagesElement.style.display = "";
+        parentElement.appendChild(imagesElement);
+        if (callback !== undefined) {
+            callback(imagesElement, 0);
+        }
+        return;
     } else {
         imagesElement.innerHTML = this.responseText;
     }
