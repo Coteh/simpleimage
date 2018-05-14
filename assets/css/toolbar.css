@@ -1,0 +1,23 @@
+.toolbar {
+    background-color: #4f5559;
+    width: 100%;
+    padding: 8px;
+}
+
+.toolbar .toolbar-button {
+    background: #292c2e;
+    border-radius: 1em;
+    color: #4f5559;
+    opacity: 1;
+    transition: opacity 1s ease;
+}
+
+.toolbar .toolbar-button.deactivated {
+    opacity: 0;
+}
+
+.toolbar .toolbar-button:hover {
+    background: rgb(182, 182, 0);
+    border-radius: 1em;
+    color: #fbff00;
+}

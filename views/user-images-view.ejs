@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/assets/css/user-images-style.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
+    <script src="/assets/js/toolbar.bundle.js"></script>
     <script src="/assets/js/selectable.bundle.js"></script>
     <script>
         
@@ -24,6 +25,11 @@
     </div>
     <%- include("top-nav-view", {user:sessionUser,fromUrl}) %>
     <div id="contents" class="page-contents">
+        <div id="user-images-toolbar" class="toolbar">
+            <div data-action-name="delete" class="button toolbar-button deactivated">
+                <span class="collecticon collecticon-trash-bin head-icon"></span>
+            </div>
+        </div>
         <div id="user-images-container">
             <% images.forEach(function(image) { %>
                 <div class="selectable-block">
