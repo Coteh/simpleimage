@@ -190,6 +190,12 @@ function onLoginLoaded(err) {
         clearOverlay(e);
         openRegister(e);
     });
+    $("#register-from-login #register-via-login-button").on("keydown", function (e) {
+        if (e.which === 13) {
+            clearOverlay(e);
+            openRegister(e);
+        }
+    });
     $("form[id='login-form'] .submit-button").click(function() {
         $("form[id='login-form']").submit();
     });
