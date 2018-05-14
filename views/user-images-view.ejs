@@ -33,7 +33,7 @@
         </div>
         <div id="user-images-container">
             <% images.forEach(function(image) { %>
-                <div class="selectable-block">
+                <div class="selectable-block" data-image-id="<%= image.id %>">
                     <div class="checkmark-button"></div>
                     <div class="image-container">
                         <a href="/images/<%= image.id %>">
