@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>
-        <%= username %> - simpleimage</title>
+        Your Images - simpleimage</title>
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/user-style.css">
     <link rel="stylesheet" href="/assets/css/form-style.css">
@@ -19,6 +19,9 @@
 </head>
 
 <body>
+    <div id="overlay-backdrop">
+    </div>
+    <%- include("top-nav-view", {user:sessionUser,fromUrl}) %>
     <div id="user-images">
         <% images.forEach(function(image) { %>
             <a href="/images/<%= image.id %>">
