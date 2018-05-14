@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/assets/css/user-style.css">
     <link rel="stylesheet" href="/assets/css/form-style.css">
     <link rel="stylesheet" href="/assets/css/comments.css">
+    <link rel="stylesheet" href="/assets/css/user-images-style.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
     <script src="/assets/js/user.bundle.js"></script>
@@ -23,11 +24,16 @@
     </div>
     <%- include("top-nav-view", {user:sessionUser,fromUrl}) %>
     <div id="contents" class="page-contents">
-        <div id="user-images">
+        <div id="user-images-container">
             <% images.forEach(function(image) { %>
-                <a href="/images/<%= image.id %>">
-                    <img style="max-width:200px; max-height: 200px;" src="data:<%= image.mimeType %>;base64,<%= image.data %>">
-                </a>
+                <div class="selectable-block">
+                    <div class="checkmark-button"></div>
+                    <div class="image-container">
+                        <a href="/images/<%= image.id %>">
+                            <img style="max-width: 100%; max-height: 100%;" src="data:<%= image.mimeType %>;base64,<%= image.data %>">
+                        </a>
+                    </div>
+                </div>
             <% }); %>
         </div>
     </div>
