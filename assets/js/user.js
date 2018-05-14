@@ -17,15 +17,30 @@ var onUserImagesLoaded = function (callback) {
     var imagesElement = document.createElement("div");
     var parentElement = document.getElementById("images-container");
     var placeholderElement = document.getElementById("images-placeholder");
+
+    imagesElement.style.display = "none";
+
     if (this.status !== 200) {
         imagesElement.innerHTML = "<span>ERROR: Could not get images.</span>";
     } else {
         imagesElement.innerHTML = this.responseText;
     }
+
     parentElement.appendChild(imagesElement);
-    placeholderElement.style = "display:none;";
+
+    var userImagesCount = $("#user-images", imagesElement).children().length;
+    var loadedCount = 0;
+
+    $(".user-image").on("load", function() {
+        loadedCount++;
+        if (loadedCount >= userImagesCount) {
+            placeholderElement.style.display = "none";
+            imagesElement.style.display = "";
+        }
+    });
+
     if (callback !== undefined) {
-        callback(imagesElement, $("#user-images", imagesElement).children().length);
+        callback(imagesElement, userImagesCount);
     }
 };
 
