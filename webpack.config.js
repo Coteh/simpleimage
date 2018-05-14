@@ -9,7 +9,7 @@ module.exports = {
         'assets/js/user.bundle': ['./assets/js/main.js', './assets/js/user.js', './assets/js/util-frontend.js'],
         'assets/js/selectable.bundle': ['./assets/js/selectable-actions.js'],
         'assets/js/toolbar.bundle': ['./assets/js/toolbar.js'],
-        'assets/js/your-images.bundle': ['./assets/js/your-images.js']
+        'assets/js/your-images.bundle': ['./assets/js/main.js', './assets/js/your-images.js']
     },
     output: {
         filename: '[name].js',
