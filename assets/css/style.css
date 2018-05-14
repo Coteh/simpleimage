@@ -204,11 +204,12 @@ input[type="file"] {
 #top-nav .nav-menu .nav-menu-items {
     position: absolute;
     top: 60px;
+    right: 0.05em;
     z-index: -1;
     transition: max-height 1s ease-out, padding 1s ease, top 1s;
     background-color: #4f5559;
     padding: 0px 20px;
-    width: 80px;
+    width: 150px;
     max-height: 0;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;

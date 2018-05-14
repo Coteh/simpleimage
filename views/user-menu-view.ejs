@@ -1,5 +1,5 @@
 <div id="user-menu" class="nav-item nav-menu nav-right-1">
-    <div class="nav-item nav-sub user nav-button">
+    <div style="right: 2em" class="nav-item nav-sub user nav-button">
         <span class="nav-composite noselect">
             <span class="collecticon collecticon-user head-icon"></span>
             <span>
@@ -10,11 +10,13 @@
     <div class="nav-menu-items">
         <a href="/users/<%= user.username %>" class="noselect">
             <div class="nav-item nav-button nav-menu-item">
+                <span class="collecticon collecticon-book head-icon"></span>
                 <span>Profile</span>
             </div>
         </a>
         <a href="/your_images" class="noselect">
             <div class="nav-item nav-button nav-menu-item">
+                <span class="collecticon collecticon-picture head-icon"></span>
                 <span>Images</span>
             </div>
         </a>
@@ -23,6 +25,7 @@
                 <form id="logout-form" method="POST" action="/logout">
                     <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
                 </form>
+                <span class="collecticon collecticon-arrow-return head-icon"></span>
                 <span>Logout</span>
             </div>
         </a>
