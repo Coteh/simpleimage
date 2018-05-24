@@ -75,8 +75,11 @@ window.requestComments = function(imageID) {
 window.deleteImage = function (imageID) {
     var req = new XMLHttpRequest();
     req.onload = onImageDeleted;
-    req.open("delete", "/images/" + imageID + "?type=json");
-    req.send();
+    req.open("delete", "/images?type=json");
+    req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    req.send(JSON.stringify({
+        ids: imageID
+    }));
 };
 
 window.confirmDeleteImage = function(imageID) {
