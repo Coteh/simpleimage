@@ -54,11 +54,13 @@ var onCommentSubmitted = function() {
 var onImageDeleted = function() {
     var jsonObj = JSON.parse(this.responseText);
     var html = "<div>" + jsonObj.message + "</div>"
+    var statusCode = parseInt(this.status);
+    var isError = (statusCode >= 400);
     showOverlay(html, {
-        error: (this.status === 500),
-        close: (this.status === 500)
+        error: isError,
+        close: (statusCode !== 200)
     });
-    if (this.status === 200) {
+    if (statusCode === 200) {
         setTimeout(function() {
             window.location.href = window.location.origin + "/";
         }, 2000);
