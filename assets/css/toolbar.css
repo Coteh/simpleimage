@@ -9,7 +9,7 @@
     border-radius: 1em;
     color: #4f5559;
     opacity: 1;
-    transition: opacity 1s ease;
+    transition: opacity 0.25s ease;
 }
 
 .toolbar .toolbar-button.deactivated {
