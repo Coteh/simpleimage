@@ -23,6 +23,10 @@ SelectableActions.prototype.notifyOnDeselectedListeners = function (selectableIt
     });
 };
 
+SelectableActions.prototype.removeSelectable = function(selectableItem) {
+    document.querySelector(".selectables-container").removeChild(selectableItem);
+};
+
 $(function () {
     $(".selectable-block .checkmark-button").click(function(e) {
         if (e.target.classList.contains("selected")) {
@@ -37,4 +41,5 @@ $(function () {
     });
 });
 
+//TODO rename
 window.SelectableActions = new SelectableActions();
