@@ -5,7 +5,7 @@ function YourImages() {
 
 YourImages.prototype.deleteAllSelectables = function() {
     this.selectables.forEach(function(elem) {
-        SelectableActions.removeSelectable(elem);
+        selectableActions.removeSelectable(elem);
     });
 };
 
@@ -72,11 +72,11 @@ $(function() {
             deleteImages(yourImages.imageIDs);
         });
     });
-    SelectableActions.addOnSelectedListener(function(selectable) {
+    selectableActions.addOnSelectedListener(function(selectable) {
         yourImages.imageIDs = yourImages.imageIDs.concat(selectable.dataset.imageId);
         yourImages.selectables = yourImages.selectables.concat(selectable);
     });
-    SelectableActions.addOnDeselectedListener(function (selectable) {
+    selectableActions.addOnDeselectedListener(function (selectable) {
         yourImages.imageIDs = yourImages.imageIDs.filter(function(value) {
             return (value !== selectable.dataset.imageId);
         });

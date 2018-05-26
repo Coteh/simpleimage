@@ -32,14 +32,13 @@ $(function () {
         if (e.target.classList.contains("selected")) {
             e.target.classList.remove("selected");
             e.target.parentElement.classList.remove("selected");
-            window.SelectableActions.notifyOnDeselectedListeners(e.target.parentElement);
+            selectableActions.notifyOnDeselectedListeners(e.target.parentElement);
         } else {
             e.target.classList.add("selected");
             e.target.parentElement.classList.add("selected");
-            window.SelectableActions.notifyOnSelectedListeners(e.target.parentElement);
+            selectableActions.notifyOnSelectedListeners(e.target.parentElement);
         }
     });
 });
 
-//TODO rename
-window.SelectableActions = new SelectableActions();
+window.selectableActions = new SelectableActions();
