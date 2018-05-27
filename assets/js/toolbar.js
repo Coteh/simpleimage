@@ -13,7 +13,12 @@ window.activateToolbarButton = function(actionName, activate) {
 window.addToolbarClickListener = function(actionName, callback) {
     window.toolbarSelector.children().each(function (index, elem) {
         if (elem.dataset.actionName === actionName) {
-            elem.onclick = callback;
+            elem.addEventListener("click", function() {
+                if (elem.classList.contains("deactivated")) {
+                    return;
+                }
+                callback();
+            });
         }
     });
 };

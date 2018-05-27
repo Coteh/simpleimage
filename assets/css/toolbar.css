@@ -14,6 +14,7 @@
 
 .toolbar .toolbar-button.deactivated {
     opacity: 0;
+    cursor: initial;
 }
 
 .toolbar .toolbar-button:hover {

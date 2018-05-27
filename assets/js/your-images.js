@@ -33,7 +33,6 @@ var onImageDeletionRequestCompleted = function() {
 };
 
 window.deleteImages = function(imageIDs) {
-    // TODO Perform delete call here
     if (imageIDs.length === 0) {
         var errMsg = "No images selected for deletion.";
         console.error(errMsg);
@@ -43,7 +42,6 @@ window.deleteImages = function(imageIDs) {
         setTimeout(clearNotification, 2000);
         return;
     }
-    console.log(imageIDs);
     var req = new XMLHttpRequest();
     req.addEventListener("loadend", onImageDeletionRequestCompleted);
     req.open("delete", "/images?type=json");
@@ -54,7 +52,6 @@ window.deleteImages = function(imageIDs) {
 };
 
 $(function() {
-    activateToolbarButton("delete", true); 
     addToolbarClickListener("delete", function() {
         var html = "<div id='delete-confirm'>"
             + "Are you sure you want to delete the selected images? "
@@ -75,6 +72,7 @@ $(function() {
     selectableActions.addOnSelectedListener(function(selectable) {
         yourImages.imageIDs = yourImages.imageIDs.concat(selectable.dataset.imageId);
         yourImages.selectables = yourImages.selectables.concat(selectable);
+        activateToolbarButton("delete", true);
     });
     selectableActions.addOnDeselectedListener(function (selectable) {
         yourImages.imageIDs = yourImages.imageIDs.filter(function(value) {
@@ -83,6 +81,9 @@ $(function() {
         yourImages.selectables = yourImages.selectables.filter(function(value) {
             return (value !== selectable);
         });
+        if (yourImages.imageIDs.length === 0) {
+            activateToolbarButton("delete", false);
+        }
     });
 });
 
