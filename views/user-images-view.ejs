@@ -16,7 +16,23 @@
     <script src="/assets/js/selectable.bundle.js"></script>
     <script src="/assets/js/your-images.bundle.js"></script>
     <script>
-        
+        window.addEventListener("load", function(e) {
+            var placeholderElement = document.getElementById("images-placeholder");
+            var userImagesContainer = document.querySelector("#user-images-container");
+            var loadedCount = 0;
+            var userImagesCount = <%= images.length %>;
+            <% images.forEach(function (image) { %>
+                var blockImage = userImagesContainer.querySelector(".selectable-block[data-image-id='<%= image.id %>'] .image-container img");
+                blockImage.src = "data:<%= image.mimeType %>;base64,<%= image.data %>";
+                blockImage.addEventListener("load", function() {
+                    loadedCount++;
+                    if (loadedCount >= userImagesCount) {
+                        placeholderElement.style.display = "none";
+                        userImagesContainer.style.display = "";
+                    }
+                });
+            <% }); %>
+        });
     </script>
     <%- include("headers") %>
 </head>
@@ -35,13 +51,15 @@
                 <span class="collecticon collecticon-trash-bin head-icon"></span>
             </div>
         </div>
-        <div id="user-images-container" class="selectables-container">
+        <div id="images-placeholder" class="spinner">
+        </div>
+        <div id="user-images-container" class="selectables-container" style="display: none">
             <% images.forEach(function(image) { %>
                 <div class="selectable-block" data-image-id="<%= image.id %>">
                     <div class="checkmark-button"></div>
                     <div class="image-container">
                         <a href="/images/<%= image.id %>">
-                            <img style="max-width: 100%; max-height: 100%;" src="data:<%= image.mimeType %>;base64,<%= image.data %>">
+                            <img style="max-width: 100%; max-height: 100%;">
                         </a>
                     </div>
                 </div>
