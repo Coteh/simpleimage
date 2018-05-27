@@ -4,8 +4,7 @@
 }
 
 #user-images-container .selectable-block {
-    width: 200px;
-    height: 200px;
+    width: auto;
     padding: 8px;
     margin: 8px;
     background-color: #4f5559;
@@ -28,4 +27,6 @@
 #user-images-container .selectable-block .image-container {
     width: 200px;
     height: 200px;
+    text-align: center;
+    margin-top: 8px;
 }
