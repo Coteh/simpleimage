@@ -55,7 +55,11 @@ window.deleteImages = function(imageIDs) {
 $(function() {
     addToolbarClickListener("delete", function() {
         var html = "<div id='delete-confirm'>"
-            + "Are you sure you want to delete the selected images? "
+            + "Are you sure you want to delete the "
+            + yourImages.imageIDs.length
+            + " selected image"
+            + (yourImages.imageIDs.length !== 1 ? "s" : "")
+            + "? "
             + "This action cannot be undone."
             + "<div id='delete-confirm-yesno'>"
             + "<span class='button' id='delete-images-btn'>Yes</span>"
