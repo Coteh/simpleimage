@@ -29,6 +29,7 @@ var onImageDeletionRequestCompleted = function() {
         yourImages.deleteAllSelectables();
         yourImages.clearImageIDs();
         yourImages.clearSelectables();
+        activateToolbarButton("delete", false);
     }
 };
 
