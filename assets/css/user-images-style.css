@@ -30,3 +30,10 @@
     text-align: center;
     margin-top: 8px;
 }
+
+#user-images-container .info-box {
+    margin-top: 8px;
+    background-color: #fff266;
+    border: 4px solid #a89a00;
+    border-radius: 8px;
+}
