@@ -40,7 +40,7 @@
                     anonymous
                 <% } %>
                 on <span class="time"><%= uploadedDate.toString() %></span></span><br/>
-            <% if (user !== undefined && author === user.username) { %>
+            <% if (unregisteredSessionOwnsImage || (user !== undefined && author === user.username)) { %>
                 <span id="delete" class="info action-link delete" onclick="confirmDeleteImage('<%= id %>');">Delete</span><br/>
             <% } %>
             <span class="info" id="comment-count">0 comments</span><br/>
