@@ -1,15 +1,67 @@
 const assert = require("assert");
+const userActions = require("../lib/user-actions");
+const ObjectID = require("mongodb").ObjectID;
+
+var getRegisteredUserSession = function() {
+    return {
+        user: {
+            username: "james",
+            email: "james@james.com"
+        }
+    };
+};
+
+var getUnregisteredUserSession = function() {
+    return {
+        unregisteredSessionID: "qwertyuiop"
+    };
+};
+
+var getRegisteredUserSessionWithUnregisteredSession = function() {
+    return Object.assign(getUnregisteredUserSession(), getRegisteredUserSession());
+};
 
 describe("user actions", function() {
     describe("compareUserImageAuthorization", function () {
         it("should return true if username on image is equal to username on session", function () {
-            assert.fail("Not implemented");
+            var session = getRegisteredUserSession();
+            var testImage = {
+                _id: new ObjectID("".toString().padStart(24, "a")),
+                encoding: "7bit",
+                uploadeddate: new Date(0),
+                data: new Buffer(0),
+                mimetype: "image/png",
+                id: "abcdef",
+                username: "james"
+            };
+            assert.equal(userActions.compareUserImageAuthorization(session, testImage), true);
         });
         it("should return false if username on image is not equal to username on session", function () {
-            assert.fail("Not implemented");
+            var session = getRegisteredUserSession();
+            var testImage = {
+                _id: new ObjectID("".toString().padStart(24, "a")),
+                encoding: "7bit",
+                uploadeddate: new Date(0),
+                data: new Buffer(0),
+                mimetype: "image/png",
+                id: "abcdef",
+                username: "dude"
+            };
+            assert.equal(userActions.compareUserImageAuthorization(session, testImage), false);
         });
         it("should return true if unregistered session ID on image is equal to unregistered session ID on session", function () {
-            assert.fail("Not implemented");
+            var session = getUnregisteredUserSession();
+            var testImage = {
+                _id: new ObjectID("".toString().padStart(24, "a")),
+                encoding: "7bit",
+                uploadeddate: new Date(0),
+                data: new Buffer(0),
+                mimetype: "image/png",
+                id: "abcdef",
+                username: null,
+                unregisteredSessionID: "qwertyuiop"
+            };
+            assert.equal(userActions.compareUserImageAuthorization(session, testImage), true);
         });
         it("should return false if unregistered session ID on image is not equal to unregistered session ID on session", function () {
             assert.fail("Not implemented");
