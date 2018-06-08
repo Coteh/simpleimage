@@ -119,17 +119,55 @@ describe("user actions", function() {
             };
             assert.equal(userActions.compareUserImageAuthorization(session, testImage), true);
         });
-        it("should return false if image is undefined", function () {
-            assert.fail("Not implemented");
+        it("should throw if session is undefined", function () {
+            var testImage = {
+                _id: new ObjectID("".toString().padStart(24, "a")),
+                encoding: "7bit",
+                uploadeddate: new Date(0),
+                data: new Buffer(0),
+                mimetype: "image/png",
+                id: "abcdef",
+                username: "james"
+            };
+            var session = getRegisteredUserSession();
+            assert.throws(function() {
+                userActions.compareUserImageAuthorization(undefined, testImage);
+            }, function(err) {
+                return (err instanceof Error && err.message === "Session is missing")
+            });
         });
-        it("should return false if image is null", function () {
-            assert.fail("Not implemented");
+        it("should throw if session is null", function () {
+            var testImage = {
+                _id: new ObjectID("".toString().padStart(24, "a")),
+                encoding: "7bit",
+                uploadeddate: new Date(0),
+                data: new Buffer(0),
+                mimetype: "image/png",
+                id: "abcdef",
+                username: "james"
+            };
+            var session = getRegisteredUserSession();
+            assert.throws(function() {
+                userActions.compareUserImageAuthorization(null, testImage);
+            }, function(err) {
+                return (err instanceof Error && err.message === "Session is missing")
+            });
         });
-        it("should return false if session is undefined", function () {
-            assert.fail("Not implemented");
+        it("should throw if image is undefined", function () {
+            var session = getRegisteredUserSession();
+            assert.throws(function() {
+                userActions.compareUserImageAuthorization(session, undefined);
+            }, function(err) {
+                return (err instanceof Error && err.message === "Image is missing")
+            });
         });
-        it("should return false if session is null", function () {
-            assert.fail("Not implemented");
+        it("should throw if image is null", function () {
+            var session = getRegisteredUserSession();
+            assert.throws(function() {
+                userActions.compareUserImageAuthorization(session, null);
+            }, function(err) {
+                return (err instanceof Error && err.message === "Image is missing")
+            });
         });
     });
     describe("authorizeUserImageOperation", function() {
