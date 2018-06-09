@@ -209,6 +209,18 @@ describe("user actions", function() {
         it("registered users can operate on image they uploaded as a guest", function() {
             assert.fail("Not implemented");
         });
+        it("should throw if session is undefined", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if session is null", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if image is undefined", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if image is null", function () {
+            assert.fail("Not implemented");
+        });
     });
     describe("authorizeUserMultiImageOperation", function () {
         it("users can operate on their own images", function () {
@@ -230,6 +242,47 @@ describe("user actions", function() {
             assert.fail("Not implemented");
         });
         it("registered users can operate on images they uploaded as a guest", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if session is undefined", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if session is null", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if image is undefined", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if image is null", function () {
+            assert.fail("Not implemented");
+        });
+    });
+    describe("transferGuestImageToUser", function () {
+        it("an image owned by an unregistered user can be transferred to a registered user successfully", function () {
+            assert.fail("Not implemented");
+        });
+        it("an image transferred from unregistered user to a registered user shall have its unregistered session ID removed", function () {
+            assert.fail("Not implemented");
+        });
+        it("should not allow an image owned by another registered user to transfer to a registered user", function () {
+            assert.fail("Not implemented");
+        });
+        it("should not allow an image owned by an unregistered user to be transferred to another unregistered user", function () {
+            assert.fail("Not implemented");
+        });
+        it("image transfer failures should not remove the unregistered session ID link", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if an undefined image is passed in", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if a null image is passed in", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if an undefined user is passed in", function () {
+            assert.fail("Not implemented");
+        });
+        it("should throw if a null user is passed in", function () {
             assert.fail("Not implemented");
         });
     });
