@@ -293,11 +293,77 @@ describe("user actions", function() {
                 })
                 .then(done, done);
         });
-        it("registered users can operate on image they uploaded as a guest");
-        it("should throw if session is undefined");
-        it("should throw if session is null");
-        it("should throw if image is undefined");
-        it("should throw if image is null");
+        it("registered users can operate on image they uploaded as a guest", function (done) {
+            var session = getRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
+            var testImage = {
+                _id: new ObjectID("".toString().padStart(24, "a")),
+                encoding: "7bit",
+                uploadeddate: new Date(0),
+                data: new Buffer(0),
+                mimetype: "image/png",
+                id: "abcdef",
+                username: null,
+                unregisteredSessionID: "qwertyuiop"
+            };
+            userActions.authorizeUserImageOperation(session, testImage)
+                .then(function (image) {
+                    assert.ok(image);
+                })
+                .catch(function (err) {
+                    assert.fail(err.message);
+                })
+                .then(done, done);
+        });
+        it("should throw if session is undefined", function (done) {
+            var testImage = {
+                _id: new ObjectID("".toString().padStart(24, "a")),
+                encoding: "7bit",
+                uploadeddate: new Date(0),
+                data: new Buffer(0),
+                mimetype: "image/png",
+                id: "abcdef",
+                username: null,
+                unregisteredSessionID: "qwertyuiop"
+            };
+            userActions.authorizeUserImageOperation(undefined, testImage)
+                .catch(function (err) {
+                    assert.equal(err.message, "Session is missing");
+                })
+                .then(done, done);
+        });
+        it("should throw if session is null", function (done) {
+            var testImage = {
+                _id: new ObjectID("".toString().padStart(24, "a")),
+                encoding: "7bit",
+                uploadeddate: new Date(0),
+                data: new Buffer(0),
+                mimetype: "image/png",
+                id: "abcdef",
+                username: null,
+                unregisteredSessionID: "qwertyuiop"
+            };
+            userActions.authorizeUserImageOperation(null, testImage)
+                .catch(function (err) {
+                    assert.equal(err.message, "Session is missing");
+                })
+                .then(done, done);
+        });
+        it("should throw if image is undefined", function (done) {
+            var session = getRegisteredUserSession("james");
+            userActions.authorizeUserImageOperation(session, undefined)
+                .catch(function (err) {
+                    assert.equal(err.message, "Image is missing");
+                })
+                .then(done, done);
+        });
+        it("should throw if image is null", function (done) {
+            var session = getRegisteredUserSession("james");
+            userActions.authorizeUserImageOperation(session, null)
+                .catch(function (err) {
+                    assert.equal(err.message, "Image is missing");
+                })
+                .then(done, done);
+        });
     });
     describe("authorizeUserMultiImageOperation", function () {
         it("users can operate on their own images");
