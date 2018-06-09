@@ -183,14 +183,13 @@ describe("user actions", function() {
             userActions.authorizeUserImageOperation(session, testImage)
                 .then(function (image) {
                     assert.ok(image);
-                    done();
                 })
                 .catch(function (err) {
                     assert.fail(err.message);
-                    done();
-                });
+                })
+                .then(done, done);
         });
-        it("users cannot operate on other users' image", function (done) {
+        it("users cannot operate on another user's image", function (done) {
             var session = getRegisteredUserSession("james");
             var testImage = {
                 _id: new ObjectID("".toString().padStart(24, "a")),
@@ -204,12 +203,11 @@ describe("user actions", function() {
             userActions.authorizeUserImageOperation(session, testImage)
                 .then(function (image) {
                     assert.fail("User was able to operate on another user's image, but they shouldn't be able to in this case.");
-                    done();
                 })
                 .catch(function (err) {
-                    assert.ok(err);
-                    done();
-                });
+                    assert.equal(err.message, "You are not authorized to perform operations on this image.");
+                })
+                .then(done, done);
         });
         it("guests can operate on their own image", function (done) {
             var session = getUnregisteredUserSession("qwertyuiop");
@@ -226,12 +224,11 @@ describe("user actions", function() {
             userActions.authorizeUserImageOperation(session, testImage)
                 .then(function (image) {
                     assert.ok(image);
-                    done();
                 })
                 .catch(function (err) {
                     assert.fail(err.message);
-                    done();
-                });
+                })
+                .then(done, done);
         });
         it("guests cannot operate on other guests' image", function (done) {
             var session = getUnregisteredUserSession("qwertyuiop");
@@ -248,12 +245,11 @@ describe("user actions", function() {
             userActions.authorizeUserImageOperation(session, testImage)
                 .then(function (image) {
                     assert.fail("Guest was able to operate on another guest's image, but they shouldn't be able to in this case.");
-                    done();
                 })
                 .catch(function (err) {
-                    assert.ok(err);
-                    done();
-                });
+                    assert.equal(err.message, "You are not authorized to perform operations on this image.");
+                })
+                .then(done, done);
         });
         it("guests cannot operate on a registered user's image", function (done) {
             var session = getUnregisteredUserSession("qwertyuiop");
@@ -269,14 +265,34 @@ describe("user actions", function() {
             userActions.authorizeUserImageOperation(session, testImage)
                 .then(function (image) {
                     assert.fail("Guest was able to operate on a registered user's image, but they shouldn't be able to in this case.");
-                    done();
                 })
                 .catch(function (err) {
-                    assert.ok(err);
-                    done();
-                });
+                    assert.equal(err.message, "You are not authorized to perform operations on this image.");
+                })
+                .then(done, done);
         });
-        it("registered user's cannot operate on guests' image (guests besides themselves)");
+        it("registered users cannot operate on guests' image (guests besides themselves)", function (done) {
+            var session = getRegisteredUserSession("james");
+            var testImage = {
+                _id: new ObjectID("".toString().padStart(24, "a")),
+                encoding: "7bit",
+                uploadeddate: new Date(0),
+                data: new Buffer(0),
+                mimetype: "image/png",
+                id: "abcdef",
+                username: null,
+                unregisteredSessionID: "qwertyuiop"
+            };
+            userActions.authorizeUserImageOperation(session, testImage)
+                .then(function (image) {
+                    assert.fail("Registered user was able to operate on a guest's image (a guest besides themselves), "
+                        + "but they shouldn't be able to in this case.");
+                })
+                .catch(function (err) {
+                    assert.equal(err.message, "You are not authorized to perform operations on this image.");
+                })
+                .then(done, done);
+        });
         it("registered users can operate on image they uploaded as a guest");
         it("should throw if session is undefined");
         it("should throw if session is null");
