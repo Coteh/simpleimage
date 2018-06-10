@@ -7,7 +7,17 @@ var testImageDB = {};
 var databaseOpsStub = {
     findImage: function (imageID, callback) {
         var image = testImageDB[imageID];
-        callback([image]);
+        callback(null, [image]);
+    },
+    transferUnregisteredUserImageToRegisteredUser: function (imageID, username) {
+        return new Promise(function (resolve, reject) {
+            var image = testImageDB[imageID];
+            image.username = username;
+            delete image.unregisteredSessionID;
+            resolve({
+                image
+            });
+        });
     }
 };
 
@@ -15,6 +25,10 @@ const userActions = proxyquire("../lib/user-actions", { "./database-ops": databa
 
 var addImageToTestImageDB = function (image) {
     testImageDB[image.id] = image;
+};
+
+var clearTestImageDB = function () {
+    testImageDB = {};
 };
 
 var createRegisteredUserSession = function (username = "testuser") {
@@ -552,18 +566,28 @@ describe("user actions", function() {
         });
     });
     describe("transferGuestImageToUser", function () {
+        before(function () {
+            clearTestImageDB();
+        });
         it("an image owned by an unregistered user can be transferred to a registered user successfully", function (done) {
-            var session = createRegisteredUserSession("james");
+            var session = createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
             var testImage = createTestImage({
-                unregisteredSessionID: "qwertyuiop"
+                unregisteredSessionID: "qwertyuiop",
+                id: "abcdef"
             });
             addImageToTestImageDB(testImage);
             userActions.transferGuestImageToUser(session, testImage.id)
                 .then(function (result) {
                     assert.ok(result);
+                    assert.equal(result.message, "Image of ID abcdef has been transferred to user james successfully.");
+                    assert.ok(result.result);
+                    var expectedImage = Object.assign({}, testImage);
+                    delete expectedImage.unregisteredSessionID;
+                    expectedImage.username = "james";
+                    assert.deepStrictEqual(result.result.image, expectedImage);
                 })
                 .catch(function (err) {
-                    assert.fail(err.message);
+                    assert.fail(err.stack);
                 })
                 .then(done, done);
         });
@@ -575,5 +599,11 @@ describe("user actions", function() {
         it("should throw if a null image is passed in");
         it("should throw if an undefined user is passed in");
         it("should throw if a null user is passed in");
+    });
+    describe("userDeleteImage", function () {
+
+    });
+    describe("userDeleteImages", function () {
+
     });
 });
