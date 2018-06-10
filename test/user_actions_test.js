@@ -1,17 +1,16 @@
 const assert = require("assert");
-const ObjectID = require("mongodb").ObjectID;
 const proxyquire = require("proxyquire");
-
-var testImageDB = {};
+const testImageDB = require("./util/test-image-db");
+const testImageUtils = require("./util/test-image-utils");
 
 var databaseOpsStub = {
     findImage: function (imageID, callback) {
-        var image = testImageDB[imageID];
+        var image = testImageDB.getImage(imageID);
         callback(null, [image]);
     },
     transferUnregisteredUserImageToRegisteredUser: function (imageID, username) {
         return new Promise(function (resolve, reject) {
-            var image = testImageDB[imageID];
+            var image = testImageDB.getImage(imageID);
             image.username = username;
             delete image.unregisteredSessionID;
             resolve({
@@ -23,135 +22,60 @@ var databaseOpsStub = {
 
 const userActions = proxyquire("../lib/user-actions", { "./database-ops": databaseOpsStub });
 
-var addImageToTestImageDB = function (image) {
-    testImageDB[image.id] = image;
-};
-
-var clearTestImageDB = function () {
-    testImageDB = {};
-};
-
-var createRegisteredUserSession = function (username = "testuser") {
-    return {
-        user: {
-            username,
-            email: username + "@email.com"
-        }
-    };
-};
-
-var createUnregisteredUserSession = function (unregisteredSessionID = "zxcvbnm") {
-    return {
-        unregisteredSessionID
-    };
-};
-
-var createRegisteredUserSessionWithUnregisteredSession = function(username, unregisteredSessionID) {
-    return Object.assign(createUnregisteredUserSession(unregisteredSessionID), createRegisteredUserSession(username));
-};
-
-var createTestImage = function(options) {
-    if (!options) {
-        options = {};
-    }
-    return {
-        _id: new ObjectID((options.index ? options.index : 0).toString().padStart(24, "0")),
-        encoding: "7bit",
-        uploadeddate: new Date(0),
-        data: new Buffer(0),
-        mimetype: "image/png",
-        id: options.id || "abcdef",
-        username: options.username,
-        unregisteredSessionID: options.unregisteredSessionID
-    };
-};
-
-var createTestImages = function(optionsArr, length) {
-    if (!optionsArr) {
-        return undefined;
-    }
-    if (typeof optionsArr === "number") {
-        var length = optionsArr;
-        optionsArr = new Array(length);
-        for (var i = 0; i < length; i++) {
-            optionsArr[i] = {};
-        }
-    } else if (optionsArr instanceof Array) { 
-        if (optionsArr.length === 0) {
-            return [];
-        }
-    } else {
-        if (!length) {
-            return undefined;
-        }
-        var options = optionsArr;
-        optionsArr = new Array(length);
-        for (var i = 0; i < length; i++) {
-            optionsArr[i] = options;
-        }
-    }
-    return optionsArr.map(function (options, index) {
-        return createTestImage(Object.assign({
-            index,
-            id: index.toString().padStart(6, "0")
-        }, options));
-    });
-};
-
 describe("user actions", function() {
     describe("compareUserImageAuthorization", function () {
         it("should return true if username on image is equal to username on session", function () {
-            var session = createRegisteredUserSession("james");
-            var testImage = createTestImage({
+            var session = testImageUtils.createRegisteredUserSession("james");
+            var testImage = testImageUtils.createTestImage({
                 username: "james"
             });
             assert.equal(userActions.compareUserImageAuthorization(session, testImage), true);
         });
         it("should return false if username on image is not equal to username on session", function () {
-            var session = createRegisteredUserSession("james");
-            var testImage = createTestImage({
+            var session = testImageUtils.createRegisteredUserSession("james");
+            var testImage = testImageUtils.createTestImage({
                 username: "dude"
             });
             assert.equal(userActions.compareUserImageAuthorization(session, testImage), false);
         });
         it("should return true if unregistered session ID on image is equal to unregistered session ID on session", function () {
-            var session = createUnregisteredUserSession("qwertyuiop");
-            var testImage = createTestImage({
+            var session = testImageUtils.createUnregisteredUserSession("qwertyuiop");
+            var testImage = testImageUtils.createTestImage({
                 unregisteredSessionID: "qwertyuiop"
             });
             assert.equal(userActions.compareUserImageAuthorization(session, testImage), true);
         });
         it("should return false if unregistered session ID on image is not equal to unregistered session ID on session", function () {
-            var session = createUnregisteredUserSession("qwertyuiop");
-            var testImage = createTestImage({
+            var session = testImageUtils.createUnregisteredUserSession("qwertyuiop");
+            var testImage = testImageUtils.createTestImage({
                 unregisteredSessionID: "asdfghjkl"
             });
             assert.equal(userActions.compareUserImageAuthorization(session, testImage), false);
         });
         it("should return false if a unregistered user session is used to verify operation on an image uploaded by a registered user", function () {
-            var session = createUnregisteredUserSession("qwertyuiop");
-            var testImage = createTestImage({
+            var session = testImageUtils.createUnregisteredUserSession("qwertyuiop");
+            var testImage = testImageUtils.createTestImage({
                 username: "dude"
             });
             assert.equal(userActions.compareUserImageAuthorization(session, testImage), false);
         });
         it("should return false if a registered user session is used to verify operation on an image uploaded anonymously", function () {
-            var session = createRegisteredUserSession("james");
-            var testImage = createTestImage({
+            var session = testImageUtils.createRegisteredUserSession("james");
+            var testImage = testImageUtils.createTestImage({
                 unregisteredSessionID: "qwertyuiop"
             });
             assert.equal(userActions.compareUserImageAuthorization(session, testImage), false);
         });
         it("should return true if a registered user session with unregistered session ID is used to verify operation "
             + "on an image uploaded anonymously with same unregistered session ID", function () {
-                var session = createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
-            var testImage = createTestImage({
+                var session = testImageUtils.createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
+            var testImage = testImageUtils.createTestImage({
                 unregisteredSessionID: "qwertyuiop"
             });
             assert.equal(userActions.compareUserImageAuthorization(session, testImage), true);
         });
         it("should throw if session is undefined", function () {
-            var testImage = createTestImage({
+            var testImage = testImageUtils.createTestImage({
                 username: "james"
             });
             assert.throws(function() {
@@ -161,7 +85,7 @@ describe("user actions", function() {
             });
         });
         it("should throw if session is null", function () {
-            var testImage = createTestImage({
+            var testImage = testImageUtils.createTestImage({
                 username: "james"
             });
             assert.throws(function() {
@@ -171,7 +95,7 @@ describe("user actions", function() {
             });
         });
         it("should throw if image is undefined", function () {
-            var session = createRegisteredUserSession();
+            var session = testImageUtils.createRegisteredUserSession();
             assert.throws(function() {
                 userActions.compareUserImageAuthorization(session, undefined);
             }, function(err) {
@@ -179,7 +103,7 @@ describe("user actions", function() {
             });
         });
         it("should throw if image is null", function () {
-            var session = createRegisteredUserSession();
+            var session = testImageUtils.createRegisteredUserSession();
             assert.throws(function() {
                 userActions.compareUserImageAuthorization(session, null);
             }, function(err) {
@@ -188,21 +112,21 @@ describe("user actions", function() {
         });
         it("should return false if session is an empty object", function () {
             var session = {};
-            var testImage = createTestImage({
+            var testImage = testImageUtils.createTestImage({
                 username: "james"
             });
             assert.equal(userActions.compareUserImageAuthorization(session, testImage), false);
         });
         it("should return false if image is an empty object", function () {
-            var session = createRegisteredUserSession("james");
+            var session = testImageUtils.createRegisteredUserSession("james");
             var testImage = {};
             assert.equal(userActions.compareUserImageAuthorization(session, testImage), false);
         });
     });
     describe("authorizeUserImageOperation", function() {
         it("users can operate on their own image", function (done) {
-            var session = createRegisteredUserSession("james");
-            var testImage = createTestImage({
+            var session = testImageUtils.createRegisteredUserSession("james");
+            var testImage = testImageUtils.createTestImage({
                 username: "james"
             });
             userActions.authorizeUserImageOperation(session, testImage)
@@ -215,8 +139,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("users cannot operate on another user's image", function (done) {
-            var session = createRegisteredUserSession("james");
-            var testImage = createTestImage({
+            var session = testImageUtils.createRegisteredUserSession("james");
+            var testImage = testImageUtils.createTestImage({
                 username: "jake"
             });
             userActions.authorizeUserImageOperation(session, testImage)
@@ -229,8 +153,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("guests can operate on their own image", function (done) {
-            var session = createUnregisteredUserSession("qwertyuiop");
-            var testImage = createTestImage({
+            var session = testImageUtils.createUnregisteredUserSession("qwertyuiop");
+            var testImage = testImageUtils.createTestImage({
                 unregisteredSessionID: "qwertyuiop"
             });
             userActions.authorizeUserImageOperation(session, testImage)
@@ -243,8 +167,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("guests cannot operate on other guests' image", function (done) {
-            var session = createUnregisteredUserSession("qwertyuiop");
-            var testImage = createTestImage({
+            var session = testImageUtils.createUnregisteredUserSession("qwertyuiop");
+            var testImage = testImageUtils.createTestImage({
                 unregisteredSessionID: "asdfghjkl"
             });
             userActions.authorizeUserImageOperation(session, testImage)
@@ -257,8 +181,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("guests cannot operate on a registered user's image", function (done) {
-            var session = createUnregisteredUserSession("qwertyuiop");
-            var testImage = createTestImage({
+            var session = testImageUtils.createUnregisteredUserSession("qwertyuiop");
+            var testImage = testImageUtils.createTestImage({
                 username: "james"
             });
             userActions.authorizeUserImageOperation(session, testImage)
@@ -271,8 +195,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("registered users cannot operate on guests' image (guests besides themselves)", function (done) {
-            var session = createRegisteredUserSession("james");
-            var testImage = createTestImage({
+            var session = testImageUtils.createRegisteredUserSession("james");
+            var testImage = testImageUtils.createTestImage({
                 unregisteredSessionID: "qwertyuiop"
             });
             userActions.authorizeUserImageOperation(session, testImage)
@@ -286,8 +210,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("registered users can operate on image they uploaded as a guest", function (done) {
-            var session = createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
-            var testImage = createTestImage({
+            var session = testImageUtils.createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
+            var testImage = testImageUtils.createTestImage({
                 unregisteredSessionID: "qwertyuiop"
             });
             userActions.authorizeUserImageOperation(session, testImage)
@@ -300,7 +224,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should throw if session is undefined", function (done) {
-            var testImage = createTestImage({
+            var testImage = testImageUtils.createTestImage({
                 username: "james"
             });
             userActions.authorizeUserImageOperation(undefined, testImage)
@@ -310,7 +234,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should throw if session is null", function (done) {
-            var testImage = createTestImage({
+            var testImage = testImageUtils.createTestImage({
                 username: "james"
             });
             userActions.authorizeUserImageOperation(null, testImage)
@@ -320,7 +244,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should throw if image is undefined", function (done) {
-            var session = createRegisteredUserSession("james");
+            var session = testImageUtils.createRegisteredUserSession("james");
             userActions.authorizeUserImageOperation(session, undefined)
                 .catch(function (err) {
                     assert.equal(err.message, "Image is missing", err.message);
@@ -328,7 +252,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should throw if image is null", function (done) {
-            var session = createRegisteredUserSession("james");
+            var session = testImageUtils.createRegisteredUserSession("james");
             userActions.authorizeUserImageOperation(session, null)
                 .catch(function (err) {
                     assert.equal(err.message, "Image is missing", err.message);
@@ -337,7 +261,7 @@ describe("user actions", function() {
         });
         it("should not authorize any operation if session provided is an empty object", function (done) {
             var session = {};
-            var testImage = createTestImage({
+            var testImage = testImageUtils.createTestImage({
                 unregisteredSessionID: "qwertyuiop"
             });
             userActions.authorizeUserImageOperation(session, testImage)
@@ -350,7 +274,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should not authorize any operation if image provided is an empty object", function (done) {
-            var session = createRegisteredUserSession("james");
+            var session = testImageUtils.createRegisteredUserSession("james");
             var testImage = {};
             userActions.authorizeUserImageOperation(session, testImage)
                 .then(function (image) {
@@ -364,8 +288,8 @@ describe("user actions", function() {
     });
     describe("authorizeUserMultiImageOperation", function () {
         it("users can operate on their own images", function (done) {
-            var session = createRegisteredUserSession("james");
-            var testImages = createTestImages({
+            var session = testImageUtils.createRegisteredUserSession("james");
+            var testImages = testImageUtils.createTestImages({
                 username: "james"
             }, 5);
             userActions.authorizeUserMultiImageOperation(session, testImages)
@@ -378,8 +302,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("users cannot operate on other users' images", function (done) {
-            var session = createRegisteredUserSession("james");
-            var testImages = createTestImages([
+            var session = testImageUtils.createRegisteredUserSession("james");
+            var testImages = testImageUtils.createTestImages([
                 {
                     username: "james"
                 },
@@ -398,8 +322,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("guests can operate on their own images", function (done) {
-            var session = createUnregisteredUserSession("qwertyuiop");
-            var testImages = createTestImages({
+            var session = testImageUtils.createUnregisteredUserSession("qwertyuiop");
+            var testImages = testImageUtils.createTestImages({
                 unregisteredSessionID: "qwertyuiop"
             }, 5);
             userActions.authorizeUserMultiImageOperation(session, testImages)
@@ -412,8 +336,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("guests cannot operate on other guests' images", function (done) {
-            var session = createUnregisteredUserSession("qwertyuiop");
-            var testImages = createTestImages([
+            var session = testImageUtils.createUnregisteredUserSession("qwertyuiop");
+            var testImages = testImageUtils.createTestImages([
                 {
                     unregisteredSessionID: "asdfghjkl"
                 },
@@ -432,8 +356,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("guests cannot operate on a registered user's images", function (done) {
-            var session = createUnregisteredUserSession("qwertyuiop");
-            var testImages = createTestImages([
+            var session = testImageUtils.createUnregisteredUserSession("qwertyuiop");
+            var testImages = testImageUtils.createTestImages([
                 {
                     username: "james"
                 },
@@ -452,8 +376,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("registered user's cannot operate on guests' images (guests besides themselves)", function (done) {
-            var session = createRegisteredUserSession("james");
-            var testImages = createTestImages([
+            var session = testImageUtils.createRegisteredUserSession("james");
+            var testImages = testImageUtils.createTestImages([
                 {
                     username: "james"
                 },
@@ -472,8 +396,8 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("registered users can operate on images they uploaded as a guest", function (done) {
-            var session = createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
-            var testImages = createTestImages([
+            var session = testImageUtils.createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
+            var testImages = testImageUtils.createTestImages([
                 {
                     username: "james"
                 },
@@ -491,7 +415,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should throw if session is undefined", function (done) {
-            var testImages = createTestImages({
+            var testImages = testImageUtils.createTestImages({
                 username: "james"
             }, 2);
             userActions.authorizeUserMultiImageOperation(undefined, testImages)
@@ -501,7 +425,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should throw if session is null", function (done) {
-            var testImages = createTestImages({
+            var testImages = testImageUtils.createTestImages({
                 username: "james"
             }, 2);
             userActions.authorizeUserMultiImageOperation(null, testImages)
@@ -511,7 +435,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should throw if images is undefined", function (done) {
-            var session = createRegisteredUserSession("james");
+            var session = testImageUtils.createRegisteredUserSession("james");
             userActions.authorizeUserMultiImageOperation(session, undefined)
                 .catch(function (err) {
                     assert.equal(err.message, "Error occurred when verifying user operations on images.", err.message);
@@ -519,7 +443,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should throw if images is null", function (done) {
-            var session = createRegisteredUserSession("james");
+            var session = testImageUtils.createRegisteredUserSession("james");
             userActions.authorizeUserMultiImageOperation(session, null)
                 .catch(function (err) {
                     assert.equal(err.message, "Error occurred when verifying user operations on images.", err.message);
@@ -528,7 +452,7 @@ describe("user actions", function() {
         });
         it("should not authorize any operation if session is an empty object", function (done) {
             var session = {};
-            var testImages = createTestImages({
+            var testImages = testImageUtils.createTestImages({
                 username: "james"
             }, 5);
             userActions.authorizeUserMultiImageOperation(session, testImages)
@@ -541,7 +465,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should not authorize any operation if image array is an empty object", function (done) {
-            var session = createRegisteredUserSession("james");
+            var session = testImageUtils.createRegisteredUserSession("james");
             var testImages = {};
             userActions.authorizeUserMultiImageOperation(session, testImages)
                 .then(function (image) {
@@ -553,7 +477,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
         it("should not authorize any operation if image array has a length of 0 (no images)", function (done) {
-            var session = createRegisteredUserSession("james");
+            var session = testImageUtils.createRegisteredUserSession("james");
             var testImages = [];
             userActions.authorizeUserMultiImageOperation(session, testImages)
                 .then(function (image) {
@@ -567,15 +491,15 @@ describe("user actions", function() {
     });
     describe("transferGuestImageToUser", function () {
         before(function () {
-            clearTestImageDB();
+            testImageDB.clearImages();
         });
         it("an image owned by an unregistered user can be transferred to a registered user successfully", function (done) {
-            var session = createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
-            var testImage = createTestImage({
+            var session = testImageUtils.createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
+            var testImage = testImageUtils.createTestImage({
                 unregisteredSessionID: "qwertyuiop",
                 id: "abcdef"
             });
-            addImageToTestImageDB(testImage);
+            testImageDB.addImage(testImage);
             userActions.transferGuestImageToUser(session, testImage.id)
                 .then(function (result) {
                     assert.ok(result);
@@ -591,7 +515,24 @@ describe("user actions", function() {
                 })
                 .then(done, done);
         });
-        it("an image transferred from unregistered user to a registered user shall have its unregistered session ID removed");
+        it("an image transferred from unregistered user to a registered user shall have its unregistered session ID removed", function (done) {
+            var session = testImageUtils.createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
+            var testImage = testImageUtils.createTestImage({
+                unregisteredSessionID: "qwertyuiop",
+                id: "abcdef"
+            });
+            testImageDB.addImage(testImage);
+            userActions.transferGuestImageToUser(session, testImage.id)
+                .then(function (result) {
+                    assert.ok(result);
+                    assert.ok(result.result);
+                    assert.deepStrictEqual(result.result.unregisteredSessionID, null);
+                })
+                .catch(function (err) {
+                    assert.fail(err.stack);
+                })
+                .then(done, done);
+        });
         it("should not allow an image owned by another registered user to transfer to a registered user");
         it("should not allow an image owned by an unregistered user to be transferred to another unregistered user");
         it("image transfer failures should not remove the unregistered session ID link");
