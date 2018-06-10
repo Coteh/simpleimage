@@ -157,6 +157,18 @@ describe("user actions", function() {
                 return (err instanceof Error && err.message === "Image is missing")
             });
         });
+        it("should return false if session is an empty object", function () {
+            var session = {};
+            var testImage = getTestImage({
+                username: "james"
+            });
+            assert.equal(userActions.compareUserImageAuthorization(session, testImage), false);
+        });
+        it("should return false if image is an empty object", function () {
+            var session = getRegisteredUserSession("james");
+            var testImage = {};
+            assert.equal(userActions.compareUserImageAuthorization(session, testImage), false);
+        });
     });
     describe("authorizeUserImageOperation", function() {
         it("users can operate on their own image", function (done) {
@@ -294,13 +306,39 @@ describe("user actions", function() {
                 })
                 .then(done, done);
         });
+        it("should not authorize any operation if session provided is an empty object", function (done) {
+            var session = {};
+            var testImage = getTestImage({
+                unregisteredSessionID: "qwertyuiop"
+            });
+            userActions.authorizeUserImageOperation(session, testImage)
+                .then(function (image) {
+                    assert.fail("This should not be allowed to happen.");
+                })
+                .catch(function (err) {
+                    assert.equal(err.message, "You are not authorized to perform operations on this image.", err.message);
+                })
+                .then(done, done);
+        });
+        it("should not authorize any operation if image provided is an empty object", function (done) {
+            var session = getRegisteredUserSession("james");
+            var testImage = {};
+            userActions.authorizeUserImageOperation(session, testImage)
+                .then(function (image) {
+                    assert.fail("This should not be allowed to happen.");
+                })
+                .catch(function (err) {
+                    assert.equal(err.message, "You are not authorized to perform operations on this image.", err.message);
+                })
+                .then(done, done);
+        });
     });
     describe("authorizeUserMultiImageOperation", function () {
         it("users can operate on their own images", function (done) {
             var session = getRegisteredUserSession("james");
             var testImages = getTestImages({
                 username: "james"
-            }, 5)
+            }, 5);
             userActions.authorizeUserMultiImageOperation(session, testImages)
                 .then(function (image) {
                     assert.ok(image);
@@ -333,7 +371,7 @@ describe("user actions", function() {
         it("guests can operate on their own images", function (done) {
             var session = getUnregisteredUserSession("qwertyuiop");
             var testImages = getTestImages({
-                    unregisteredSessionID: "qwertyuiop"
+                unregisteredSessionID: "qwertyuiop"
             }, 5);
             userActions.authorizeUserMultiImageOperation(session, testImages)
                 .then(function (image) {
@@ -443,19 +481,57 @@ describe("user actions", function() {
                 })
                 .then(done, done);
         });
-        it("should throw if image is undefined", function (done) {
+        it("should throw if images is undefined", function (done) {
             var session = getRegisteredUserSession("james");
             userActions.authorizeUserMultiImageOperation(session, undefined)
                 .catch(function (err) {
-                    assert.equal(err.message, "Image is missing", err.message);
+                    assert.equal(err.message, "Error occurred when verifying user operations on images.", err.message);
                 })
                 .then(done, done);
         });
-        it("should throw if image is null", function (done) {
+        it("should throw if images is null", function (done) {
             var session = getRegisteredUserSession("james");
             userActions.authorizeUserMultiImageOperation(session, null)
                 .catch(function (err) {
-                    assert.equal(err.message, "Image is missing", err.message);
+                    assert.equal(err.message, "Error occurred when verifying user operations on images.", err.message);
+                })
+                .then(done, done);
+        });
+        it("should not authorize any operation if session is an empty object", function (done) {
+            var session = {};
+            var testImages = getTestImages({
+                username: "james"
+            }, 5);
+            userActions.authorizeUserMultiImageOperation(session, testImages)
+                .then(function (image) {
+                    assert.fail("This should not be allowed to happen.");
+                })
+                .catch(function (err) {
+                    assert.equal(err.message, "You are not authorized to perform operations on one or more of these images.", err.message);
+                })
+                .then(done, done);
+        });
+        it("should not authorize any operation if image array is an empty object", function (done) {
+            var session = getRegisteredUserSession("james");
+            var testImages = {};
+            userActions.authorizeUserMultiImageOperation(session, testImages)
+                .then(function (image) {
+                    assert.fail("This should not be allowed to happen.");
+                })
+                .catch(function (err) {
+                    assert.equal(err.message, "There are no image operations to be authenticated.", err.message);
+                })
+                .then(done, done);
+        });
+        it("should not authorize any operation if image array has a length of 0 (no images)", function (done) {
+            var session = getRegisteredUserSession("james");
+            var testImages = [];
+            userActions.authorizeUserMultiImageOperation(session, testImages)
+                .then(function (image) {
+                    assert.fail("This should not be allowed to happen.");
+                })
+                .catch(function (err) {
+                    assert.equal(err.message, "There are no image operations to be authenticated.", err.message);
                 })
                 .then(done, done);
         });
