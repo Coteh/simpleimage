@@ -8,6 +8,10 @@ var databaseOpsStub = {
         var image = testImageDB.getImage(imageID);
         callback(null, [image]);
     },
+    findImages: function (imageIDs, callback) {
+        var images = testImageDB.getImages(imageIDs);
+        callback(null, images);
+    },
     transferUnregisteredUserImageToRegisteredUser: function (imageID, username) {
         return new Promise(function (resolve, reject) {
             var image = testImageDB.getImage(imageID);
@@ -15,6 +19,19 @@ var databaseOpsStub = {
             delete image.unregisteredSessionID;
             resolve({
                 image
+            });
+        });
+    },
+    transferUnregisteredUserImageMultiToRegisteredUser: function (imageIDs, username) {
+        return new Promise(function (resolve, reject) {
+            testImageDB.updateManyImages(imageIDs, {
+                username
+            });
+            testImageDB.unsetImagePropertyMany(imageIDs, {
+                unregisteredSessionID: ""
+            });
+            resolve({
+                ok: 1
             });
         });
     }
@@ -535,6 +552,38 @@ describe("user actions", function() {
         });
         it("should not allow an image owned by another registered user to transfer to a registered user");
         it("should not allow an image owned by an unregistered user to be transferred to another unregistered user");
+        it("image transfer failures should not remove the unregistered session ID link");
+        it("should throw if an undefined image is passed in");
+        it("should throw if a null image is passed in");
+        it("should throw if an undefined user is passed in");
+        it("should throw if a null user is passed in");
+    });
+    describe("transferGuestImageMultiToUser", function () {
+        before(function () {
+            testImageDB.clearImages();
+        });
+        it("images owned by an unregistered user can be transferred to a registered user successfully", function (done) {
+            var session = testImageUtils.createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
+            var testImages = testImageUtils.createTestImages({
+                unregisteredSessionID: "qwertyuiop"
+            }, 5);
+            testImageDB.addImages(testImages);
+            var testImageIDs = testImages.map(function (testImage) {
+                return testImage.id;
+            });
+            userActions.transferGuestImageMultiToUser(session, testImageIDs)
+                .then(function (result) {
+                    assert.ok(result);
+                    assert.equal(result.message, "Images have been transferred to user james successfully.");
+                })
+                .catch(function (err) {
+                    assert.fail(err.stack);
+                })
+                .then(done, done);
+        });
+        it("images transferred from unregistered user to a registered user shall have their unregistered session IDs removed");
+        it("should not allow images owned by another registered user to transfer to a registered user");
+        it("should not allow images owned by an unregistered user to be transferred to another unregistered user");
         it("image transfer failures should not remove the unregistered session ID link");
         it("should throw if an undefined image is passed in");
         it("should throw if a null image is passed in");
