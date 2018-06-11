@@ -17,9 +17,7 @@ var databaseOpsStub = {
             var image = testImageDB.getImage(imageID);
             image.username = username;
             delete image.unregisteredSessionID;
-            resolve({
-                image
-            });
+            resolve(image);
         });
     },
     transferUnregisteredUserImageMultiToRegisteredUser: function (imageIDs, username) {
@@ -521,11 +519,11 @@ describe("user actions", function() {
                 .then(function (result) {
                     assert.ok(result);
                     assert.equal(result.message, "Image of ID abcdef has been transferred to user james successfully.");
-                    assert.ok(result.result);
+                    assert.ok(result.image);
                     var expectedImage = Object.assign({}, testImage);
                     delete expectedImage.unregisteredSessionID;
                     expectedImage.username = "james";
-                    assert.deepStrictEqual(result.result.image, expectedImage);
+                    assert.deepStrictEqual(result.image, expectedImage);
                 })
                 .catch(function (err) {
                     assert.fail(err.stack);
@@ -542,8 +540,8 @@ describe("user actions", function() {
             userActions.transferGuestImageToUser(session, testImage.id)
                 .then(function (result) {
                     assert.ok(result);
-                    assert.ok(result.result);
-                    assert.deepStrictEqual(result.result.unregisteredSessionID, null);
+                    assert.ok(result.image);
+                    assert.deepStrictEqual(result.image.unregisteredSessionID, null);
                 })
                 .catch(function (err) {
                     assert.fail(err.stack);

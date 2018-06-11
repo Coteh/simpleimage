@@ -60,8 +60,7 @@ describe("transferUnregisteredUserImageToRegisteredUser", function () {
         databaseOps.transferUnregisteredUserImageToRegisteredUser("abcdef", "james")
             .then(function (result) {
                 assert.ok(result);
-                assert.ok(result.value);
-                assert.deepStrictEqual(result.value.username, "james");
+                assert.deepStrictEqual(result.username, "james");
             })
             .catch(function (err) {
                 assert.fail(err.stack || err.message);
@@ -76,8 +75,7 @@ describe("transferUnregisteredUserImageToRegisteredUser", function () {
         databaseOps.transferUnregisteredUserImageToRegisteredUser("abcdef", "james")
             .then(function (result) {
                 assert.ok(result);
-                assert.ok(result.value);
-                assert.deepStrictEqual(result.value.unregisteredSessionID, null);
+                assert.deepStrictEqual(result.unregisteredSessionID, null);
             })
             .catch(function (err) {
                 assert.fail(err.stack || err.message);
@@ -95,7 +93,7 @@ describe("transferUnregisteredUserImageMultiToRegisteredUser", function () {
         testImageDB.clearImages();
     });
     it("should set username on each image", function (done) {
-        var testImages = testImageUtils.createTestImage({
+        var testImages = testImageUtils.createTestImages({
             unregisteredSessionID: "qwertyuiop"
         }, 5);
         testImageDB.addImages(testImages);
