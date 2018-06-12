@@ -48,46 +48,6 @@ var mongoStub = {
 const databaseOps = rewire("../lib/database-ops");
 databaseOps.__set__(mongoStub);
 
-describe("transferUnregisteredUserImageToRegisteredUser", function () {
-    before(function () {
-        testImageDB.clearImages();
-    });
-    it("should set username on the image", function (done) {
-        testImageDB.addImage(testImageUtils.createTestImage({
-            unregisteredSessionID: "qwertyuiop",
-            id: "abcdef"
-        }));
-        databaseOps.transferUnregisteredUserImageToRegisteredUser("abcdef", "james")
-            .then(function (result) {
-                assert.ok(result);
-                assert.deepStrictEqual(result.username, "james");
-            })
-            .catch(function (err) {
-                assert.fail(err.stack || err.message);
-            })
-            .then(done, done);
-    });
-    it("should remove unregistered session ID from the image", function (done) {
-        testImageDB.addImage(testImageUtils.createTestImage({
-            unregisteredSessionID: "qwertyuiop",
-            id: "abcdef"
-        }));
-        databaseOps.transferUnregisteredUserImageToRegisteredUser("abcdef", "james")
-            .then(function (result) {
-                assert.ok(result);
-                assert.deepStrictEqual(result.unregisteredSessionID, null);
-            })
-            .catch(function (err) {
-                assert.fail(err.stack || err.message);
-            })
-            .then(done, done);
-    });
-    it("should throw if undefined imageID is passed");
-    it("should throw if null imageID is passed");
-    it("should throw if undefined username is passed");
-    it("should throw if null username is passed");
-});
-
 describe("transferUnregisteredUserImageMultiToRegisteredUser", function () {
     before(function () {
         testImageDB.clearImages();

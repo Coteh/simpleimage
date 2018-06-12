@@ -504,58 +504,6 @@ describe("user actions", function() {
                 .then(done, done);
         });
     });
-    describe("transferGuestImageToUser", function () {
-        before(function () {
-            testImageDB.clearImages();
-        });
-        it("an image owned by an unregistered user can be transferred to a registered user successfully", function (done) {
-            var session = testImageUtils.createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
-            var testImage = testImageUtils.createTestImage({
-                unregisteredSessionID: "qwertyuiop",
-                id: "abcdef"
-            });
-            testImageDB.addImage(testImage);
-            userActions.transferGuestImageToUser(session, testImage.id)
-                .then(function (result) {
-                    assert.ok(result);
-                    assert.equal(result.message, "Image of ID abcdef has been transferred to user james successfully.");
-                    assert.ok(result.image);
-                    var expectedImage = Object.assign({}, testImage);
-                    delete expectedImage.unregisteredSessionID;
-                    expectedImage.username = "james";
-                    assert.deepStrictEqual(result.image, expectedImage);
-                })
-                .catch(function (err) {
-                    assert.fail(err.stack);
-                })
-                .then(done, done);
-        });
-        it("an image transferred from unregistered user to a registered user shall have its unregistered session ID removed", function (done) {
-            var session = testImageUtils.createRegisteredUserSessionWithUnregisteredSession("james", "qwertyuiop");
-            var testImage = testImageUtils.createTestImage({
-                unregisteredSessionID: "qwertyuiop",
-                id: "abcdef"
-            });
-            testImageDB.addImage(testImage);
-            userActions.transferGuestImageToUser(session, testImage.id)
-                .then(function (result) {
-                    assert.ok(result);
-                    assert.ok(result.image);
-                    assert.deepStrictEqual(result.image.unregisteredSessionID, null);
-                })
-                .catch(function (err) {
-                    assert.fail(err.stack);
-                })
-                .then(done, done);
-        });
-        it("should not allow an image owned by another registered user to transfer to a registered user");
-        it("should not allow an image owned by an unregistered user to be transferred to another unregistered user");
-        it("image transfer failures should not remove the unregistered session ID link");
-        it("should throw if an undefined image is passed in");
-        it("should throw if a null image is passed in");
-        it("should throw if an undefined user is passed in");
-        it("should throw if a null user is passed in");
-    });
     describe("transferGuestImageMultiToUser", function () {
         before(function () {
             testImageDB.clearImages();
