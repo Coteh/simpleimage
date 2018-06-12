@@ -5,25 +5,6 @@ const testImageUtils = require("./util/test-image-utils");
 
 var mongoStub = {
     imageEntryCollection: {
-        findOneAndUpdate: function(selector, operations, callback) {
-            if (operations.$set) {
-                if (!selector.id) {
-                    callback({
-                        message: "Non-ID selection not supported in this test environment."
-                    }, null);
-                    return;
-                }
-                testImageDB.updateImage(selector.id, operations.$set);
-                callback(null, {
-                    ok: 1,
-                    value: testImageDB.getImage(selector.id)
-                });
-            } else {
-                callback({
-                    message: "Any other operation is not supported in this test environment."
-                }, null);
-            }
-        },
         updateMany: function (selector, operations, callback) {
             if (operations.$set) {
                 if (!selector.id) {
@@ -48,7 +29,7 @@ var mongoStub = {
 const databaseOps = rewire("../lib/database-ops");
 databaseOps.__set__(mongoStub);
 
-describe("transferUnregisteredUserImageMultiToRegisteredUser", function () {
+describe("transferUnregisteredUserImagesToRegisteredUser", function () {
     before(function () {
         testImageDB.clearImages();
     });
@@ -60,7 +41,7 @@ describe("transferUnregisteredUserImageMultiToRegisteredUser", function () {
         var testImageIDs = testImages.map(function (image) {
             return image.id;
         });
-        databaseOps.transferUnregisteredUserImageMultiToRegisteredUser(testImageIDs, "james")
+        databaseOps.transferUnregisteredUserImagesToRegisteredUser(testImageIDs, "james")
             .then(function (result) {
                 assert.ok(result);
             })

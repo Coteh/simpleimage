@@ -12,15 +12,7 @@ var databaseOpsStub = {
         var images = testImageDB.getImages(imageIDs);
         callback(null, images);
     },
-    transferUnregisteredUserImageToRegisteredUser: function (imageID, username) {
-        return new Promise(function (resolve, reject) {
-            var image = testImageDB.getImage(imageID);
-            image.username = username;
-            delete image.unregisteredSessionID;
-            resolve(image);
-        });
-    },
-    transferUnregisteredUserImageMultiToRegisteredUser: function (imageIDs, username) {
+    transferUnregisteredUserImagesToRegisteredUser: function (imageIDs, username) {
         return new Promise(function (resolve, reject) {
             testImageDB.updateManyImages(imageIDs, {
                 username
@@ -504,7 +496,7 @@ describe("user actions", function() {
                 .then(done, done);
         });
     });
-    describe("transferGuestImageMultiToUser", function () {
+    describe("transferGuestImagesToUser", function () {
         before(function () {
             testImageDB.clearImages();
         });
@@ -517,7 +509,7 @@ describe("user actions", function() {
             var testImageIDs = testImages.map(function (testImage) {
                 return testImage.id;
             });
-            userActions.transferGuestImageMultiToUser(session, testImageIDs)
+            userActions.transferGuestImagesToUser(session, testImageIDs)
                 .then(function (result) {
                     assert.ok(result);
                     assert.equal(result.message, "Images have been transferred to user james successfully.");
