@@ -566,9 +566,27 @@ describe("user actions", function() {
         it("should not perform an image transfer if the images already belong to the registered user");
     });
     describe("userDeleteImage", function () {
-
+        it("should successfully delete an image that a registered user owns (as that user)");
+        it("should successfully delete an image that an unregistered user owns (as that unregistered user)");
+        it("should fail if a registered user attempts to delete an image that another registered user owns");
+        it("should fail if a registered user attempts to delete an image that an unregistered user (besides themselves) owns");
+        it("should fail if an unregistered user attempts to delete an image that a registered user owns");
+        it("should successfully delete an image that a registered user uploaded when they were an unregistered user");
+        it("should throw if a null session is passed in");
+        it("should throw if an undefined session is passed in");
+        it("should throw if a null image ID is passed in");
+        it("should throw if an undefined image ID is passed in");
     });
     describe("userDeleteImages", function () {
-
+        it("should successfully delete a set of images that a registered user owns (as that user)");
+        it("should successfully delete a set of images that an unregistered user owns (as that unregistered user)");
+        it("should fail if a registered user attempts to delete an image that another registered user owns");
+        it("should fail if a registered user attempts to delete an image that an unregistered user (besides themselves) owns");
+        it("should fail if an unregistered user attempts to delete an image that a registered user owns");
+        it("should successfully delete a set of images that a registered user uploaded when they were an unregistered user");
+        it("should throw if a null session is passed in");
+        it("should throw if an undefined session is passed in");
+        it("should throw if a null array of image IDs is passed in");
+        it("should throw if an undefined array of image IDs is passed in");
     });
 });
