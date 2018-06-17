@@ -133,6 +133,7 @@ input[type="file"] {
 
 #top-nav #title {
     left: 0;
+    width: 200px;
 }
 
 #top-nav #title .logo {
@@ -140,7 +141,7 @@ input[type="file"] {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
-    width: 200px;
+    width: auto;
     height: 38px;
     transition-property: transform;
     transition-duration: 1s;
@@ -155,8 +156,6 @@ input[type="file"] {
 }
 
 #top-nav .nav-item {
-    position: absolute;
-    cursor: pointer;
     transition: transform 1s, left 1s, right 1s, background-color 0.2s;
 }
 
@@ -168,19 +167,10 @@ input[type="file"] {
     cursor: default;
 }
 
-#top-nav .nav-item.nav-right-1 {
-    right: 0;
-    top: 30px;
-}
-
-#top-nav .nav-item.nav-right-2 {
-    right: 136px;
-    top: 30px;
-}
-
 #top-nav .nav-item.nav-button {
     background-color: #222425;
     border-radius: 8px;
+    cursor: pointer;
 }
 
 #top-nav .nav-item.nav-button:hover {
@@ -255,6 +245,13 @@ input[type="file"] {
         display: none;
     }
 
+    #top-nav #user-menu, #top-nav #guest-menu {
+        display: flex;
+        position: absolute;
+        top: 30px;
+        right: 0;
+    }
+
     #top-nav.mini {
         height: 50px;
     }
@@ -263,20 +260,8 @@ input[type="file"] {
         left: -30px;
     }
 
-    #top-nav.mini #title .logo {
-        transform: scale(0.7);
-    }
-
-    #top-nav.mini .nav-item.nav-right-1 {
-        transform: scale(0.7);
-        right: -30px;
-        top: 30px;
-    }
-
-    #top-nav.mini .nav-item.nav-right-2 {
-        transform: scale(0.7);
-        right: 68px;
-        top: 30px;
+    #top-nav.mini .nav-item{
+        transform: scale(0.9);
     }
 
     #top-nav.mini .nav-menu .nav-menu-items {
@@ -293,6 +278,13 @@ input[type="file"] {
         display: none;
     }
 
+    #top-nav #mobile-menu-button {
+        right: 0;
+        cursor: pointer;
+        position: absolute;
+        top: 30px;
+    }
+
     #mobile-menu {
         visibility: hidden;
         opacity: 0.0;
@@ -302,10 +294,6 @@ input[type="file"] {
         visibility: visible;
         opacity: 1.0;
     }
-}
-
-#top-nav .nav-item.nav-drawer.nav-active {
-    
 }
 
 .nav-item.nav-menu .nav-menu-item {
