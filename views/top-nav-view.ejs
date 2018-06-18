@@ -5,7 +5,7 @@
                 <a href="/"><div class="logo"></div></a>
             </div>
             <% if (user === undefined) { %>
-            <%- include("guest-menu-view") %>
+            <%- include("guest-menu-view",{guestHasExtraFeatures}) %>
             <% } else { %>
             <%- include("user-menu-view",{user,fromUrl}) %>
             <% } %>
@@ -16,7 +16,7 @@
     </div>
     <div id="mobile-menu">
         <% if (user === undefined) { %>
-        <%- include("guest-mobile-menu-view") %>
+        <%- include("guest-mobile-menu-view",{guestHasExtraFeatures}) %>
         <% } else { %>
         <%- include("user-mobile-menu-view",{user,fromUrl}) %>
         <% } %>

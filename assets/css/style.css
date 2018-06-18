@@ -128,12 +128,15 @@ input[type="file"] {
     color: white;
     text-decoration: none;
     font-size: 24px;
-    margin: 0 20px;
 }
 
 #top-nav #title {
     left: 0;
     width: 200px;
+}
+
+#top-nav #title a {
+    margin: 0 20px;
 }
 
 #top-nav #title .logo {
@@ -171,6 +174,10 @@ input[type="file"] {
     background-color: #222425;
     border-radius: 8px;
     cursor: pointer;
+}
+
+#top-nav .nav-item.nav-button span {
+    margin: 0 20px;
 }
 
 #top-nav .nav-item.nav-button:hover {

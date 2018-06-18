@@ -5,4 +5,11 @@
     <div class="nav-item nav-button" onclick="openRegister();">    
         <span class="noselect">Register</span>
     </div>
+    <% if (guestHasExtraFeatures) { %>
+    <a href="/your_images">
+        <div class="nav-item nav-button">
+            <span class="noselect">Images</span>
+        </div>
+    </a>
+    <% } %>
 </div>
