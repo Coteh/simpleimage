@@ -20,6 +20,7 @@
     "ejs": "^2.5.7",
     "ejs-lint": "^0.3.0",
     "exif": "^0.6.0",
+    "exif-js": "^2.3.0",
     "express": "^4.14.0",
     "express-session": "^1.15.6",
     "file-type": "^7.4.0",

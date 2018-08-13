@@ -12,7 +12,17 @@ var onFileSelected = function() {
 
     for (var i = 0; i < files.length; i++) {
         var image = document.createElement("img");
-        image.src = window.URL.createObjectURL(files[i]);
+        image.addEventListener("load", function (evt) {
+            autoRotateImage(evt.target);
+        });
+        var reader = new FileReader();
+        reader.readAsDataURL(files[i]);
+        reader.onloadend = function() {
+            dataURL = reader.result;
+            image.src = dataURL;
+        }
+        // var blobURL = window.URL.createObjectURL(files[i]);
+        // image.src = blobURL;
         image.className = "image-preview";
         image.onload = function() {
             image.style.top = (-this.height + 15) + "px";
