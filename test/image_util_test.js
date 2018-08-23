@@ -4,10 +4,76 @@ const piexifjs = require("piexifjs");
 const fs = require("fs");
 
 describe("rotateImageEntry", function () {
-    it("should rotate a EXIF image to standard orientation (1)");
-    it("should throw an error if attempting to rotate a non-EXIF image");
-    it("should throw an error if attempting to rotate a null image");
-    it("should throw an error if attempting to rotate a undefined image");
+    // TODO test with a pre-rotated image
+    it("should rotate an EXIF image to standard orientation (1)", function () {
+        var imageEntry = {
+            data: fs.readFileSync("./test/assets/images/EXIF_rotate_test.jpg"),
+            mimetype: "image/jpeg",
+            encoding: "7bit",
+            username: "TestUser"
+        };
+
+        return imageUtil.rotateImageEntry(imageEntry)
+            .then(function (imageData) {
+                imageEntry.data = imageData;
+                return imageUtil.checkForEXIFImageEntry(imageEntry)
+                    .then(function (exifData) {
+                        assert.strictEqual(exifData.image.Orientation, 1);
+                    })
+                    .catch(function (err) {
+                        throw new Error("Error reading EXIF data from rotated image. Error message: " + err.message);
+                    });
+            })
+            .catch(function (err) {
+                throw new Error(err.message);
+            });
+    });
+    it("should throw an error if attempting to rotate a non-EXIF image", function () {
+        assert.fail("Test not implemented");
+    });
+    it("should throw an error if attempting to rotate a non-JPEG image", function () {
+        var imageEntry = {
+            data: fs.readFileSync("./test/assets/images/NonJPEG_image.png"),
+            mimetype: "image/png",
+            encoding: "7bit",
+            username: "TestUser"
+        };
+
+        return imageUtil.rotateImageEntry(imageEntry)
+            .then(function (data) {
+                assert.fail("This should not succeed. Failing...");
+            })
+            .catch(function (err) {
+                console.log(err);
+                assert.strictEqual(err.message, "Not a JPEG file", err.message);
+            });
+    });
+    it("should throw an error if attempting to rotate a non-JPEG image mistakenly labelled with a JPEG mimetype", function () {
+        var imageEntry = {
+            data: fs.readFileSync("./test/assets/images/NonJPEG_image.png"),
+            mimetype: "image/jpeg",
+            encoding: "7bit",
+            username: "TestUser"
+        };
+
+        return imageUtil.rotateImageEntry(imageEntry)
+            .then(function (data) {
+                assert.fail("This should not succeed. Failing...");
+            })
+            .catch(function (err) {
+                console.log(err);
+                assert.strictEqual(err.message, "Not a JPEG file", err.message);
+            });
+    });
+    it("should throw an error if attempting to rotate an image file that does not exist", function () {
+        assert.fail("Test not implemented");
+    });
+    it("should throw an error if attempting to rotate a null image", function () {
+        assert.fail("Test not implemented");
+    });
+    it("should throw an error if attempting to rotate a undefined image", function () {
+        assert.fail("Test not implemented");
+    });
 });
 
 describe("removeEXIFDataFromImageEntry", function () {
@@ -114,6 +180,22 @@ describe("checkForEXIFImageEntry", function () {
         var imageEntry = {
             data: fs.readFileSync("./test/assets/images/NonJPEG_image.png"),
             mimetype: "image/png",
+            encoding: "7bit",
+            username: "TestUser"
+        };
+
+        return imageUtil.checkForEXIFImageEntry(imageEntry)
+            .then(function (data) {
+                assert.fail("PNG image should not have passed the EXIF check.");
+            })
+            .catch(function (err) {
+                assert.strictEqual(err.code, "NOT_A_JPEG");
+            });
+    });
+    it("should fail for non-JPEG image entries that are mistakenly labelled with a JPEG mimetype", function () {
+        var imageEntry = {
+            data: fs.readFileSync("./test/assets/images/NonJPEG_image.png"),
+            mimetype: "image/jpeg",
             encoding: "7bit",
             username: "TestUser"
         };
