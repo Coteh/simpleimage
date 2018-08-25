@@ -15,6 +15,7 @@ var onFileSelected = function() {
         image.addEventListener("load", function (evt) {
             image.style.top = (-this.height + 15) + "px";
             autoRotateImage(evt.target);
+            image.style.opacity = 1;
         });
         var reader = new FileReader();
         reader.readAsDataURL(files[i]);

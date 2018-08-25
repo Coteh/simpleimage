@@ -25,6 +25,8 @@ input[type="file"] {
     max-width: 200px;
     max-height: 200px;
     position: relative;
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 #contents {
