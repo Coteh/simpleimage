@@ -12,11 +12,20 @@ var onFileSelected = function() {
 
     for (var i = 0; i < files.length; i++) {
         var image = document.createElement("img");
-        image.src = window.URL.createObjectURL(files[i]);
-        image.className = "image-preview";
-        image.onload = function() {
+        image.addEventListener("load", function (evt) {
             image.style.top = (-this.height + 15) + "px";
-        };
+            autoRotateImage(evt.target);
+            image.style.opacity = 1;
+        });
+        var reader = new FileReader();
+        reader.readAsDataURL(files[i]);
+        reader.onloadend = function() {
+            dataURL = reader.result;
+            image.src = dataURL;
+        }
+        // var blobURL = window.URL.createObjectURL(files[i]);
+        // image.src = blobURL;
+        image.className = "image-preview";
         uploadPreview.appendChild(image);
         uploadPreview.className = "selected";
         currentFile = files[i];

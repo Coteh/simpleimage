@@ -1,0 +1,16 @@
+version: "3.2"
+services:
+    si_app:
+        build:
+            context: .
+            args:
+                - NODE_ENV=test
+        volumes:
+            -  .:/usr/src/simpleimage
+            -  node_modules:/usr/src/simpleimage/node_modules
+        command: bash -c "npm test"
+        environment:
+            - NODE_ENV=test
+
+volumes:
+    node_modules:

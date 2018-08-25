@@ -42,7 +42,7 @@ npm run start:dev
 # Build Docker images
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
 # or, run
-make dev
+make build-dev
 
 # Run Docker containers in Docker Compose environment
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
@@ -58,12 +58,26 @@ make deploy-dev
 # Build Docker images
 docker-compose build
 # or, run
-make prod
+make build-prod
 
 # Run Docker containers in Docker Compose environment
 docker-compose up
 # or, run
 make deploy-prod
+~~~
+
+### Run Tests
+
+~~~sh
+# Build Docker images for test
+docker-compose -f docker-compose.yml -f docker-compose.test.yml build
+# or, run
+make build-test
+
+# Run Docker containers for test in Docker Compose environment
+docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
+# or, run
+make deploy-test
 ~~~
 
 ### Known Limitations
