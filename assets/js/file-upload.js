@@ -13,6 +13,7 @@ var onFileSelected = function() {
     for (var i = 0; i < files.length; i++) {
         var image = document.createElement("img");
         image.addEventListener("load", function (evt) {
+            image.style.top = (-this.height + 15) + "px";
             autoRotateImage(evt.target);
         });
         var reader = new FileReader();
@@ -24,9 +25,6 @@ var onFileSelected = function() {
         // var blobURL = window.URL.createObjectURL(files[i]);
         // image.src = blobURL;
         image.className = "image-preview";
-        image.onload = function() {
-            image.style.top = (-this.height + 15) + "px";
-        };
         uploadPreview.appendChild(image);
         uploadPreview.className = "selected";
         currentFile = files[i];
