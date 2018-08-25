@@ -14,4 +14,4 @@ deploy-dev:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
 deploy-test:
-	docker-compose -f docker-compose.yml -f docker-compose.test.yml up
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit

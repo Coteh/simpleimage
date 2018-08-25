@@ -28,8 +28,41 @@ describe("rotateImageEntry", function () {
                 throw new Error(err.message);
             });
     });
-    it("should throw an error if attempting to rotate a non-EXIF image", function () {
-        assert.fail("Test not implemented");
+    it("should not alter the image data of a non-EXIF image", function () {
+        var imageEntry = {
+            data: fs.readFileSync("./test/assets/images/EXIF_removed.jpg"),
+            mimetype: "image/jpeg",
+            encoding: "7bit",
+            username: "TestUser"
+        };
+
+        return imageUtil.rotateImageEntry(imageEntry)
+            .then(function (data) {
+                var newData = data;
+                var oldData = imageEntry.data;
+                assert.strictEqual(oldData.compare(newData, newData.indexOf("FFDA", 0, "hex"), newData.length, oldData.indexOf("FFDA", 0, "hex"), oldData.length), 0)
+            })
+            .catch(function (err) {
+                throw new Error(err.message);
+            });
+    });
+    it("should not alter metadata of a non-EXIF image (exiftran does add placeholder JFIF metadata if JFIF is not present however)", function () {
+        var imageEntry = {
+            data: fs.readFileSync("./test/assets/images/EXIF_removed.jpg"),
+            mimetype: "image/jpeg",
+            encoding: "7bit",
+            username: "TestUser"
+        };
+
+        return imageUtil.rotateImageEntry(imageEntry)
+            .then(function (data) {
+                var newData = data;
+                var oldData = imageEntry.data;
+                assert.strictEqual(oldData.compare(newData, 20, newData.indexOf("FFDA", 0, "hex") - 20, 2, oldData.indexOf("FFDA", 0, "hex") - 2), 0);
+            })
+            .catch(function (err) {
+                throw new Error(err.message);
+            });
     });
     it("should throw an error if attempting to rotate a non-JPEG image", function () {
         var imageEntry = {
@@ -44,8 +77,7 @@ describe("rotateImageEntry", function () {
                 assert.fail("This should not succeed. Failing...");
             })
             .catch(function (err) {
-                console.log(err);
-                assert.strictEqual(err.message, "Not a JPEG file", err.message);
+                assert.strictEqual(err.code, "NOT_A_JPEG", err.message);
             });
     });
     it("should throw an error if attempting to rotate a non-JPEG image mistakenly labelled with a JPEG mimetype", function () {
@@ -61,18 +93,58 @@ describe("rotateImageEntry", function () {
                 assert.fail("This should not succeed. Failing...");
             })
             .catch(function (err) {
-                console.log(err);
-                assert.strictEqual(err.message, "Not a JPEG file", err.message);
+                assert.strictEqual(err.code, "NOT_A_JPEG", err.message);
             });
     });
-    it("should throw an error if attempting to rotate an image file that does not exist", function () {
-        assert.fail("Test not implemented");
-    });
     it("should throw an error if attempting to rotate a null image", function () {
-        assert.fail("Test not implemented");
+        var imageEntry = {
+            data: null,
+            mimetype: "image/jpeg",
+            encoding: "7bit",
+            username: "TestUser"
+        };
+
+        return imageUtil.rotateImageEntry(imageEntry)
+            .then(function (data) {
+                assert.fail("This should not succeed. Failing...");
+            })
+            .catch(function (err) {
+                assert.strictEqual(err.code, "IMG_NULL", err.message);
+            });
     });
-    it("should throw an error if attempting to rotate a undefined image", function () {
-        assert.fail("Test not implemented");
+    it("should throw an error if attempting to rotate an undefined image", function () {
+        var imageEntry = {
+            data: undefined,
+            mimetype: "image/jpeg",
+            encoding: "7bit",
+            username: "TestUser"
+        };
+
+        return imageUtil.rotateImageEntry(imageEntry)
+            .then(function (data) {
+                assert.fail("This should not succeed. Failing...");
+            })
+            .catch(function (err) {
+                assert.strictEqual(err.code, "IMG_NULL", err.message);
+            });
+    });
+    it("should throw an error if a null image entry is passed in", function () {
+        return imageUtil.rotateImageEntry(null)
+            .then(function (data) {
+                assert.fail("This should not succeed. Failing...");
+            })
+            .catch(function (err) {
+                assert.strictEqual(err.code, "IMG_ENTRY_NULL", err.message);
+            });
+    });
+    it("should throw an error if an undefined image entry is passed in", function () {
+        return imageUtil.rotateImageEntry(undefined)
+            .then(function (data) {
+                assert.fail("This should not succeed. Failing...");
+            })
+            .catch(function (err) {
+                assert.strictEqual(err.code, "IMG_ENTRY_NULL", err.message);
+            });
     });
 });
 
