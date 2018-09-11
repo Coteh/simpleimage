@@ -1,4 +1,11 @@
 import EXIF from "exif-js";
+import piexifjs from "piexifjs";
+
+// Strips EXIF from local preview image
+// that is displayed before uploading.
+window.stripEXIF = function(img) {
+    return piexifjs.remove(img.src);
+};
 
 window.getTranslationValue = function(orientation) {
     var ua = $("#upload-area");
