@@ -12,10 +12,20 @@ var onFileSelected = function() {
 
     for (var i = 0; i < files.length; i++) {
         var image = document.createElement("img");
+        var exifRemoved = false;
+        // This load event listener will fire twice
+        // First time when local preview image is initially loaded
+        // Second time after the image element's src property
+        // is changed to be the modified version without orientation
         image.addEventListener("load", function (evt) {
-            image.style.top = (-this.height + 15) + "px";
-            autoRotateImage(evt.target);
-            image.style.opacity = 1;
+            if (exifRemoved) {
+                image.style.opacity = 1;
+            } else {
+                image.style.top = (-this.height + 15) + "px";
+                autoRotateImage(evt.target);
+                evt.target.src = stripEXIF(evt.target);
+                exifRemoved = true;
+            }
         });
         var reader = new FileReader();
         reader.readAsDataURL(files[i]);
