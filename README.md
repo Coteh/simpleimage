@@ -82,7 +82,12 @@ make deploy-test
 
 ### Known Limitations
 
-* None yet
+* Cannot change username/password/email
+* Some of the popup dialogs need a bit of size tweaking (e.g. signup dialog)
+* No image upload history (Currently being worked on in [dev/image-history branch](https://github.com/Coteh/simpleimage/tree/dev/image-history))
+* No option for anonymous users to upload an image with ability to delete
+    * Delete links based on user session are being considered (which is what imgur does as well)
+* See [Issues](https://github.com/Coteh/simpleimage/issues) page for more
 
 ### Future Additions
 
@@ -91,4 +96,3 @@ make deploy-test
 * Image galleries
 * Custom image IDs
 * Delete account
-* Mobile layout
