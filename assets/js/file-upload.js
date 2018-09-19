@@ -13,20 +13,27 @@ var onFileSelected = function() {
     for (var i = 0; i < files.length; i++) {
         var image = document.createElement("img");
         var exifRemoved = false;
+        var previewLoadHandler = (function (file) {
+            return function (evt) {
+                if (exifRemoved) {
+                    image.style.opacity = 1;
+                } else {
+                    image.style.top = (-this.height + 15) + "px";
+                    if (file.type !== "image/jpeg") {
+                        image.style.opacity = 1;
+                        return;
+                    }
+                    autoRotateImage(evt.target);
+                    evt.target.src = stripEXIF(evt.target);
+                    exifRemoved = true;
+                }
+            }
+        })(files[i]);
         // This load event listener will fire twice
         // First time when local preview image is initially loaded
         // Second time after the image element's src property
         // is changed to be the modified version without orientation
-        image.addEventListener("load", function (evt) {
-            if (exifRemoved) {
-                image.style.opacity = 1;
-            } else {
-                image.style.top = (-this.height + 15) + "px";
-                autoRotateImage(evt.target);
-                evt.target.src = stripEXIF(evt.target);
-                exifRemoved = true;
-            }
-        });
+        image.addEventListener("load", previewLoadHandler);
         var reader = new FileReader();
         reader.readAsDataURL(files[i]);
         reader.onloadend = function() {
