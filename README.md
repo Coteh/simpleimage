@@ -2,6 +2,8 @@
 
 A simple image hosting web application that I created and implemented using Node.js and Express, with MongoDB as the database and Redis as the session store for production.
 
+![Screenshot](screenshots/screenshot.png "App Screenshot")
+
 ## Features
 
 * Upload BMP, PNG, JPEG, and GIF images
