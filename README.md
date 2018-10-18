@@ -1,6 +1,6 @@
 # ![simpleimage logo](assets/images/logo.svg "simpleimage")
 
-A simple image hosting web application that I created and implemented using Node.js and Express, with MongoDB as the database and Redis as the session store. (for production only)
+A simple image hosting web application that I created and implemented using Node.js and Express, with MongoDB as the database and Redis as the session store for production.
 
 ## Features
 
