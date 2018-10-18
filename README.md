@@ -4,7 +4,7 @@ A simple image hosting web application that I created and implemented using Node
 
 ## Features
 
-* Upload bmp, png, jpeg, and gif images
+* Upload BMP, PNG, JPEG, and GIF images
 * Comment on images
 * Image page
     * Image upload date
@@ -13,6 +13,8 @@ A simple image hosting web application that I created and implemented using Node
 * User profile page
     * Join date
     * Comment history and total number of comments posted
+* Rotates JPEG images based on Orientation tag in EXIF metadata
+* Strips EXIF metadata from JPEG images
 
 ## Installation
 
