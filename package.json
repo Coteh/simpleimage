@@ -12,7 +12,7 @@
   "author": "James Cote (Coteh)",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.18.2",
     "connect-redis": "^3.3.2",
     "copy-webpack-plugin": "^4.1.1",
