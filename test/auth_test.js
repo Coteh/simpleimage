@@ -3,6 +3,7 @@ const auth = require("../lib/auth");
 
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const errMsgs = require("../lib/error-msgs");
 
 const REGULAR_PASSWORD = "myPassword";
 const REGULAR_PASSWORD_HASHED = "$2a$10$LgUwc4WQBxjoAQYM/jxha.7nT2m5yMYd6PHeVn.4VYuu86JCjdPqC";
@@ -61,7 +62,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Cannot hash non-string password");
+                assert.strictEqual(err.message, auth.ERRORS.CANNOT_HASH_NONSTRING);
             });
         });
         it("should not create a hash if password is undefined", function () {
@@ -74,7 +75,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Cannot hash non-string password");
+                assert.strictEqual(err.message, auth.ERRORS.CANNOT_HASH_NONSTRING);
             });
         });
         it("should not create a hash if password is null", function () {
@@ -87,7 +88,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Cannot hash non-string password");
+                assert.strictEqual(err.message, auth.ERRORS.CANNOT_HASH_NONSTRING);
             });
         });
     });
@@ -121,7 +122,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Could not login user. Username and password combination not found.");
+                assert.strictEqual(err.message, errMsgs.USERPASS_COMBO_NOT_FOUND);
             });
         });
         it("should fail to authenticate the user if the password is greater than 72 characters and the first 72 characters match, but the rest don't", function() {
@@ -138,7 +139,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Could not login user. Username and password combination not found.");
+                assert.strictEqual(err.message, errMsgs.USERPASS_COMBO_NOT_FOUND);
             });
         });
         it("should authenticate a user with a long password past bcrypt's limitations (72 chars)", function() {
@@ -170,7 +171,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Could not login user. Invalid password value provided.");
+                assert.strictEqual(err.message, auth.ERRORS.INVALID_PASSWORD_ATTEMPT);
             });
         });
         it("should fail to authenticate the user if the password is undefined", function () {
@@ -186,7 +187,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Could not login user. Invalid password value provided.");
+                assert.strictEqual(err.message, auth.ERRORS.INVALID_PASSWORD_ATTEMPT);
             });
         });
         it("should fail to authenticate the user if the password is null", function () {
@@ -202,7 +203,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Could not login user. Invalid password value provided.");
+                assert.strictEqual(err.message, auth.ERRORS.INVALID_PASSWORD_ATTEMPT);
             });
         });
         it("should fail to authenticate the user if user reference is undefined", function() {
@@ -216,7 +217,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Could not login user. Invalid user value provided.");
+                assert.strictEqual(err.message, auth.ERRORS.INVALID_AUTH_USER);
             });
         });
         it("should fail to authenticate the user if user reference is null", function () {
@@ -230,7 +231,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Could not login user. Invalid user value provided.");
+                assert.strictEqual(err.message, auth.ERRORS.INVALID_AUTH_USER);
             });
         });
         it("should fail to authenticate the user if user reference does not contain a 'password' field", function () {
@@ -245,7 +246,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Could not login user. Invalid user value provided.");
+                assert.strictEqual(err.message, auth.ERRORS.INVALID_AUTH_USER);
             });
         });
         it("should fail to authenticate the user if user reference's 'password' field is not a string", function () {
@@ -262,7 +263,7 @@ describe("auth", function () {
                         resolve(err);
                     });
             }).then((err) => {
-                assert.strictEqual(err.message, "Could not login user. Invalid user value provided.");
+                assert.strictEqual(err.message, auth.ERRORS.INVALID_AUTH_USER);
             });
         });
     });
