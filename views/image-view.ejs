@@ -49,7 +49,6 @@
             <% } else { %>
                 <form id="comment" action="/comment?type=json&response=html" method="POST">
                     <input type="hidden" name="imageID" value="<%= id %>">
-                    <input type="hidden" name="userID" value="0">
                     <textarea class="comment-box" name="comment" placeholder="Add a comment"></textarea><br/>
                     <span class="button submit-button">Submit</span>
                 </form><br/>
