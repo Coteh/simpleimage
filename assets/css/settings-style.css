@@ -1,0 +1,25 @@
+body {
+    overflow: visible;
+}
+
+#settings-container h2 {
+    color: white;
+}
+
+.settings-view, .settings-nav-left {
+    background: grey;
+    padding: 20px;
+    line-height: 20px;
+}
+
+.settings-nav-left {
+    float: left;
+}
+
+#settings-container {
+    
+}
+
+#container {
+    position: relative;
+}

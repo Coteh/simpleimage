@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>User Settings - simpleimage</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/settings-style.css">
+    <link rel="stylesheet" href="/assets/css/form-style.css">
+    <link rel="stylesheet" href="/assets/css/comments.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="/assets/js/user.bundle.js"></script>
+    <script>
+        $(function () {
+            $("form[id='change-password-form'] .submit-button").click(function (e) {
+                $("form[id='change-password-form']").submit();
+            });
+        });
+    </script>
+    <%- include("headers") %>
+</head>
+
+<body>
+    <div id="overlay-backdrop">
+    </div>
+    <%- include("top-nav-view", {user:sessionUser,fromUrl}) %>
+    <div id="contents" class="page-contents">
+        <div id="notification-overlay-container">
+        </div>
+        <div id="overlay-container">
+        </div>
+        <div id="settings-container">
+            <div>
+                <h2>User Settings</h2>
+            </div>
+            <div class="settings-view">
+                <span>Change Password</span><br/>
+                <form action="/change_password?type=html" method="POST" id="change-password-form" class="input-form">
+                    <span>Old Password</span>
+                    <input type="password" name="oldPassword"></input><br />
+                    <span>New Password</span>
+                    <input type="password" name="newPassword"></input><br />
+                    <span>Confirm New Password</span>
+                    <input type="password" name="newPasswordConfirm"></input><br />
+                    <span class="button submit-button">Submit</span>
+                </form>
+            </div>
+        </div>
+        <%- include("footer") %>
+    </div>
+</body>
+
+</html>
