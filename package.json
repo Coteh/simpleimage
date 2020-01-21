@@ -23,7 +23,7 @@
     "exif-js": "^2.3.0",
     "express": "^4.14.0",
     "express-session": "^1.15.6",
-    "file-type": "^7.4.0",
+    "file-type": "^13.1.1",
     "mime-types": "^2.1.17",
     "mongodb": "^2.2.9",
     "multer": "^1.2.0",
