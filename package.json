@@ -7,7 +7,7 @@
     "build:client": "webpack",
     "start": "node app.js",
     "start:dev": "nodemon",
-    "test": "NODE_ENV=test mocha"
+    "test": "NODE_ENV=test mocha --exit"
   },
   "author": "James Cote (Coteh)",
   "license": "MIT",
@@ -33,7 +33,10 @@
     "webpack": "^3.7.1"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "mocha": "^4.1.0",
+    "mongodb-memory-server": "^6.2.4",
     "nodemon": "^1.15.1",
     "proxyquire": "^2.0.1",
     "session-file-store": "^1.2.0"
