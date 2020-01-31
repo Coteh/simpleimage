@@ -1,9 +1,11 @@
 const chai = require("chai");
 const chaiHTTP = require("chai-http");
+const auth = require("../../lib/auth");
 const databaseOps = require("../../lib/database-ops");
 const server = require("../../lib/server");
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
+const bcrypt = require("bcrypt");
 var assert = require("assert");
 
 chai.use(chaiHTTP);
@@ -32,6 +34,7 @@ function performUserLogin() {
 describe("integ - change password", () => {
     var mongod = null;
     var db = null;
+    const TEST_USER = "test-user";
 
     before(async function () {
         mongod = new MongoMemoryServer();
@@ -60,7 +63,7 @@ describe("integ - change password", () => {
     });
     beforeEach((done) => {
         databaseOps.addUser({
-            username: "test-user",
+            username: TEST_USER,
             password: "test",
             email: "test@test.com"
         }, () => {
@@ -70,17 +73,29 @@ describe("integ - change password", () => {
     it("should let user change password", (done) => {
         performUserLogin()
             .then((agent) => {
+                const newPassword = "Qwerty123!";
                 agent.post("/change_password?type=json")
                     .type("form")
                     .send({
                         "oldPassword": "test",
-                        "newPassword": "Qwerty123!",
-                        "newPasswordConfirm": "Qwerty123!"
+                        "newPassword": newPassword,
+                        "newPasswordConfirm": newPassword
                     })
                     .end((err, res) => {
                         assert.equal(res.statusCode, 200);
                         assert.equal(res.body.message, "Password changed");
-                        done();
+                        usersCollection = db.collection("users");
+                        usersCollection.find({ username: TEST_USER })
+                            .toArray((err, users) => {
+                                if (err) {
+                                    assert.fail(err);
+                                    done();
+                                    return;
+                                }
+                                const user = users[0];
+                                assert.ok(bcrypt.compareSync(auth.preHashPassword(newPassword), user.password));
+                                done();
+                            });
                     });
             })
             .catch((err) => {
