@@ -114,8 +114,7 @@ describe("integ - change password", () => {
                         "newPasswordConfirm": "Qwerty123!"
                     })
                     .end((err, res) => {
-                        assert.equal(res.statusCode, 400);
-                        assert.equal(res.body.message, "Could not change password. Old password is not correct.");
+                        assert.equal(res.body.errorID, "oldPasswordIncorrect");
                         done();
                     });
             })
@@ -129,27 +128,140 @@ describe("integ - change password", () => {
         agent.post("/change_password?type=json")
             .type("form")
             .send({
-                "oldPassword": "dsfsd",
+                "oldPassword": "test",
                 "newPassword": "Qwerty123!",
                 "newPasswordConfirm": "Qwerty123!"
             })
             .end((err, res) => {
-                assert.equal(res.statusCode, 404);
-                assert.equal(res.body.message, "Cannot perform action. Not signed in.");
+                assert.equal(res.body.errorID, "notSignedIn");
                 done();
             });
     });
     it("should prevent user from changing password if old password is not provided", (done) => {
-        assert.fail("Not implemented");
+        performUserLogin()
+            .then((agent) => {
+                agent.post("/change_password?type=json")
+                    .type("form")
+                    .send({
+                        "newPassword": "Qwerty123!",
+                        "newPasswordConfirm": "Qwerty123!"
+                    })
+                    .end((err, res) => {
+                        assert.equal(res.body.errorID, "missingOldPassword");
+                        done();
+                    });
+            })
+            .catch((err) => {
+                assert.fail(err);
+                done();
+            });
     });
     it("should prevent user from changing password if new password is not provided", (done) => {
-        assert.fail("Not implemented");
+        performUserLogin()
+            .then((agent) => {
+                agent.post("/change_password?type=json")
+                    .type("form")
+                    .send({
+                        "oldPassword": "test",
+                        "newPasswordConfirm": "Qwerty123!"
+                    })
+                    .end((err, res) => {
+                        assert.equal(res.body.errorID, "missingNewPassword");
+                        done();
+                    });
+            })
+            .catch((err) => {
+                assert.fail(err);
+                done();
+            });
     });
     it("should prevent user from changing password if new password confirmation is not provided", (done) => {
-        assert.fail("Not implemented");
+        performUserLogin()
+            .then((agent) => {
+                agent.post("/change_password?type=json")
+                    .type("form")
+                    .send({
+                        "oldPassword": "test",
+                        "newPassword": "Qwerty123!",
+                    })
+                    .end((err, res) => {
+                        assert.equal(res.body.errorID, "missingNewPasswordConfirm");
+                        done();
+                    });
+            })
+            .catch((err) => {
+                assert.fail(err);
+                done();
+            });
+    });
+    it("should prevent user from changing password if new password and its confirmation don't match", (done) => {
+        performUserLogin()
+            .then((agent) => {
+                agent.post("/change_password?type=json")
+                    .type("form")
+                    .send({
+                        "oldPassword": "test",
+                        "newPassword": "dsfds",
+                        "newPasswordConfirm": "Qwerty123!"
+                    })
+                    .end((err, res) => {
+                        assert.equal(res.body.errorID, "passwordsDoNotMatch");
+                        done();
+                    });
+            })
+            .catch((err) => {
+                assert.fail(err);
+                done();
+            });
     });
     it("should prevent user from changing password if new password is not strong enough", (done) => {
+        performUserLogin()
+            .then((agent) => {
+                agent.post("/change_password?type=json")
+                    .type("form")
+                    .send({
+                        "oldPassword": "test",
+                        "newPassword": "weak",
+                        "newPasswordConfirm": "weak"
+                    })
+                    .end((err, res) => {
+                        assert.equal(res.body.errorID, "passwordNotStrong");
+                        done();
+                    });
+            })
+            .catch((err) => {
+                assert.fail(err);
+                done();
+            });
+    });
+    // TODO both this test and the one after it will require server-side mocking
+    it("should prevent user from changing password if user doesn't exist", (done) => {
+        assert.fail("TODO should we test for user being deleted between session activation and password change?");
+    });
+    it("should not change password if changing password encountered an error", (done) => {
         assert.fail("Not implemented");
+    });
+    it("should not change password if there was an error retrieving session user info from db", (done) => {
+        performUserLogin()
+            .then((agent) => {
+                usersCollection = db.collection("users");
+                usersCollection.deleteMany({});
+                agent.post("/change_password?type=json")
+                    .type("form")
+                    .send({
+                        "oldPassword": "test",
+                        "newPassword": "Qwerty123!",
+                        "newPasswordConfirm": "Qwerty123!"
+                    })
+                    .end((err, res) => {
+                        assert.equal(res.body.errorID, "sessionUserNotFound");
+                        done();
+                    });
+            })
+            .catch((err) => {
+                assert.fail(err);
+                done();
+            });
     });
     afterEach(async function () {
         usersCollection = db.collection("users");
