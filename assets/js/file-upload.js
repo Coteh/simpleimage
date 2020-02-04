@@ -37,9 +37,9 @@ var onFileSelected = function() {
         var reader = new FileReader();
         reader.readAsDataURL(files[i]);
         reader.onloadend = function() {
-            dataURL = reader.result;
+            var dataURL = reader.result;
             image.src = dataURL;
-        }
+        };
         // var blobURL = window.URL.createObjectURL(files[i]);
         // image.src = blobURL;
         image.className = "image-preview";
@@ -52,7 +52,7 @@ var onFileSelected = function() {
 }
 
 var onFileUploaded = function() {
-    json = JSON.parse(this.responseText);
+    var json = JSON.parse(this.responseText);
     fileSelect.value = "";
     if (this.status === 500) {
         console.error("An error ocurred: " + json.message);
