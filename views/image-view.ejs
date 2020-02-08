@@ -51,6 +51,7 @@
                     <input type="hidden" name="imageID" value="<%= id %>">
                     <textarea class="comment-box" name="comment" placeholder="Add a comment"></textarea><br/>
                     <span class="button submit-button">Submit</span>
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"></input>
                 </form><br/>
             <% } %>
             <div id="comments-container"></div>
