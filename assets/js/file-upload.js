@@ -54,7 +54,7 @@ var onFileSelected = function() {
 var onFileUploaded = function() {
     var json = JSON.parse(this.responseText);
     fileSelect.value = "";
-    if (this.status === 500) {
+    if (this.status !== 200) {
         console.error("An error ocurred: " + json.message);
         uploadPreview.style.boxShadow = "";
         uploadPreview.classList.add("error");
@@ -78,12 +78,13 @@ var uploadFile = function(file) {
     var action = form.attr("action");
     var req = new XMLHttpRequest();
     var formData = new FormData();
-
+    
     uploadPreview.classList.remove("error");
-
+    
     req.onload = onFileUploaded;
     req.onprogress = onFileProgress;
     req.open("post", action);
+    req.setRequestHeader("X-CSRF-TOKEN", csrfToken);
     formData.append("myFile", currentFile);
     req.send(formData);
 }
