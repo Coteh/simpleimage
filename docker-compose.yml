@@ -42,8 +42,6 @@ services:
     si_sessions:
         image: redis:4.0.6
         container_name: si-sessions
-        ports:
-            - "6379:6379"
 
 volumes:
     configdb:
