@@ -7,7 +7,8 @@
     "build:client": "webpack",
     "start": "node app.js",
     "start:dev": "nodemon",
-    "test": "NODE_ENV=test mocha"
+    "test": "NODE_ENV=test mocha",
+    "heroku-postbuild": "webpack -p"
   },
   "author": "James Cote (Coteh)",
   "license": "MIT",
