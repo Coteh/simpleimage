@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build:client": "webpack",
+    "watch:client": "webpack -w",
     "start": "node app.js",
     "start:dev": "nodemon",
     "test": "NODE_ENV=test mocha",
