@@ -34,13 +34,13 @@
     "webpack": "^4.41.5",
     "express-rate-limit": "^5.0.0",
     "rate-limit-redis": "^1.7.0",
-    "redis": "^3.0.2"
+    "redis": "^3.0.2",
+    "webpack-cli": "^3.3.10"
   },
   "devDependencies": {
     "mocha": "^4.1.0",
     "nodemon": "^1.15.1",
     "proxyquire": "^2.0.1",
-    "session-file-store": "^1.2.0",
-    "webpack-cli": "^3.3.10"
+    "session-file-store": "^1.2.0"
   }
 }
