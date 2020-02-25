@@ -146,7 +146,7 @@ describe("util", function() {
             it("should return just the relative path if malicious URL is provided", function() {
                 assert.strictEqual(util.getRedirectPath("http://evilsite.com/foo/bar?somequery=value"), "/foo/bar");
             });
-            it("should block relative paths with two slashes in front", function() {
+            it("should block relative paths with two (or more) slashes in front", function() {
                 assert.strictEqual(util.getRedirectPath("//google.com"), "/");
             });
             it("should block javascript: protocol URLs", function() {
