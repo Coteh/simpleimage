@@ -7,7 +7,7 @@
             <% if (user === undefined) { %>
             <%- include("guest-menu-view") %>
             <% } else { %>
-            <%- include("user-menu-view",{user,fromUrl}) %>
+            <%- include("user-menu-view",{user}) %>
             <% } %>
             <div id="mobile-menu-button" class="nav-item user nav-drawer nav-right-1">
                 <span class="collecticon collecticon-hamburger-menu head-icon"></span>
@@ -18,7 +18,7 @@
         <% if (user === undefined) { %>
         <%- include("guest-mobile-menu-view") %>
         <% } else { %>
-        <%- include("user-mobile-menu-view",{user,fromUrl}) %>
+        <%- include("user-mobile-menu-view",{user}) %>
         <% } %>
     </div>
 </div>
