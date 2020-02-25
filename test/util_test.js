@@ -135,6 +135,20 @@ describe("util", function() {
             it("should return root path string given undefined as url", function () {
                 assert.strictEqual(util.getRedirectPath(undefined), "/");
             });
+            it("should return root slash if root slash is given", function() {
+                var path = "/";
+                assert.strictEqual(util.getRedirectPath(path), path);
+            });
+            it("should return the same string if relative path already given", function() {
+                var path = "/my_path";
+                assert.strictEqual(util.getRedirectPath(path), path);
+            });
+            it("should strip out queries from the URL", function() {
+                assert.strictEqual(util.getRedirectPath("/index.html?query=something"), "/index.html");
+            });
+            it("should return just the relative path if malicious URL is provided", function() {
+                assert.strictEqual(util.getRedirectPath("http://evilsite.com/foo/bar?somequery=value"), "/foo/bar");
+            });
         });
     });
 });
