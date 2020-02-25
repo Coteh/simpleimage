@@ -129,9 +129,6 @@ describe("util", function() {
                 var myURL = "https://www.simpleimage.com/images/test";
                 assert.strictEqual(util.getRedirectPath(myURL), "/images/test");
             });
-            it("should return root path string given 'home' string as url", function() {
-                assert.strictEqual(util.getRedirectPath("home"), "/");
-            });
             it("should return root path string given undefined as url", function () {
                 assert.strictEqual(util.getRedirectPath(undefined), "/");
             });
@@ -148,6 +145,18 @@ describe("util", function() {
             });
             it("should return just the relative path if malicious URL is provided", function() {
                 assert.strictEqual(util.getRedirectPath("http://evilsite.com/foo/bar?somequery=value"), "/foo/bar");
+            });
+            it("should block relative paths with two slashes in front", function() {
+                assert.strictEqual(util.getRedirectPath("//google.com"), "/");
+            });
+            it("should block javascript: protocol URLs", function() {
+                assert.strictEqual(util.getRedirectPath("javascript:alert(1)"), "/");
+            });
+            it("should block data: protocol URLs", function() {
+                assert.strictEqual(util.getRedirectPath("data:text/html,<script>alert(document.domain)</script>"), "/");
+            });
+            it("should block URLs with CRLF characters", function() {
+                assert.strictEqual(util.getRedirectPath("/index\r\nsomething"), "/");
             });
         });
     });
