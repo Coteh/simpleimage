@@ -20,6 +20,18 @@ A simple image hosting web application that I created and implemented using Node
 
 ## Installation
 
+### .env Template
+
+```
+MONGODB_URI=<MongoDB URI goes here>
+REDIS_URL=<Redis URL goes here>
+MONGO_ROOT_USERNAME=<root username for MongoDB instance>
+MONGO_ROOT_PASSWORD=<root password for MongoDB instance>
+MONGO_INITIAL_DATABASE=<initial database for MongoDB instance>
+
+SESSION_SECRET=<session secret goes here>
+```
+
 ### Building and Running Locally
 
 ~~~sh
@@ -31,6 +43,9 @@ npm run build:client
 
 # Run local MongoDB database
 mongod --dbpath ./data/
+
+# Export SESSION_SECRET environment variable (or use a .env file)
+export SESSION_SECRET="my-secret"
 
 # Run the app
 npm start
