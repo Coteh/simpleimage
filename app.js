@@ -1,6 +1,6 @@
 const databaseOps = require("./lib/database-ops");
 const server = require("./lib/server");
-const logger = require("./lib/logger");
+const logger = require("./lib/logger").logger;
 
 var port = process.env.PORT || 3010;
 
