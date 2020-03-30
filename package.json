@@ -20,7 +20,7 @@
     "copy-webpack-plugin": "^4.6.0",
     "csurf": "^1.11.0",
     "dotenv": "^4.0.0",
-    "ejs": "^2.5.7",
+    "ejs": "^3.0.2",
     "ejs-lint": "^0.3.0",
     "exif": "^0.6.0",
     "exif-js": "^2.3.0",
