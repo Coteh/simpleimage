@@ -104,13 +104,13 @@ describe("util", function() {
         });
         describe("sanitizeText", function () {
             it("should sanitize input text", function() {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.sanitizeText("<>&\"'"), "&lt;&gt;&amp;&quot;&#39;");
             });
             it("should return empty string if empty string passed in", function() {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.sanitizeText(""), "");
             });
             it("should return undefined if undefined passed in", function() {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.sanitizeText(undefined), undefined);
             });
         });
         describe("escapeOutput", function () {
