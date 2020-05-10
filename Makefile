@@ -15,3 +15,7 @@ deploy-dev:
 
 deploy-test:
 	docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
+
+clean:
+	docker ps -a | grep coteh/simpleimage | cut -d' ' -f1 | xargs docker rm
+	docker volume rm simpleimage_node_modules

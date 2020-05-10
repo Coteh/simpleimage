@@ -11,6 +11,9 @@ services:
         command: bash -c "npm run build:client & npm run start:dev"
         environment:
             - NODE_ENV=development
+    si_sessions:
+        ports:
+            - "6379:6379"
 
 volumes:
     node_modules:
