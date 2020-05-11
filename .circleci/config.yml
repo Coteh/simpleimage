@@ -14,8 +14,7 @@ jobs:
                 name: Run tests
                 command: npm test
                 environment:
-                    JUNIT_REPORT_PATH: ./junit/
-                    JUNIT_REPORT_NAME: test-results.xml
+                    MOCHA_FILE: ./junit/test-results.xml
             - store_test_results:
                 path: ./junit
 workflows:
