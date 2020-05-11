@@ -104,7 +104,7 @@ describe("util", function() {
         });
         describe("sanitizeText", function () {
             it("should sanitize input text", function() {
-                assert.strictEqual(util.sanitizeText("<>&\"'"), "&lt;&gt;&amp;&quot;&#39;");
+                assert.fail("Not implemented");
             });
             it("should return empty string if empty string passed in", function() {
                 assert.strictEqual(util.sanitizeText(""), "");
@@ -114,14 +114,14 @@ describe("util", function() {
             });
         });
         describe("escapeOutput", function () {
-            it("should escape output text", function () {
-                assert.fail("Not implemented");
+            it("should escape text with HTML special characters", function () {
+                assert.strictEqual(util.escapeOutput("<>&\"'"), "&lt;&gt;&amp;&quot;&#39;");
             });
             it("should return empty string if empty string passed in", function () {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.escapeOutput(""), "");
             });
             it("should return undefined if undefined passed in", function () {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.escapeOutput(undefined), undefined);
             });
         });
         describe("getRedirectPath", function () {
