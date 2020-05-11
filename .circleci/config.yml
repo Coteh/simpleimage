@@ -12,7 +12,7 @@ jobs:
             - run: npm install
             - run:
                 name: Run tests
-                command: npm test
+                command: npm run test-report
                 environment:
                     MOCHA_FILE: ./junit/simpleimage/test-results.xml
             - store_test_results:

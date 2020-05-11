@@ -8,7 +8,8 @@
     "watch:client": "webpack -w",
     "start": "node app.js",
     "start:dev": "nodemon",
-    "test": "NODE_ENV=test mocha test --reporter mocha-junit-reporter",
+    "test": "NODE_ENV=test mocha test",
+    "test-report": "NODE_ENV=test mocha test --reporter mocha-junit-reporter",
     "heroku-postbuild": "webpack -p"
   },
   "author": "James Cote (Coteh)",
