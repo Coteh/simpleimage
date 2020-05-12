@@ -102,17 +102,6 @@ describe("util", function() {
                 assert.strictEqual(obj.message, undefined);
             });
         });
-        describe("sanitizeText", function () {
-            it("should sanitize input text", function() {
-                assert.fail("Not implemented");
-            });
-            it("should return empty string if empty string passed in", function() {
-                assert.strictEqual(util.sanitizeText(""), "");
-            });
-            it("should return undefined if undefined passed in", function() {
-                assert.strictEqual(util.sanitizeText(undefined), undefined);
-            });
-        });
         describe("escapeOutput", function () {
             it("should escape text with HTML special characters", function () {
                 assert.strictEqual(util.escapeOutput("<>&\"'"), "&lt;&gt;&amp;&quot;&#39;");
