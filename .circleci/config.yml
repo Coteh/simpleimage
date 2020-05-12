@@ -13,9 +13,8 @@ jobs:
             - run: npm install
             - run:
                 name: Run tests
-                command: mocha test --reporter mocha-junit-reporter
+                command: npm run test-ci
                 environment:
-                    NODE_ENV: test
                     MOCHA_FILE: ./junit/simpleimage/test-results.xml
             - store_test_results:
                 path: ./junit
