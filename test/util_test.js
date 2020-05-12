@@ -18,19 +18,6 @@ describe("util", function() {
                 assert.strictEqual(util.encodeHTML(undefined), undefined);
             });
         });
-
-        describe("runTextTransformation", function () {
-            it("should run a transformation function on given text", function() {
-                var funcArr = [testTransform];
-                assert.strictEqual(util.runTextTransformation(funcArr, "Test"), "Transformed");
-            });
-            it("should return the input text if empty function array passed", function () {
-                assert.strictEqual(util.runTextTransformation([], "Test"), "Test");
-            });
-            it("should return undefined if undefined is passed in as function array", function () {
-                assert.strictEqual(util.runTextTransformation(undefined, "Test"), undefined);
-            });
-        });
     });
 
     describe("external functions", function() {
