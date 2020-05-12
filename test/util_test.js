@@ -80,10 +80,6 @@ describe("util", function() {
                     message
                 });
             });
-            it("should have a status of 'error' if undefined passed as status", function() {
-                var obj = util.createJSONResponseObject(undefined, "My message here");
-                assert.strictEqual(obj.status, "error");
-            });
             it("should not contain a message property if undefined passed as message", function() {
                 var obj = util.createJSONResponseObject("success", undefined);
                 assert.strictEqual(obj.message, undefined);
