@@ -9,17 +9,15 @@ jobs:
     #   name: node/default
     steps:
       - checkout
-      - node/with-cache:
-          steps:
-            - run: sudo apt-get install -y exiftran
-            - run: npm install
-            - run:
-                name: Run tests
-                command: npm run test-ci
-                environment:
-                    MOCHA_FILE: ./junit/simpleimage/test-results.xml
-            - store_test_results:
-                path: ./junit
+      - run: sudo apt-get install -y exiftran
+      - run: npm install
+      - run:
+          name: Run tests
+          command: npm run test-ci
+          environment:
+              MOCHA_FILE: ./junit/simpleimage/test-results.xml
+      - store_test_results:
+          path: ./junit
 workflows:
     build-and-test:
       jobs:
