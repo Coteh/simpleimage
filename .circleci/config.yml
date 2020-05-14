@@ -1,12 +1,8 @@
 version: 2.1
-# orbs:
-#   node: circleci/node@1.1.6
 jobs:
   build-and-test:
     docker:
-      - image: coteh/si-test-deps:0.0.1
-    # executor:
-    #   name: node/default
+      - image: coteh/si-test-deps:0.0.2
     steps:
       - checkout
       - restore_cache:
