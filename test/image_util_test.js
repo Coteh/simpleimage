@@ -4,7 +4,6 @@ const piexifjs = require("piexifjs");
 const fs = require("fs");
 
 describe("rotateImageEntry", function () {
-    // TODO test with a pre-rotated image
     it("should rotate an EXIF image to standard orientation (1)", function () {
         var imageEntry = {
             data: fs.readFileSync("./test/assets/images/EXIF_rotate_test.jpg"),
@@ -41,24 +40,6 @@ describe("rotateImageEntry", function () {
                 var newData = data;
                 var oldData = imageEntry.data;
                 assert.strictEqual(oldData.compare(newData, newData.indexOf("FFDA", 0, "hex"), newData.length, oldData.indexOf("FFDA", 0, "hex"), oldData.length), 0)
-            })
-            .catch(function (err) {
-                throw new Error(err.message);
-            });
-    });
-    it("should not alter metadata of a non-EXIF image (exiftran does add placeholder JFIF metadata if JFIF is not present however)", function () {
-        var imageEntry = {
-            data: fs.readFileSync("./test/assets/images/EXIF_removed.jpg"),
-            mimetype: "image/jpeg",
-            encoding: "7bit",
-            username: "TestUser"
-        };
-
-        return imageUtil.rotateImageEntry(imageEntry)
-            .then(function (data) {
-                var newData = data;
-                var oldData = imageEntry.data;
-                assert.strictEqual(oldData.compare(newData, 20, newData.indexOf("FFDA", 0, "hex") - 20, 2, oldData.indexOf("FFDA", 0, "hex") - 2), 0);
             })
             .catch(function (err) {
                 throw new Error(err.message);
