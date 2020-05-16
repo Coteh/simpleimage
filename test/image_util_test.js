@@ -24,7 +24,7 @@ describe("rotateImageEntry", function () {
                     });
             })
             .catch(function (err) {
-                throw new Error(err.message);
+                throw err;
             });
     });
     it("should not alter the image data of a non-EXIF image", function () {
@@ -42,7 +42,7 @@ describe("rotateImageEntry", function () {
                 assert.strictEqual(oldData.compare(newData, newData.indexOf("FFDA", 0, "hex"), newData.length, oldData.indexOf("FFDA", 0, "hex"), oldData.length), 0)
             })
             .catch(function (err) {
-                throw new Error(err.message);
+                throw err;
             });
     });
     it("should throw an error if attempting to rotate a non-JPEG image", function () {
