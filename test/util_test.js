@@ -18,19 +18,6 @@ describe("util", function() {
                 assert.strictEqual(util.encodeHTML(undefined), undefined);
             });
         });
-
-        describe("runTextTransformation", function () {
-            it("should run a transformation function on given text", function() {
-                var funcArr = [testTransform];
-                assert.strictEqual(util.runTextTransformation(funcArr, "Test"), "Transformed");
-            });
-            it("should return the input text if empty function array passed", function () {
-                assert.strictEqual(util.runTextTransformation([], "Test"), "Test");
-            });
-            it("should return undefined if undefined is passed in as function array", function () {
-                assert.strictEqual(util.runTextTransformation(undefined, "Test"), undefined);
-            });
-        });
     });
 
     describe("external functions", function() {
@@ -93,35 +80,20 @@ describe("util", function() {
                     message
                 });
             });
-            it("should have a status of 'error' if undefined passed as status", function() {
-                var obj = util.createJSONResponseObject(undefined, "My message here");
-                assert.strictEqual(obj.status, "error");
-            });
             it("should not contain a message property if undefined passed as message", function() {
                 var obj = util.createJSONResponseObject("success", undefined);
                 assert.strictEqual(obj.message, undefined);
             });
         });
-        describe("sanitizeText", function () {
-            it("should sanitize input text", function() {
-                assert.fail("Not implemented");
-            });
-            it("should return empty string if empty string passed in", function() {
-                assert.fail("Not implemented");
-            });
-            it("should return undefined if undefined passed in", function() {
-                assert.fail("Not implemented");
-            });
-        });
         describe("escapeOutput", function () {
-            it("should escape output text", function () {
-                assert.fail("Not implemented");
+            it("should escape text with HTML special characters", function () {
+                assert.strictEqual(util.escapeOutput("<>&\"'"), "&lt;&gt;&amp;&quot;&#39;");
             });
             it("should return empty string if empty string passed in", function () {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.escapeOutput(""), "");
             });
             it("should return undefined if undefined passed in", function () {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.escapeOutput(undefined), undefined);
             });
         });
         describe("getRedirectPath", function () {
