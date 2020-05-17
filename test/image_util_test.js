@@ -45,38 +45,6 @@ describe("rotateImageEntry", function () {
                 throw err;
             });
     });
-    it("should throw an error if attempting to rotate a non-JPEG image", function () {
-        var imageEntry = {
-            data: fs.readFileSync("./test/assets/images/NonJPEG_image.png"),
-            mimetype: "image/png",
-            encoding: "7bit",
-            username: "TestUser"
-        };
-
-        return imageUtil.rotateImageEntry(imageEntry)
-            .then(function (data) {
-                assert.fail("This should not succeed. Failing...");
-            })
-            .catch(function (err) {
-                assert.strictEqual(err.code, "NOT_A_JPEG", err.message);
-            });
-    });
-    it("should throw an error if attempting to rotate a non-JPEG image mistakenly labelled with a JPEG mimetype", function () {
-        var imageEntry = {
-            data: fs.readFileSync("./test/assets/images/NonJPEG_image.png"),
-            mimetype: "image/jpeg",
-            encoding: "7bit",
-            username: "TestUser"
-        };
-
-        return imageUtil.rotateImageEntry(imageEntry)
-            .then(function (data) {
-                assert.fail("This should not succeed. Failing...");
-            })
-            .catch(function (err) {
-                assert.strictEqual(err.code, "NOT_A_JPEG", err.message);
-            });
-    });
     it("should throw an error if attempting to rotate a null image", function () {
         var imageEntry = {
             data: null,
