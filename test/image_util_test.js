@@ -4,7 +4,6 @@ const piexifjs = require("piexifjs");
 const fs = require("fs");
 
 describe("rotateImageEntry", function () {
-    // TODO test with a pre-rotated image
     it("should rotate an EXIF image to standard orientation (1)", function () {
         var imageEntry = {
             data: fs.readFileSync("./test/assets/images/EXIF_rotate_test.jpg"),
@@ -25,7 +24,7 @@ describe("rotateImageEntry", function () {
                     });
             })
             .catch(function (err) {
-                throw new Error(err.message);
+                throw err;
             });
     });
     it("should not alter the image data of a non-EXIF image", function () {
@@ -43,57 +42,7 @@ describe("rotateImageEntry", function () {
                 assert.strictEqual(oldData.compare(newData, newData.indexOf("FFDA", 0, "hex"), newData.length, oldData.indexOf("FFDA", 0, "hex"), oldData.length), 0)
             })
             .catch(function (err) {
-                throw new Error(err.message);
-            });
-    });
-    it("should not alter metadata of a non-EXIF image (exiftran does add placeholder JFIF metadata if JFIF is not present however)", function () {
-        var imageEntry = {
-            data: fs.readFileSync("./test/assets/images/EXIF_removed.jpg"),
-            mimetype: "image/jpeg",
-            encoding: "7bit",
-            username: "TestUser"
-        };
-
-        return imageUtil.rotateImageEntry(imageEntry)
-            .then(function (data) {
-                var newData = data;
-                var oldData = imageEntry.data;
-                assert.strictEqual(oldData.compare(newData, 20, newData.indexOf("FFDA", 0, "hex") - 20, 2, oldData.indexOf("FFDA", 0, "hex") - 2), 0);
-            })
-            .catch(function (err) {
-                throw new Error(err.message);
-            });
-    });
-    it("should throw an error if attempting to rotate a non-JPEG image", function () {
-        var imageEntry = {
-            data: fs.readFileSync("./test/assets/images/NonJPEG_image.png"),
-            mimetype: "image/png",
-            encoding: "7bit",
-            username: "TestUser"
-        };
-
-        return imageUtil.rotateImageEntry(imageEntry)
-            .then(function (data) {
-                assert.fail("This should not succeed. Failing...");
-            })
-            .catch(function (err) {
-                assert.strictEqual(err.code, "NOT_A_JPEG", err.message);
-            });
-    });
-    it("should throw an error if attempting to rotate a non-JPEG image mistakenly labelled with a JPEG mimetype", function () {
-        var imageEntry = {
-            data: fs.readFileSync("./test/assets/images/NonJPEG_image.png"),
-            mimetype: "image/jpeg",
-            encoding: "7bit",
-            username: "TestUser"
-        };
-
-        return imageUtil.rotateImageEntry(imageEntry)
-            .then(function (data) {
-                assert.fail("This should not succeed. Failing...");
-            })
-            .catch(function (err) {
-                assert.strictEqual(err.code, "NOT_A_JPEG", err.message);
+                throw err;
             });
     });
     it("should throw an error if attempting to rotate a null image", function () {
@@ -205,7 +154,9 @@ describe("removeEXIFDataFromImageEntry", function () {
 
         return imageUtil.removeEXIFDataFromImageEntry(imageEntry)
             .then(function (imageEntry) {
-                assert.strictEqual(imageData, imageEntry.data);
+                var newData = imageData;
+                var oldData = imageEntry.data;
+                assert.strictEqual(oldData.compare(newData, newData.indexOf("FFDA", 0, "hex"), newData.length, oldData.indexOf("FFDA", 0, "hex"), oldData.length), 0)
             })
             .catch(function (err) {
                 throw new Error(err.message);

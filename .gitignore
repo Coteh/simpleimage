@@ -78,3 +78,6 @@ sessions/
 
 # tmp directory for testing
 tmp/
+
+# JUnit Reporter Results
+test-results.xml
