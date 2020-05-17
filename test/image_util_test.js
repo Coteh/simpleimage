@@ -154,7 +154,9 @@ describe("removeEXIFDataFromImageEntry", function () {
 
         return imageUtil.removeEXIFDataFromImageEntry(imageEntry)
             .then(function (imageEntry) {
-                assert.strictEqual(imageData, imageEntry.data);
+                var newData = imageData;
+                var oldData = imageEntry.data;
+                assert.strictEqual(oldData.compare(newData, newData.indexOf("FFDA", 0, "hex"), newData.length, oldData.indexOf("FFDA", 0, "hex"), oldData.length), 0)
             })
             .catch(function (err) {
                 throw new Error(err.message);
