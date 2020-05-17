@@ -22,11 +22,11 @@ function performUserLogin() {
                 "username": "test-user",
                 "password": "test"
             })
-            .end((err, res) => {
-                if (err) {
-                    reject(err);
-                }
+            .then((res) => {
                 resolve(agent);
+            })
+            .catch((err) => {
+                reject(err);
             });
     });
 }
@@ -81,7 +81,7 @@ describe("integ - change password", () => {
                         "newPassword": newPassword,
                         "newPasswordConfirm": newPassword
                     })
-                    .end((err, res) => {
+                    .then((res) => {
                         assert.equal(res.statusCode, 200);
                         assert.equal(res.body.message, "Password changed");
                         usersCollection = db.collection("users");
@@ -96,6 +96,10 @@ describe("integ - change password", () => {
                                 assert.ok(bcrypt.compareSync(auth.preHashPassword(newPassword), user.password));
                                 done();
                             });
+                    })
+                    .catch((err) => {
+                        assert.fail(err);
+                        done();
                     });
             })
             .catch((err) => {
@@ -113,8 +117,12 @@ describe("integ - change password", () => {
                         "newPassword": "Qwerty123!",
                         "newPasswordConfirm": "Qwerty123!"
                     })
-                    .end((err, res) => {
+                    .then((res) => {
                         assert.equal(res.body.errorID, "oldPasswordIncorrect");
+                        done();
+                    })
+                    .catch((err) => {
+                        assert.fail(err);
                         done();
                     });
             })
@@ -132,8 +140,12 @@ describe("integ - change password", () => {
                 "newPassword": "Qwerty123!",
                 "newPasswordConfirm": "Qwerty123!"
             })
-            .end((err, res) => {
+            .then((res) => {
                 assert.equal(res.body.errorID, "notSignedIn");
+                done();
+            })
+            .catch((err) => {
+                assert.fail(err);
                 done();
             });
     });
@@ -146,8 +158,12 @@ describe("integ - change password", () => {
                         "newPassword": "Qwerty123!",
                         "newPasswordConfirm": "Qwerty123!"
                     })
-                    .end((err, res) => {
+                    .then((res) => {
                         assert.equal(res.body.errorID, "missingOldPassword");
+                        done();
+                    })
+                    .catch((err) => {
+                        assert.fail(err);
                         done();
                     });
             })
@@ -165,8 +181,12 @@ describe("integ - change password", () => {
                         "oldPassword": "test",
                         "newPasswordConfirm": "Qwerty123!"
                     })
-                    .end((err, res) => {
+                    .then((res) => {
                         assert.equal(res.body.errorID, "missingNewPassword");
+                        done();
+                    })
+                    .catch((err) => {
+                        assert.fail(err);
                         done();
                     });
             })
@@ -184,8 +204,12 @@ describe("integ - change password", () => {
                         "oldPassword": "test",
                         "newPassword": "Qwerty123!",
                     })
-                    .end((err, res) => {
+                    .then((res) => {
                         assert.equal(res.body.errorID, "missingNewPasswordConfirm");
+                        done();
+                    })
+                    .catch((err) => {
+                        assert.fail(err);
                         done();
                     });
             })
@@ -204,8 +228,12 @@ describe("integ - change password", () => {
                         "newPassword": "dsfds",
                         "newPasswordConfirm": "Qwerty123!"
                     })
-                    .end((err, res) => {
+                    .then((res) => {
                         assert.equal(res.body.errorID, "passwordsDoNotMatch");
+                        done();
+                    })
+                    .catch((err) => {
+                        assert.fail(err);
                         done();
                     });
             })
@@ -224,8 +252,12 @@ describe("integ - change password", () => {
                         "newPassword": "weak",
                         "newPasswordConfirm": "weak"
                     })
-                    .end((err, res) => {
+                    .then((res) => {
                         assert.equal(res.body.errorID, "passwordNotStrong");
+                        done();
+                    })
+                    .catch((err) => {
+                        assert.fail(err);
                         done();
                     });
             })
@@ -253,8 +285,12 @@ describe("integ - change password", () => {
                         "newPassword": "Qwerty123!",
                         "newPasswordConfirm": "Qwerty123!"
                     })
-                    .end((err, res) => {
+                    .then((res) => {
                         assert.equal(res.body.errorID, "sessionUserNotFound");
+                        done();
+                    })
+                    .catch((err) => {
+                        assert.fail(err);
                         done();
                     });
             })
