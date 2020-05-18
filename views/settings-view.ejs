@@ -12,7 +12,36 @@
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="/assets/js/user.bundle.js"></script>
     <script>
+        var onPasswordResetSubmitted = function() {
+            if (this.status !== 200) {
+                var jsonObj = JSON.parse(this.responseText);
+                showNotification(jsonObj.message, {
+                    error: true
+                });
+            } else {
+                var jsonObj = JSON.parse(this.responseText);
+                showNotification(jsonObj.message, {
+                    error: false
+                });
+            }
+        };
+
+        var submitPasswordReset = function() {
+            var form = $("form[id='change-password-form']");
+            var req = new XMLHttpRequest();
+
+            req.onload = onPasswordResetSubmitted;
+            req.open("post", "/change_password?type=json");
+            req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            req.send(form.serialize());
+        }
+
         $(function () {
+            $("form[id='change-password-form']").on("submit", function(e) {
+                e.preventDefault();
+                submitPasswordReset();
+                return false;
+            });
             $("form[id='change-password-form'] .submit-button").click(function (e) {
                 $("form[id='change-password-form']").submit();
             });
