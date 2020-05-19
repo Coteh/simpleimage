@@ -13,6 +13,10 @@ chai.should();
 
 // TODO shut down mongo mem server and remove --exit hopefully
 
+function performAsyncTest(callback) {
+    return new Promise(callback);
+}
+
 function performUserLogin() {
     return new Promise((resolve, reject) => {
         var agent = chai.request.agent(server.app);
@@ -70,234 +74,283 @@ describe("integ - change password", () => {
             done();
         });
     })
-    it("should let user change password", (done) => {
-        performUserLogin()
-            .then((agent) => {
-                const newPassword = "Qwerty123!";
-                agent.post("/change_password?type=json")
-                    .type("form")
-                    .send({
-                        "oldPassword": "test",
-                        "newPassword": newPassword,
-                        "newPasswordConfirm": newPassword
-                    })
-                    .then((res) => {
-                        assert.equal(res.statusCode, 200);
-                        assert.equal(res.body.message, "Password changed");
-                        usersCollection = db.collection("users");
-                        usersCollection.find({ username: TEST_USER })
-                            .toArray((err, users) => {
-                                if (err) {
-                                    assert.fail(err);
-                                    done();
-                                    return;
-                                }
-                                const user = users[0];
-                                assert.ok(bcrypt.compareSync(auth.preHashPassword(newPassword), user.password));
-                                done();
-                            });
-                    })
-                    .catch((err) => {
-                        assert.fail(err);
-                        done();
-                    });
-            })
-            .catch((err) => {
-                assert.fail(err);
-                done();
-            });
+    it("should let user change password", () => {
+        return performAsyncTest((resolve, reject) => {
+            performUserLogin()
+                .then((agent) => {
+                    assert.fail("Should have a precondition check for old password");
+                    const newPassword = "Qwerty123!";
+                    agent.post("/change_password?type=json")
+                        .type("form")
+                        .send({
+                            "oldPassword": "test",
+                            "newPassword": newPassword,
+                            "newPasswordConfirm": newPassword
+                        })
+                        .then((res) => {
+                            assert.equal(res.statusCode, 200);
+                            assert.equal(res.body.message, "Password changed");
+                            usersCollection = db.collection("users");
+                            usersCollection.find({ username: TEST_USER })
+                                .toArray((err, users) => {
+                                    if (err) {
+                                        reject(err);
+                                        return;
+                                    }
+                                    const user = users[0];
+                                    assert.ok(bcrypt.compareSync(auth.preHashPassword(newPassword), user.password));
+                                    resolve();
+                                });
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     });
-    it("should prevent user from changing password if they provided the wrong old password", (done) => {
-        performUserLogin()
-            .then((agent) => {
-                agent.post("/change_password?type=json")
-                    .type("form")
-                    .send({
-                        "oldPassword": "dsfsd",
-                        "newPassword": "Qwerty123!",
-                        "newPasswordConfirm": "Qwerty123!"
-                    })
-                    .then((res) => {
-                        assert.equal(res.body.errorID, "oldPasswordIncorrect");
-                        done();
-                    })
-                    .catch((err) => {
-                        assert.fail(err);
-                        done();
-                    });
-            })
-            .catch((err) => {
-                assert.fail(err);
-                done();
-            });
+    it("should prevent user from changing password if they provided the wrong old password", () => {
+        return performAsyncTest((resolve, reject) => {
+            performUserLogin()
+                .then((agent) => {
+                    assert.fail("Should have a precondition check for old password");
+                    agent.post("/change_password?type=json")
+                        .type("form")
+                        .send({
+                            "oldPassword": "dsfsd",
+                            "newPassword": "Qwerty123!",
+                            "newPasswordConfirm": "Qwerty123!"
+                        })
+                        .then((res) => {
+                            assert.equal(res.body.errorID, "oldPasswordIncorrect");
+                            assert.fail("Does not check if user password did not change");
+                            // resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     });
-    it("should prevent user from changing password if the aren't signed in (ie. are guest)", (done) => {
-        var agent = chai.request.agent(server.app);
-        agent.post("/change_password?type=json")
-            .type("form")
-            .send({
-                "oldPassword": "test",
-                "newPassword": "Qwerty123!",
-                "newPasswordConfirm": "Qwerty123!"
-            })
-            .then((res) => {
-                assert.equal(res.body.errorID, "notSignedIn");
-                done();
-            })
-            .catch((err) => {
-                assert.fail(err);
-                done();
-            });
+    it("should prevent user from changing password if the aren't signed in (ie. are guest)", () => {
+        return performAsyncTest((resolve, reject) => {
+            assert.fail("Should have a precondition check for old password");
+            var agent = chai.request.agent(server.app);
+            agent.post("/change_password?type=json")
+                .type("form")
+                .send({
+                    "oldPassword": "test",
+                    "newPassword": "Qwerty123!",
+                    "newPasswordConfirm": "Qwerty123!"
+                })
+                .then((res) => {
+                    assert.equal(res.body.errorID, "notSignedIn");
+                    assert.fail("Does not check if user password did not change");
+                    resolve();
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     });
-    it("should prevent user from changing password if old password is not provided", (done) => {
-        performUserLogin()
-            .then((agent) => {
-                agent.post("/change_password?type=json")
-                    .type("form")
-                    .send({
-                        "newPassword": "Qwerty123!",
-                        "newPasswordConfirm": "Qwerty123!"
-                    })
-                    .then((res) => {
-                        assert.equal(res.body.errorID, "missingOldPassword");
-                        done();
-                    })
-                    .catch((err) => {
-                        assert.fail(err);
-                        done();
-                    });
-            })
-            .catch((err) => {
-                assert.fail(err);
-                done();
-            });
+    it("should prevent user from changing password if old password is not provided", () => {
+        return performAsyncTest((resolve, reject) => {
+            performUserLogin()
+                .then((agent) => {
+                    assert.fail("Should have a precondition check for old password");
+                    agent.post("/change_password?type=json")
+                        .type("form")
+                        .send({
+                            "newPassword": "Qwerty123!",
+                            "newPasswordConfirm": "Qwerty123!"
+                        })
+                        .then((res) => {
+                            assert.equal(res.body.errorID, "missingOldPassword");
+                            assert.fail("Does not check if user password did not change");
+                            // resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     });
-    it("should prevent user from changing password if new password is not provided", (done) => {
-        performUserLogin()
-            .then((agent) => {
-                agent.post("/change_password?type=json")
-                    .type("form")
-                    .send({
-                        "oldPassword": "test",
-                        "newPasswordConfirm": "Qwerty123!"
-                    })
-                    .then((res) => {
-                        assert.equal(res.body.errorID, "missingNewPassword");
-                        done();
-                    })
-                    .catch((err) => {
-                        assert.fail(err);
-                        done();
-                    });
-            })
-            .catch((err) => {
-                assert.fail(err);
-                done();
-            });
+    it("should prevent user from changing password if new password is not provided", () => {
+        return performAsyncTest((resolve, reject) => {
+            performUserLogin()
+                .then((agent) => {
+                    assert.fail("Should have a precondition check for old password");
+                    agent.post("/change_password?type=json")
+                        .type("form")
+                        .send({
+                            "oldPassword": "test",
+                            "newPasswordConfirm": "Qwerty123!"
+                        })
+                        .then((res) => {
+                            assert.equal(res.body.errorID, "missingNewPassword");
+                            assert.fail("Does not check if user password did not change");
+                            // resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     });
-    it("should prevent user from changing password if new password confirmation is not provided", (done) => {
-        performUserLogin()
-            .then((agent) => {
-                agent.post("/change_password?type=json")
-                    .type("form")
-                    .send({
-                        "oldPassword": "test",
-                        "newPassword": "Qwerty123!",
-                    })
-                    .then((res) => {
-                        assert.equal(res.body.errorID, "missingNewPasswordConfirm");
-                        done();
-                    })
-                    .catch((err) => {
-                        assert.fail(err);
-                        done();
-                    });
-            })
-            .catch((err) => {
-                assert.fail(err);
-                done();
-            });
+    it("should prevent user from changing password if new password confirmation is not provided", () => {
+        return performAsyncTest((resolve, reject) => {
+            performUserLogin()
+                .then((agent) => {
+                    assert.fail("Should have a precondition check for old password");
+                    agent.post("/change_password?type=json")
+                        .type("form")
+                        .send({
+                            "oldPassword": "test",
+                            "newPassword": "Qwerty123!",
+                        })
+                        .then((res) => {
+                            assert.equal(res.body.errorID, "missingNewPasswordConfirm");
+                            assert.fail("Does not check if user password did not change");
+                            // resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     });
-    it("should prevent user from changing password if new password and its confirmation don't match", (done) => {
-        performUserLogin()
-            .then((agent) => {
-                agent.post("/change_password?type=json")
-                    .type("form")
-                    .send({
-                        "oldPassword": "test",
-                        "newPassword": "dsfds",
-                        "newPasswordConfirm": "Qwerty123!"
-                    })
-                    .then((res) => {
-                        assert.equal(res.body.errorID, "passwordsDoNotMatch");
-                        done();
-                    })
-                    .catch((err) => {
-                        assert.fail(err);
-                        done();
-                    });
-            })
-            .catch((err) => {
-                assert.fail(err);
-                done();
-            });
+    it("should prevent user from changing password if new password and its confirmation don't match", () => {
+        return performAsyncTest((resolve, reject) => {
+            performUserLogin()
+                .then((agent) => {
+                    assert.fail("Should have a precondition check for old password");
+                    agent.post("/change_password?type=json")
+                        .type("form")
+                        .send({
+                            "oldPassword": "test",
+                            "newPassword": "dsfds",
+                            "newPasswordConfirm": "Qwerty123!"
+                        })
+                        .then((res) => {
+                            assert.equal(res.body.errorID, "passwordsDoNotMatch");
+                            assert.fail("Does not check if user password did not change");
+                            // resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     });
-    it("should prevent user from changing password if new password is not strong enough", (done) => {
-        performUserLogin()
-            .then((agent) => {
-                agent.post("/change_password?type=json")
-                    .type("form")
-                    .send({
-                        "oldPassword": "test",
-                        "newPassword": "weak",
-                        "newPasswordConfirm": "weak"
-                    })
-                    .then((res) => {
-                        assert.equal(res.body.errorID, "passwordNotStrong");
-                        done();
-                    })
-                    .catch((err) => {
-                        assert.fail(err);
-                        done();
-                    });
-            })
-            .catch((err) => {
-                assert.fail(err);
-                done();
-            });
+    it("should prevent user from changing password if new password is not strong enough", () => {
+        return performAsyncTest((resolve, reject) => {
+            performUserLogin()
+                .then((agent) => {
+                    assert.fail("Should have a precondition check for old password");
+                    agent.post("/change_password?type=json")
+                        .type("form")
+                        .send({
+                            "oldPassword": "test",
+                            "newPassword": "weak",
+                            "newPasswordConfirm": "weak"
+                        })
+                        .then((res) => {
+                            assert.equal(res.body.errorID, "passwordNotStrong");
+                            assert.fail("Does not check if user password did not change");
+                            // resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     });
-    // TODO both this test and the one after it will require server-side mocking
-    it("should prevent user from changing password if user doesn't exist", (done) => {
-        assert.fail("TODO should we test for user being deleted between session activation and password change?");
+    // // TODO both this test and the one after it will require server-side mocking
+    it("should prevent user from changing password if user doesn't exist", () => {
+        return performAsyncTest((resolve, reject) => {
+            performUserLogin()
+                .then((agent) => {
+                    assert.fail("Should have a precondition check for old password");
+                    usersCollection = db.collection("users");
+                    usersCollection.remove({ username: TEST_USER }, true)
+                        .then((result) => {
+                            agent.post("/change_password?type=json")
+                                .type("form")
+                                .send({
+                                    "oldPassword": "test",
+                                    "newPassword": newPassword,
+                                    "newPasswordConfirm": newPassword
+                                })
+                                .then((res) => {
+                                    assert.fail("Does not check if user password did not change");
+                                    resolve();
+                                })
+                                .catch((err) => {
+                                    reject(err);
+                                });
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     });
     it("should not change password if changing password encountered an error", (done) => {
         assert.fail("Not implemented");
     });
-    it("should not change password if there was an error retrieving session user info from db", (done) => {
-        performUserLogin()
-            .then((agent) => {
-                usersCollection = db.collection("users");
-                usersCollection.deleteMany({});
-                agent.post("/change_password?type=json")
-                    .type("form")
-                    .send({
-                        "oldPassword": "test",
-                        "newPassword": "Qwerty123!",
-                        "newPasswordConfirm": "Qwerty123!"
-                    })
-                    .then((res) => {
-                        assert.equal(res.body.errorID, "sessionUserNotFound");
-                        done();
-                    })
-                    .catch((err) => {
-                        assert.fail(err);
-                        done();
-                    });
-            })
-            .catch((err) => {
-                assert.fail(err);
-                done();
-            });
+    it("should not change password if there was an error retrieving session user info from db", () => {
+        return performAsyncTest((resolve, reject) => {
+            performUserLogin()
+                .then((agent) => {
+                    assert.fail("Should have a precondition check for old password");
+                    usersCollection = db.collection("users");
+                    usersCollection.deleteMany({});
+                    agent.post("/change_password?type=json")
+                        .type("form")
+                        .send({
+                            "oldPassword": "test",
+                            "newPassword": "Qwerty123!",
+                            "newPasswordConfirm": "Qwerty123!"
+                        })
+                        .then((res) => {
+                            assert.equal(res.body.errorID, "sessionUserNotFound");
+                            assert.fail("Does not check if user password did not change");
+                            // resolve();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        })
+        .catch((err) => {
+            assert.fail(err);
+        });
     });
     afterEach(async function () {
         usersCollection = db.collection("users");
