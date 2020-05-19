@@ -40,6 +40,25 @@ describe("integ - change password", () => {
     var db = null;
     const TEST_USER = "test-user";
 
+    function checkPassword(username, password) {
+        return new Promise((resolve, reject) => {
+            usersCollection = db.collection("users");
+            usersCollection.find({ username })
+                .toArray((err, users) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    const user = users[0];
+                    if (bcrypt.compareSync(auth.preHashPassword(password), user.password)) {
+                        resolve();
+                    } else {
+                        reject(new Error("Password not correct"));
+                    }
+                });
+        });
+    }
+
     before(async function () {
         mongod = new MongoMemoryServer();
         await mongod.getUri();
@@ -77,8 +96,8 @@ describe("integ - change password", () => {
     it("should let user change password", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
-                .then((agent) => {
-                    assert.fail("Should have a precondition check for old password");
+                .then(async (agent) => {
+                    await checkPassword(TEST_USER, "test");
                     const newPassword = "Qwerty123!";
                     agent.post("/change_password?type=json")
                         .type("form")
@@ -90,16 +109,12 @@ describe("integ - change password", () => {
                         .then((res) => {
                             assert.equal(res.statusCode, 200);
                             assert.equal(res.body.message, "Password changed");
-                            usersCollection = db.collection("users");
-                            usersCollection.find({ username: TEST_USER })
-                                .toArray((err, users) => {
-                                    if (err) {
-                                        reject(err);
-                                        return;
-                                    }
-                                    const user = users[0];
-                                    assert.ok(bcrypt.compareSync(auth.preHashPassword(newPassword), user.password));
+                            checkPassword(TEST_USER, newPassword)
+                                .then(() => {
                                     resolve();
+                                })
+                                .catch((err) => {
+                                    reject(err);
                                 });
                         })
                         .catch((err) => {
@@ -114,8 +129,8 @@ describe("integ - change password", () => {
     it("should prevent user from changing password if they provided the wrong old password", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
-                .then((agent) => {
-                    assert.fail("Should have a precondition check for old password");
+                .then(async (agent) => {
+                    await checkPassword(TEST_USER, "test");
                     agent.post("/change_password?type=json")
                         .type("form")
                         .send({
@@ -138,8 +153,8 @@ describe("integ - change password", () => {
         });
     });
     it("should prevent user from changing password if the aren't signed in (ie. are guest)", () => {
-        return performAsyncTest((resolve, reject) => {
-            assert.fail("Should have a precondition check for old password");
+        return performAsyncTest(async (resolve, reject) => {
+            await checkPassword(TEST_USER, "test");
             var agent = chai.request.agent(server.app);
             agent.post("/change_password?type=json")
                 .type("form")
@@ -161,8 +176,8 @@ describe("integ - change password", () => {
     it("should prevent user from changing password if old password is not provided", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
-                .then((agent) => {
-                    assert.fail("Should have a precondition check for old password");
+                .then(async (agent) => {
+                    await checkPassword(TEST_USER, "test");
                     agent.post("/change_password?type=json")
                         .type("form")
                         .send({
@@ -186,8 +201,8 @@ describe("integ - change password", () => {
     it("should prevent user from changing password if new password is not provided", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
-                .then((agent) => {
-                    assert.fail("Should have a precondition check for old password");
+                .then(async (agent) => {
+                    await checkPassword(TEST_USER, "test");
                     agent.post("/change_password?type=json")
                         .type("form")
                         .send({
@@ -211,8 +226,8 @@ describe("integ - change password", () => {
     it("should prevent user from changing password if new password confirmation is not provided", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
-                .then((agent) => {
-                    assert.fail("Should have a precondition check for old password");
+                .then(async (agent) => {
+                    await checkPassword(TEST_USER, "test");
                     agent.post("/change_password?type=json")
                         .type("form")
                         .send({
@@ -236,8 +251,8 @@ describe("integ - change password", () => {
     it("should prevent user from changing password if new password and its confirmation don't match", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
-                .then((agent) => {
-                    assert.fail("Should have a precondition check for old password");
+                .then(async (agent) => {
+                    await checkPassword(TEST_USER, "test");
                     agent.post("/change_password?type=json")
                         .type("form")
                         .send({
@@ -262,8 +277,8 @@ describe("integ - change password", () => {
     it("should prevent user from changing password if new password is not strong enough", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
-                .then((agent) => {
-                    assert.fail("Should have a precondition check for old password");
+                .then(async (agent) => {
+                    await checkPassword(TEST_USER, "test");
                     agent.post("/change_password?type=json")
                         .type("form")
                         .send({
@@ -289,8 +304,8 @@ describe("integ - change password", () => {
     it("should prevent user from changing password if user doesn't exist", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
-                .then((agent) => {
-                    assert.fail("Should have a precondition check for old password");
+                .then(async (agent) => {
+                    await checkPassword(TEST_USER, "test");
                     usersCollection = db.collection("users");
                     usersCollection.remove({ username: TEST_USER }, true)
                         .then((result) => {
@@ -324,8 +339,8 @@ describe("integ - change password", () => {
     it("should not change password if there was an error retrieving session user info from db", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
-                .then((agent) => {
-                    assert.fail("Should have a precondition check for old password");
+                .then(async (agent) => {
+                    await checkPassword(TEST_USER, "test");
                     usersCollection = db.collection("users");
                     usersCollection.deleteMany({});
                     agent.post("/change_password?type=json")
