@@ -6,7 +6,7 @@ const server = require("../../lib/server");
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
 const bcrypt = require("bcrypt");
-var assert = require("assert");
+const { assert } = chai;
 
 chai.use(chaiHTTP);
 chai.should();
@@ -47,6 +47,10 @@ describe("integ - change password", () => {
                 .toArray((err, users) => {
                     if (err) {
                         reject(err);
+                        return;
+                    }
+                    if (users.length === 0) {
+                        reject(new Error("No user found"));
                         return;
                     }
                     const user = users[0];
@@ -138,10 +142,10 @@ describe("integ - change password", () => {
                             "newPassword": "Qwerty123!",
                             "newPasswordConfirm": "Qwerty123!"
                         })
-                        .then((res) => {
+                        .then(async (res) => {
                             assert.equal(res.body.errorID, "oldPasswordIncorrect");
-                            assert.fail("Does not check if user password did not change");
-                            // resolve();
+                            await checkPassword(TEST_USER, "test");
+                            resolve();
                         })
                         .catch((err) => {
                             reject(err);
@@ -163,9 +167,9 @@ describe("integ - change password", () => {
                     "newPassword": "Qwerty123!",
                     "newPasswordConfirm": "Qwerty123!"
                 })
-                .then((res) => {
+                .then(async (res) => {
                     assert.equal(res.body.errorID, "notSignedIn");
-                    assert.fail("Does not check if user password did not change");
+                    await checkPassword(TEST_USER, "test");
                     resolve();
                 })
                 .catch((err) => {
@@ -184,10 +188,10 @@ describe("integ - change password", () => {
                             "newPassword": "Qwerty123!",
                             "newPasswordConfirm": "Qwerty123!"
                         })
-                        .then((res) => {
+                        .then(async (res) => {
                             assert.equal(res.body.errorID, "missingOldPassword");
-                            assert.fail("Does not check if user password did not change");
-                            // resolve();
+                            await checkPassword(TEST_USER, "test");
+                            resolve();
                         })
                         .catch((err) => {
                             reject(err);
@@ -209,10 +213,10 @@ describe("integ - change password", () => {
                             "oldPassword": "test",
                             "newPasswordConfirm": "Qwerty123!"
                         })
-                        .then((res) => {
+                        .then(async (res) => {
                             assert.equal(res.body.errorID, "missingNewPassword");
-                            assert.fail("Does not check if user password did not change");
-                            // resolve();
+                            await checkPassword(TEST_USER, "test");
+                            resolve();
                         })
                         .catch((err) => {
                             reject(err);
@@ -234,10 +238,10 @@ describe("integ - change password", () => {
                             "oldPassword": "test",
                             "newPassword": "Qwerty123!",
                         })
-                        .then((res) => {
+                        .then(async (res) => {
                             assert.equal(res.body.errorID, "missingNewPasswordConfirm");
-                            assert.fail("Does not check if user password did not change");
-                            // resolve();
+                            await checkPassword(TEST_USER, "test");
+                            resolve();
                         })
                         .catch((err) => {
                             reject(err);
@@ -260,10 +264,10 @@ describe("integ - change password", () => {
                             "newPassword": "dsfds",
                             "newPasswordConfirm": "Qwerty123!"
                         })
-                        .then((res) => {
+                        .then(async (res) => {
                             assert.equal(res.body.errorID, "passwordsDoNotMatch");
-                            assert.fail("Does not check if user password did not change");
-                            // resolve();
+                            await checkPassword(TEST_USER, "test");
+                            resolve();
                         })
                         .catch((err) => {
                             reject(err);
@@ -286,10 +290,10 @@ describe("integ - change password", () => {
                             "newPassword": "weak",
                             "newPasswordConfirm": "weak"
                         })
-                        .then((res) => {
+                        .then(async (res) => {
                             assert.equal(res.body.errorID, "passwordNotStrong");
-                            assert.fail("Does not check if user password did not change");
-                            // resolve();
+                            await checkPassword(TEST_USER, "test");
+                            resolve();
                         })
                         .catch((err) => {
                             reject(err);
@@ -300,7 +304,6 @@ describe("integ - change password", () => {
                 });
         });
     });
-    // // TODO both this test and the one after it will require server-side mocking
     it("should prevent user from changing password if user doesn't exist", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
@@ -313,12 +316,19 @@ describe("integ - change password", () => {
                                 .type("form")
                                 .send({
                                     "oldPassword": "test",
-                                    "newPassword": newPassword,
-                                    "newPasswordConfirm": newPassword
+                                    "newPassword": "something",
+                                    "newPasswordConfirm": "something"
                                 })
                                 .then((res) => {
-                                    assert.fail("Does not check if user password did not change");
-                                    resolve();
+                                    assert.equal(res.statusCode, 404);
+                                    checkPassword(TEST_USER, "test")
+                                        .then((res) => {
+                                            assert.fail("Password shouldn't change");
+                                        })
+                                        .catch((err) => {
+                                            assert.isDefined(err);
+                                            resolve();
+                                        });
                                 })
                                 .catch((err) => {
                                     reject(err);
@@ -333,6 +343,7 @@ describe("integ - change password", () => {
                 });
         });
     });
+    // TODO either delete or figure out a way to mock databaseOps.changeUserPassword on the server
     it("should not change password if changing password encountered an error", (done) => {
         assert.fail("Not implemented");
     });
@@ -352,8 +363,14 @@ describe("integ - change password", () => {
                         })
                         .then((res) => {
                             assert.equal(res.body.errorID, "sessionUserNotFound");
-                            assert.fail("Does not check if user password did not change");
-                            // resolve();
+                            checkPassword(TEST_USER, "test")
+                                .then((res) => {
+                                    assert.fail("Password shouldn't change");
+                                })
+                                .catch((err) => {
+                                    assert.isDefined(err);
+                                    resolve();
+                                });
                         })
                         .catch((err) => {
                             reject(err);
