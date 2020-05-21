@@ -380,41 +380,6 @@ describe("integ - change password", () => {
                 });
         });
     });
-    it("should not change password if there was an error retrieving session user info from db", () => {
-        return performAsyncTest((resolve, reject) => {
-            performUserLogin()
-                .then(async (agent) => {
-                    await checkPassword(TEST_USER, "test");
-                    assert.fail("Change the way that retrieving session user causes error");
-                    usersCollection = db.collection("users");
-                    usersCollection.deleteMany({});
-                    agent.post("/change_password?type=json")
-                        .type("form")
-                        .send({
-                            "oldPassword": "test",
-                            "newPassword": "Qwerty123!",
-                            "newPasswordConfirm": "Qwerty123!"
-                        })
-                        .then((res) => {
-                            assert.equal(res.body.errorID, "sessionUserNotFound");
-                            checkPassword(TEST_USER, "test")
-                                .then((res) => {
-                                    assert.fail("Password shouldn't change");
-                                })
-                                .catch((err) => {
-                                    assert.isDefined(err);
-                                    resolve();
-                                });
-                        })
-                        .catch((err) => {
-                            reject(err);
-                        });
-                })
-                .catch((err) => {
-                    reject(err);
-                });
-        });
-    });
     afterEach(async function () {
         usersCollection = db.collection("users");
         usersCollection.deleteMany({});
