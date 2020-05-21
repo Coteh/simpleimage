@@ -1,5 +1,6 @@
 const chai = require("chai");
 const chaiHTTP = require("chai-http");
+const sinon = require("sinon");
 const auth = require("../../lib/auth");
 const databaseOps = require("../../lib/database-ops");
 const server = require("../../lib/server");
@@ -344,14 +345,47 @@ describe("integ - change password", () => {
         });
     });
     // TODO either delete or figure out a way to mock databaseOps.changeUserPassword on the server
-    it("should not change password if changing password encountered an error", (done) => {
-        assert.fail("Not implemented");
+    it("should not change password if changing password encountered an error", () => {
+        return performAsyncTest((resolve, reject) => {
+            performUserLogin()
+                .then(async (agent) => {
+                    await checkPassword(TEST_USER, "test");
+                    var stub = sinon.stub(databaseOps, "changeUserPassword").rejects(new Error("Error changing password"));
+                    agent.post("/change_password?type=json")
+                        .type("form")
+                        .send({
+                            "oldPassword": "test",
+                            "newPassword": "Qwerty123!",
+                            "newPasswordConfirm": "Qwerty123!"
+                        })
+                        .then((res) => {
+                            assert.equal(res.body.errorID, "errorChangingPassword");
+                            checkPassword(TEST_USER, "test")
+                                .then((res) => {
+                                    assert.fail("Password shouldn't change");
+                                })
+                                .catch((err) => {
+                                    assert.isDefined(err);
+                                    resolve();
+                                });
+                            stub.restore();
+                        })
+                        .catch((err) => {
+                            reject(err);
+                            stub.restore();
+                        });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     });
     it("should not change password if there was an error retrieving session user info from db", () => {
         return performAsyncTest((resolve, reject) => {
             performUserLogin()
                 .then(async (agent) => {
                     await checkPassword(TEST_USER, "test");
+                    assert.fail("Change the way that retrieving session user causes error");
                     usersCollection = db.collection("users");
                     usersCollection.deleteMany({});
                     agent.post("/change_password?type=json")
@@ -379,9 +413,6 @@ describe("integ - change password", () => {
                 .catch((err) => {
                     reject(err);
                 });
-        })
-        .catch((err) => {
-            assert.fail(err);
         });
     });
     afterEach(async function () {
