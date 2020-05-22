@@ -13,7 +13,7 @@ const { assert } = chai;
 chai.use(chaiHTTP);
 chai.should();
 
-// TODO shut down mongo mem server and remove --exit hopefully
+// TODO:#119 shut down mongo mem server and remove --exit hopefully
 
 function getServerAgent() {
     return chai.request.agent(server.app);
