@@ -1,7 +1,7 @@
 {
   "name": "simpleimage",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.1.0",
+  "description": "Simple image uploading service",
   "main": "app.js",
   "scripts": {
     "build:client": "webpack",
