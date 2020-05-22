@@ -12,13 +12,6 @@ const LONG_PASSWORD = BCRYPT_CUTOFF_SAMPLE + "A";
 const LONG_PASSWORD_HASHED = "$2a$10$XRrOYig1EBlIwfmKaIen5uM17YOc0E4yXR/o6rDzcK0gr01pIUhPq";
 const ALT_LONG_PASSWORD = BCRYPT_CUTOFF_SAMPLE + "D";
 
-// The same as preHashPassword in auth module, to be used for hashPassword tests
-var preHashPassword = function(password) {
-    let hash = crypto.createHash("sha512");
-    hash.update(password, "utf8");
-    return hash.digest("utf8");
-}
-
 describe("auth", function () {
     describe("hashPassword", function() {
         it("should create an appropriate hash for given user password", function() {
@@ -32,7 +25,7 @@ describe("auth", function () {
                         reject(err);
                     });
             }).then((hashedPassword) => {
-                let testPasswordPreHashed = preHashPassword(testPassword);
+                let testPasswordPreHashed = auth.preHashPassword(testPassword);
                 assert.ok(bcrypt.compareSync(testPasswordPreHashed, hashedPassword));
             });
         });
@@ -47,7 +40,7 @@ describe("auth", function () {
                         reject(err);
                     });
             }).then((hashedPassword) => {
-                let testPasswordPreHashed = preHashPassword(ALT_LONG_PASSWORD);
+                let testPasswordPreHashed = auth.preHashPassword(ALT_LONG_PASSWORD);
                 assert.equal(bcrypt.compareSync(testPasswordPreHashed, hashedPassword), false);
             });
         });

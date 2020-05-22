@@ -127,6 +127,9 @@ describe("util", function() {
             it("should block data: protocol URLs", function() {
                 assert.strictEqual(util.getRedirectPath("data:text/html,<script>alert(document.domain)</script>"), "/");
             });
+            it("should block vbscript: protocol URLs", function () {
+                assert.strictEqual(util.getRedirectPath("vbscript:myfunction(total)"), "/");
+            });
             it("should block URLs with CRLF characters", function() {
                 assert.strictEqual(util.getRedirectPath("/index\r\nsomething"), "/");
             });

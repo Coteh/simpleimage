@@ -113,7 +113,7 @@ make deploy-test
 ### Future Additions
 
 * User preferences menu
-* Ability to change email, password, and/or username
+* Ability to change email and/or username
 * Image galleries
 * Custom image IDs
 * Delete account

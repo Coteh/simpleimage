@@ -9,9 +9,6 @@ databaseOps.startDatabaseClient(function(err) {
         logger.error(err);
         return;
     }
-    server.setOptions({
-        rootDirName: __dirname
-    });
     server.runServer(port, function(err) {
         if (err) {
             logger.error("Could not run server due to an error:");
