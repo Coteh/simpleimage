@@ -1,10 +1,14 @@
 # ![simpleimage logo](assets/images/logo.svg "simpleimage")
 
-A simple image hosting web application that I created and implemented using Node.js and Express, with MongoDB as the database and Redis as the session store. (for production only)
+[![CircleCI](https://circleci.com/gh/Coteh/simpleimage.svg?style=shield)](https://circleci.com/gh/Coteh/simpleimage)
+
+A simple image hosting web application that I created and implemented using Node.js and Express, with MongoDB as the database and Redis as the session store for production.
+
+![Screenshot](screenshots/screenshot.png "App Screenshot")
 
 ## Features
 
-* Upload bmp, png, jpeg, and gif images
+* Upload BMP, PNG, JPEG, and GIF images
 * Comment on images
 * Image page
     * Image upload date
@@ -13,8 +17,22 @@ A simple image hosting web application that I created and implemented using Node
 * User profile page
     * Join date
     * Comment history and total number of comments posted
+* Rotates JPEG images based on Orientation tag in EXIF metadata
+* Strips EXIF metadata from JPEG images
 
 ## Installation
+
+### .env Template
+
+```
+MONGODB_URI=<MongoDB URI goes here>
+REDIS_URL=<Redis URL goes here>
+MONGO_ROOT_USERNAME=<root username for MongoDB instance>
+MONGO_ROOT_PASSWORD=<root password for MongoDB instance>
+MONGO_INITIAL_DATABASE=<initial database for MongoDB instance>
+
+SESSION_SECRET=<session secret goes here>
+```
 
 ### Building and Running Locally
 
@@ -23,10 +41,13 @@ A simple image hosting web application that I created and implemented using Node
 npm install
 
 # Build web components with webpack (and watch for changes when in development mode)
-npm build:client
+npm run build:client
 
 # Run local MongoDB database
 mongod --dbpath ./data/
+
+# Export SESSION_SECRET environment variable (or use a .env file)
+export SESSION_SECRET="my-secret"
 
 # Run the app
 npm start
@@ -42,7 +63,7 @@ npm run start:dev
 # Build Docker images
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
 # or, run
-make dev
+make build-dev
 
 # Run Docker containers in Docker Compose environment
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
@@ -58,7 +79,7 @@ make deploy-dev
 # Build Docker images
 docker-compose build
 # or, run
-make prod
+make build-prod
 
 # Run Docker containers in Docker Compose environment
 docker-compose up
@@ -66,15 +87,33 @@ docker-compose up
 make deploy-prod
 ~~~
 
+### Run Tests
+
+~~~sh
+# Build Docker images for test
+docker-compose -f docker-compose.yml -f docker-compose.test.yml build
+# or, run
+make build-test
+
+# Run Docker containers for test in Docker Compose environment
+docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
+# or, run
+make deploy-test
+~~~
+
 ### Known Limitations
 
-* None yet
+* Cannot change username/password/email
+* Some of the popup dialogs need a bit of size tweaking (e.g. signup dialog)
+* No image upload history (Currently being worked on in [dev/image-history branch](https://github.com/Coteh/simpleimage/tree/dev/image-history))
+* No option for anonymous users to upload an image with ability to delete
+    * Delete links based on user session are being considered (which is what imgur does as well)
+* See [Issues](https://github.com/Coteh/simpleimage/issues) page for more
 
 ### Future Additions
 
 * User preferences menu
-* Ability to change email, password, and/or username
+* Ability to change email and/or username
 * Image galleries
 * Custom image IDs
 * Delete account
-* Mobile layout

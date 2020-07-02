@@ -130,7 +130,7 @@ var onLoginSubmitted = function(form) {
         });
 
         // Clear out error style from all input fields.
-        for (inputFieldIndex in form.elements) {
+        for (const inputFieldIndex in form.elements) {
             if (form.elements[inputFieldIndex].classList) {
                 form.elements[inputFieldIndex].classList.remove("input-field-error");
             }

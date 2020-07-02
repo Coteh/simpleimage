@@ -4,16 +4,13 @@ services:
         build:
             context: .
             args:
-                - NODE_ENV=development
+                - NODE_ENV=test
         volumes:
             -  .:/usr/src/simpleimage
             -  node_modules:/usr/src/simpleimage/node_modules
-        command: bash -c "npm run build:client & npm run start:dev"
+        command: bash -c "npm test"
         environment:
-            - NODE_ENV=development
-    si_sessions:
-        ports:
-            - "6379:6379"
+            - NODE_ENV=test
 
 volumes:
     node_modules:

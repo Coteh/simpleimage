@@ -38,7 +38,7 @@
                             <td><input type="text" name="email"></input></td>
                         </tr>
                     </table>
-                    <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"></input>
                     <span tabindex=0 class="button submit-button">Submit</span>
                 </form>
             </div>

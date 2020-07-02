@@ -23,7 +23,7 @@
 <body>
     <div id="overlay-backdrop">
     </div>
-    <%- include("top-nav-view", {user,fromUrl}) %>
+    <%- include("top-nav-view", {user}) %>
     <div id="contents" class="page-contents">
         <div id="notification-overlay-container">
         </div>
@@ -49,9 +49,9 @@
             <% } else { %>
                 <form id="comment" action="/comment?type=json&response=html" method="POST">
                     <input type="hidden" name="imageID" value="<%= id %>">
-                    <input type="hidden" name="userID" value="0">
                     <textarea class="comment-box" name="comment" placeholder="Add a comment"></textarea><br/>
                     <span class="button submit-button">Submit</span>
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"></input>
                 </form><br/>
             <% } %>
             <div id="comments-container"></div>

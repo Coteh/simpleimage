@@ -16,7 +16,7 @@
 <body>
     <div id="overlay-backdrop">
     </div>
-    <%- include("top-nav-view", {user,fromUrl,guestHasExtraFeatures}) %>
+    <%- include("top-nav-view", {user,guestHasExtraFeatures}) %>
     <div id="contents">
         <div id="notification-overlay-container">
         </div>
@@ -39,6 +39,9 @@
         </div>
         <%- include("footer") %>
     </div>
+    <script>
+        var csrfToken = "<%= csrfToken %>";
+    </script>
 </body>
 
 </html>

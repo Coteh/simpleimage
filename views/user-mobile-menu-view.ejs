@@ -19,7 +19,7 @@
 <a href="#" class="noselect" onclick="document.getElementById('logout-form').submit();">
     <div class="nav-item nav-button nav-menu-item">
         <form id="logout-form" method="POST" action="/logout">
-            <input type="hidden" name="redirectUrl" value="<%= fromUrl %>"></input>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>"></input>
             <span class="collecticon collecticon-arrow-return head-icon"></span>
             <span>Logout</span>
         </form>

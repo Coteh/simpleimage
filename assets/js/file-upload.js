@@ -12,11 +12,37 @@ var onFileSelected = function() {
 
     for (var i = 0; i < files.length; i++) {
         var image = document.createElement("img");
-        image.src = window.URL.createObjectURL(files[i]);
-        image.className = "image-preview";
-        image.onload = function() {
-            image.style.top = (-this.height + 15) + "px";
+        var exifRemoved = false;
+        var previewLoadHandler = (function (file) {
+            return function (evt) {
+                if (exifRemoved) {
+                    image.style.opacity = 1;
+                } else {
+                    image.style.top = (-this.height + 15) + "px";
+                    if (file.type !== "image/jpeg") {
+                        image.style.opacity = 1;
+                        return;
+                    }
+                    autoRotateImage(evt.target);
+                    evt.target.src = stripEXIF(evt.target);
+                    exifRemoved = true;
+                }
+            }
+        })(files[i]);
+        // This load event listener will fire twice
+        // First time when local preview image is initially loaded
+        // Second time after the image element's src property
+        // is changed to be the modified version without orientation
+        image.addEventListener("load", previewLoadHandler);
+        var reader = new FileReader();
+        reader.readAsDataURL(files[i]);
+        reader.onloadend = function() {
+            var dataURL = reader.result;
+            image.src = dataURL;
         };
+        // var blobURL = window.URL.createObjectURL(files[i]);
+        // image.src = blobURL;
+        image.className = "image-preview";
         uploadPreview.appendChild(image);
         uploadPreview.className = "selected";
         currentFile = files[i];
@@ -26,9 +52,9 @@ var onFileSelected = function() {
 }
 
 var onFileUploaded = function() {
-    json = JSON.parse(this.responseText);
+    var json = JSON.parse(this.responseText);
     fileSelect.value = "";
-    if (this.status === 500) {
+    if (this.status !== 200) {
         console.error("An error ocurred: " + json.message);
         uploadPreview.style.boxShadow = "";
         uploadPreview.classList.add("error");
@@ -52,12 +78,13 @@ var uploadFile = function(file) {
     var action = form.attr("action");
     var req = new XMLHttpRequest();
     var formData = new FormData();
-
+    
     uploadPreview.classList.remove("error");
-
+    
     req.onload = onFileUploaded;
     req.onprogress = onFileProgress;
     req.open("post", action);
+    req.setRequestHeader("X-CSRF-TOKEN", csrfToken);
     formData.append("myFile", currentFile);
     req.send(formData);
 }

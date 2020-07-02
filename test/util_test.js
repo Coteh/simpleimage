@@ -50,19 +50,6 @@ describe("util", function() {
                 assert.strictEqual(util.encodeHTML(undefined), undefined);
             });
         });
-
-        describe("runTextTransformation", function () {
-            it("should run a transformation function on given text", function() {
-                var funcArr = [testTransform];
-                assert.strictEqual(util.runTextTransformation(funcArr, "Test"), "Transformed");
-            });
-            it("should return the input text if empty function array passed", function () {
-                assert.strictEqual(util.runTextTransformation([], "Test"), "Test");
-            });
-            it("should return undefined if undefined is passed in as function array", function () {
-                assert.strictEqual(util.runTextTransformation(undefined, "Test"), undefined);
-            });
-        });
     });
 
     describe("external functions", function() {
@@ -125,35 +112,20 @@ describe("util", function() {
                     message
                 });
             });
-            it("should have a status of 'error' if undefined passed as status", function() {
-                var obj = util.createJSONResponseObject(undefined, "My message here");
-                assert.strictEqual(obj.status, "error");
-            });
             it("should not contain a message property if undefined passed as message", function() {
                 var obj = util.createJSONResponseObject("success", undefined);
                 assert.strictEqual(obj.message, undefined);
             });
         });
-        describe("sanitizeText", function () {
-            it("should sanitize input text", function() {
-                assert.fail("Not implemented");
-            });
-            it("should return empty string if empty string passed in", function() {
-                assert.fail("Not implemented");
-            });
-            it("should return undefined if undefined passed in", function() {
-                assert.fail("Not implemented");
-            });
-        });
         describe("escapeOutput", function () {
-            it("should escape output text", function () {
-                assert.fail("Not implemented");
+            it("should escape text with HTML special characters", function () {
+                assert.strictEqual(util.escapeOutput("<>&\"'"), "&lt;&gt;&amp;&quot;&#39;");
             });
             it("should return empty string if empty string passed in", function () {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.escapeOutput(""), "");
             });
             it("should return undefined if undefined passed in", function () {
-                assert.fail("Not implemented");
+                assert.strictEqual(util.escapeOutput(undefined), undefined);
             });
         });
         describe("getRedirectPath", function () {
@@ -161,11 +133,37 @@ describe("util", function() {
                 var myURL = "https://www.simpleimage.com/images/test";
                 assert.strictEqual(util.getRedirectPath(myURL), "/images/test");
             });
-            it("should return root path string given 'home' string as url", function() {
-                assert.strictEqual(util.getRedirectPath("home"), "/");
-            });
             it("should return root path string given undefined as url", function () {
                 assert.strictEqual(util.getRedirectPath(undefined), "/");
+            });
+            it("should return root slash if root slash is given", function() {
+                var path = "/";
+                assert.strictEqual(util.getRedirectPath(path), path);
+            });
+            it("should return the same string if relative path already given", function() {
+                var path = "/my_path";
+                assert.strictEqual(util.getRedirectPath(path), path);
+            });
+            it("should strip out queries from the URL", function() {
+                assert.strictEqual(util.getRedirectPath("/index.html?query=something"), "/index.html");
+            });
+            it("should return just the relative path if malicious URL is provided", function() {
+                assert.strictEqual(util.getRedirectPath("http://evilsite.com/foo/bar?somequery=value"), "/foo/bar");
+            });
+            it("should block relative paths with two (or more) slashes in front", function() {
+                assert.strictEqual(util.getRedirectPath("//google.com"), "/");
+            });
+            it("should block javascript: protocol URLs", function() {
+                assert.strictEqual(util.getRedirectPath("javascript:alert(1)"), "/");
+            });
+            it("should block data: protocol URLs", function() {
+                assert.strictEqual(util.getRedirectPath("data:text/html,<script>alert(document.domain)</script>"), "/");
+            });
+            it("should block vbscript: protocol URLs", function () {
+                assert.strictEqual(util.getRedirectPath("vbscript:myfunction(total)"), "/");
+            });
+            it("should block URLs with CRLF characters", function() {
+                assert.strictEqual(util.getRedirectPath("/index\r\nsomething"), "/");
             });
         });
         describe("convertImageBinaryToBase64", function () {
