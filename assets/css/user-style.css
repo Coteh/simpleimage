@@ -12,10 +12,20 @@ body {
     line-height: 20px;
 }
 
-#user-container {
-    
+#user-container .info-box {
+    background-color: #fff266;
+    border: 4px solid #a89a00;
+    border-radius: 8px;
+}
+
+#user-container .user-view #join-date {
+    margin-left: 4px;
 }
 
 #container {
     position: relative;
+}
+
+#images-container {
+    height: 100%;
 }

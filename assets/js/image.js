@@ -54,11 +54,13 @@ var onCommentSubmitted = function() {
 var onImageDeleted = function() {
     var jsonObj = JSON.parse(this.responseText);
     var html = "<div>" + jsonObj.message + "</div>"
+    var statusCode = parseInt(this.status);
+    var isError = (statusCode >= 400);
     showOverlay(html, {
-        error: (this.status === 500),
-        close: (this.status === 500)
+        error: isError,
+        close: (statusCode !== 200)
     });
-    if (this.status === 200) {
+    if (statusCode === 200) {
         setTimeout(function() {
             window.location.href = window.location.origin + "/";
         }, 2000);
@@ -75,8 +77,11 @@ window.requestComments = function(imageID) {
 window.deleteImage = function (imageID) {
     var req = new XMLHttpRequest();
     req.onload = onImageDeleted;
-    req.open("delete", "/images/" + imageID + "?type=json");
-    req.send();
+    req.open("delete", "/images?type=json");
+    req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    req.send(JSON.stringify({
+        ids: imageID
+    }));
 };
 
 window.confirmDeleteImage = function(imageID) {

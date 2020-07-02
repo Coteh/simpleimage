@@ -6,13 +6,21 @@
 </div>
 <a href="/users/<%= user.username %>" class="noselect">
     <div class="nav-item nav-button nav-menu-item">
+        <span class="collecticon collecticon-book head-icon"></span>
         <span>Profile</span>
+    </div>
+</a>
+<a href="/your_images" class="noselect">
+    <div class="nav-item nav-button nav-menu-item">
+        <span class="collecticon collecticon-picture head-icon"></span>
+        <span>Images</span>
     </div>
 </a>
 <a href="#" class="noselect" onclick="document.getElementById('logout-form').submit();">
     <div class="nav-item nav-button nav-menu-item">
         <form id="logout-form" method="POST" action="/logout">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>"></input>
+            <span class="collecticon collecticon-arrow-return head-icon"></span>
             <span>Logout</span>
         </form>
     </div>

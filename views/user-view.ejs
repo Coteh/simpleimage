@@ -1,3 +1,4 @@
+<% const JOIN_DATE_STRING = "Join Date" %>
 <!DOCTYPE html>
 <html>
 
@@ -12,8 +13,12 @@
         crossorigin="anonymous"></script>
     <script src="/assets/js/user.bundle.js"></script>
     <script>
-        requestCommentsUser("<%= user.username %>", function(comments, numOfComments) {
-            $("#comment-count").text(numOfComments);
+        requestCommentsUser("<%= user.username %>", function(commentsElement, numOfComments) {
+            $("#comment-count").text("(" + numOfComments + ")");
+        });
+
+        requestImagesUser("<%= user.username %>", function (imagesElement, numOfImages) {
+            $("#images-count").text("(" + numOfImages + ")");
         });
 
         $(document).ready(function() {
@@ -34,15 +39,22 @@
         </div>
         <div id="user-container">
             <div>
-                <h2>User Summary</h2>
+                <h2><%= user.username %></h2>
             </div>
             <div class="user-view">
-                <span>Username: <span id="username"><%= user.username %></span></span><br/>
-                <span>Join Date: <span id="join-date"></span></span><br/>
-                <span>Comment Count: <span id="comment-count"></span></span>
+                <span class="collecticon collecticon-calendar head-icon" alt="<%= JOIN_DATE_STRING %>" title="<%= JOIN_DATE_STRING %>">
+                    <span id="join-date"></span>
+                </span>
             </div>
             <div>
-                <h2>Comment History</h2>
+                <h2>Uploaded Images <span id="images-count"></span></h2>
+            </div>
+            <div id="images-container">
+                <div id="images-placeholder" class="spinner">
+                </div>
+            </div>
+            <div>
+                <h2>Comments <span id="comment-count"></span></h2>
             </div>
             <div id="comments-container"></div>
         </div>

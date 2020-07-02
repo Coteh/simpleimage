@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Your Images - simpleimage</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/user-style.css">
+    <link rel="stylesheet" href="/assets/css/form-style.css">
+    <link rel="stylesheet" href="/assets/css/comments.css">
+    <link rel="stylesheet" href="/assets/css/user-images-style.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <script src="/assets/js/toolbar.bundle.js"></script>
+    <script src="/assets/js/selectable.bundle.js"></script>
+    <script src="/assets/js/your-images.bundle.js"></script>
+    <script>
+        window.addEventListener("load", function(e) {
+            var placeholderElement = document.getElementById("images-placeholder");
+            var userImagesContainer = document.querySelector("#user-images-container");
+            var loadedCount = 0;
+            var userImagesCount = <%= images.length %>;
+            if (userImagesCount === 0) {
+                userImagesContainer.innerHTML = "<div class='info-box'>You have not uploaded any images.</div>";
+                placeholderElement.style.display = "none";
+                userImagesContainer.style.display = "";
+                return;
+            }
+            <% images.forEach(function (image) { %>
+                var blockImage = userImagesContainer.querySelector(".selectable-block[data-image-id='<%= image.id %>'] .image-container img");
+                blockImage.src = "data:<%= image.mimeType %>;base64,<%= image.data %>";
+                blockImage.addEventListener("load", function() {
+                    loadedCount++;
+                    if (loadedCount >= userImagesCount) {
+                        placeholderElement.style.display = "none";
+                        userImagesContainer.style.display = "";
+                    }
+                });
+            <% }); %>
+        });
+    </script>
+    <%- include("headers") %>
+</head>
+
+<body>
+    <div id="overlay-backdrop">
+    </div>
+    <%- include("top-nav-view", {user:sessionUser,fromUrl}) %>
+    <div id="contents" class="page-contents">
+        <div id="notification-overlay-container">
+        </div>
+        <div id="overlay-container">
+        </div>
+        <div id="user-images-toolbar" class="toolbar">
+            <div data-action-name="delete" class="button toolbar-button deactivated">
+                <span class="collecticon collecticon-trash-bin head-icon"></span>
+            </div>
+        </div>
+        <div id="images-placeholder" class="spinner">
+        </div>
+        <div id="user-images-container" class="selectables-container" style="display: none">
+            <% images.forEach(function(image) { %>
+                <div class="selectable-block" data-image-id="<%= image.id %>">
+                    <div class="checkmark-button"></div>
+                    <div class="image-container">
+                        <a href="/images/<%= image.id %>">
+                            <img style="max-width: 100%; max-height: 100%;">
+                        </a>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+    <%- include("footer") %>
+</body>
+
+</html>

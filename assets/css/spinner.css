@@ -1,0 +1,55 @@
+/* Adapted from
+  Steve Marx's CSS Half Circle
+  https://codepen.io/xram/pen/thLsk */
+
+.spinner {
+    background-image: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%);
+    background-image: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.25) 100%);
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.25) 100%);
+    width: 45px;
+    height: 22.5px;
+    margin: 0 1em 1em 0;
+    border-top-left-radius: 45px;
+    border-top-right-radius: 45px;
+    animation: 1s linear infinite rotate, 5s linear infinite color;
+    transform-origin: 50% 100%;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes color {
+    from {
+        background-color: rgb(150, 0, 0);
+    }
+    12.5% {
+        background-color: rgb(0, 150, 0);
+    }
+    25% {
+        background-color: rgb(0, 0, 150);
+    }
+    37.5% {
+        background-color: rgb(150, 150, 0);
+    }
+    50% {
+        background-color: rgb(0, 150, 150);
+    }
+    62.5% {
+        background-color: rgb(150, 0, 150);
+    }
+    75% {
+        background-color: rgb(80, 0, 170);
+    }
+    87.5% {
+        background-color: rgb(150, 115, 0);
+    }
+    to {
+        background-color: rgb(150, 0, 0);
+    }
+}

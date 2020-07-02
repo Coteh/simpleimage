@@ -6,7 +6,10 @@ module.exports = {
     entry: {
         'assets/js/home.bundle': ['./assets/js/main.js', './assets/js/file-upload.js', './assets/js/util-frontend.js', './assets/js/image-util-frontend.js'],
         'assets/js/image.bundle': ['./assets/js/main.js', './assets/js/image.js', './assets/js/util-frontend.js'],
-        'assets/js/user.bundle': ['./assets/js/main.js', './assets/js/user.js', './assets/js/util-frontend.js']
+        'assets/js/user.bundle': ['./assets/js/main.js', './assets/js/user.js', './assets/js/util-frontend.js'],
+        'assets/js/selectable.bundle': ['./assets/js/selectable-actions.js'],
+        'assets/js/toolbar.bundle': ['./assets/js/toolbar.js'],
+        'assets/js/your-images.bundle': ['./assets/js/main.js', './assets/js/your-images.js', './assets/js/util-frontend.js']
     },
     output: {
         filename: '[name].js',
