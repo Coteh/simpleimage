@@ -13,23 +13,25 @@ module.exports = {
         path: path.resolve(__dirname, 'public')
     },
     plugins: [
-        new CopyWebpackPlugin([
-            {
-                from: 'assets/css',
-                to: 'assets/css'
-            },
-            {
-                from: 'assets/font',
-                to: 'assets/font'
-            },
-            {
-                from: 'assets/images',
-                to: 'assets/images'
-            },
-            {
-                from: 'favicon.ico',
-                to: 'favicon.ico'
-            }
-        ])
-    ]
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: 'assets/css',
+                    to: 'assets/css'
+                },
+                {
+                    from: 'assets/font',
+                    to: 'assets/font'
+                },
+                {
+                    from: 'assets/images',
+                    to: 'assets/images'
+                },
+                {
+                    from: 'favicon.ico',
+                    to: 'favicon.ico'
+                },
+            ],
+        }),
+    ],
 };
