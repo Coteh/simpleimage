@@ -17,7 +17,7 @@
   "dependencies": {
     "bcrypt": "^3.0.8",
     "body-parser": "^1.18.2",
-    "connect-redis": "^3.3.2",
+    "connect-redis": "^4.0.4",
     "copy-webpack-plugin": "^6.0.3",
     "csurf": "^1.11.0",
     "dotenv": "^4.0.0",
