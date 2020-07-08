@@ -8,6 +8,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
 const { Agent } = require("http");
 const server = require("../../lib/server");
+const { promisify } = require("util");
 
 chai.use(chaiHTTP);
 chai.should();
@@ -19,7 +20,10 @@ function getServerAgent() {
 describe("integ", () => {
     describe("user images", () => {
         let imagesArr = [];
+        let imagesLookup = new Map();
         const TEST_USER = "test-user";
+
+        const findImagesForUserPromise = promisify(databaseOps.findImagesForUser);
 
         function performUserImageRequest(user) {
             return new Promise((resolve, reject) => {
@@ -81,6 +85,8 @@ describe("integ", () => {
                         if (err) {
                             assert.fail("Error uploading test image");
                         }
+                        let imgResult = result.ops[0];
+                        imagesLookup.set(imgResult.id, imgResult);
                     });
                 });
             }, {
@@ -98,11 +104,24 @@ describe("integ", () => {
         });
 
         it("should successfully return all images belonging to specified user", () => {
+            let resImages;
+
             return performUserImageRequest(TEST_USER)
                 .then((res) => {
                     assert.equal(res.statusCode, 200);
                     assert.isOk(res.body.images);
                     assert.equal(res.body.images.length, 3);
+                    resImages = res.body.images;
+                    return findImagesForUserPromise(TEST_USER);
+                })
+                .then((images) => {
+                    let imgMap = new Map();
+                    images.forEach((img) => {
+                        imgMap.set(img.id, img.data);
+                    });
+                    resImages.forEach((img) => {
+                        assert(imgMap.get(img.id).buffer.equals(imagesLookup.get(img.id).data), "Buffers don't match");
+                    });
                 })
                 .catch((err) => {
                     assert.fail(err);
