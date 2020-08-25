@@ -15,7 +15,7 @@
   "author": "James Cote (Coteh)",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^3.0.8",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.18.2",
     "connect-redis": "^3.3.2",
     "copy-webpack-plugin": "^6.0.3",
@@ -36,7 +36,7 @@
     "piexifjs": "^1.0.4",
     "rate-limit-redis": "^1.7.0",
     "redis": "^3.0.2",
-    "validator": "^9.2.0",
+    "validator": "^9.4.1",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
     "winston": "^3.2.1",
