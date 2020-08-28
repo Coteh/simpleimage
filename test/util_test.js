@@ -7,9 +7,9 @@ var testTransform = function(text) {
     return "Transformed";
 };
 
-var imagesArr = [];
-
 describe("util", function() {
+    var imagesArr = [];
+    
     before(function() {
         const imageInfoArr = [
             {
