@@ -189,6 +189,18 @@ describe("integ", () => {
                     return checkPassword(TEST_USER, "test");
                 });
         });
+        it('should not change user password if new password is the same as the old password', () => {
+            return performUserLogin()
+                .then(async () => {
+                    await checkPassword(TEST_USER, "test");
+                    return changePassword("test", "test", "test");
+                })
+                .then((res) => {
+                    assert.equal(res.statusCode, 400);
+                    assert.equal(res.body.errorID, "passwordSame");
+                    return checkPassword(TEST_USER, "test");
+                });
+        });
         it("should not change user password if new password is not strong enough", () => {
             return performUserLogin()
                 .then(async () => {
