@@ -1,11 +1,43 @@
 const assert = require("assert");
 const util = require("../lib/util");
+const fs = require("fs");
+const ObjectID = require("mongodb").ObjectID;
 
 var testTransform = function(text) {
     return "Transformed";
 };
 
 describe("util", function() {
+    var imagesArr = [];
+    
+    before(function() {
+        const imageInfoArr = [
+            {
+                fileName: "Black_tea_pot_cropped.jpg",
+                mimeType: "image/jpeg",
+                id: "test"
+            },
+            {
+                fileName: "Ingranaggio.png",
+                mimeType: "image/png",
+                id: "test2"
+            },
+            {
+                fileName: "1525676723.png",
+                mimeType: "image/png",
+                id: "test3"
+            }
+        ];
+        imageInfoArr.forEach(function(item) {
+            var imageFile = fs.readFileSync("./test/assets/images/" + item.fileName + "");
+            var expectedImageFileBase64 = fs.readFileSync("./test/assets/images/base64/" + item.fileName + ".txt").toString();
+            imagesArr.push(Object.assign({
+                imageBuffer: imageFile,
+                imageBase64: expectedImageFileBase64
+            }, item));
+        });
+    });
+
     describe("internal functions", function() {
         describe("encodeHTML", function () {
             it("should encode '<', '>', and '&' characters", function () {
@@ -132,6 +164,66 @@ describe("util", function() {
             });
             it("should block URLs with CRLF characters", function() {
                 assert.strictEqual(util.getRedirectPath("/index\r\nsomething"), "/");
+            });
+        });
+        describe("convertImageBinaryToBase64", function () {
+            it("should convert binary image data to base64 equivalent", function() {
+                var image = imagesArr[0];
+                var imageFile = image.imageBuffer;
+                var expectedImageFileBase64 = image.imageBase64;
+
+                var actualImageFileBase64 = util.convertImageBinaryToBase64(imageFile);
+
+                assert.equal(actualImageFileBase64, expectedImageFileBase64, "The base64 strings don't match.");
+            });
+            it("should return undefined if undefined is passed as binary image data", function() {
+                var imageBase64 = util.convertImageBinaryToBase64(undefined);
+
+                assert.equal(imageBase64, undefined);
+            });
+            it("should return undefined if null is passed as binary image data", function () {
+                var imageBase64 = util.convertImageBinaryToBase64(null);
+
+                assert.equal(imageBase64, undefined);
+            });
+        });
+        describe("constructBase64ImageArray", function() {
+            it("should construct a set of base64 images (data + info) given array of image info from DB", function() {
+                var dbImages = imagesArr.map(function(item, index) {
+                    return {
+                        data: item.imageBuffer,
+                        mimetype: item.mimeType,
+                        id: item.id,
+                        encoding: "7bit",
+                        uploadeddate: new Date(0),
+                        _id: new ObjectID(index.toString().padStart(24, "a"))
+                    }
+                });
+
+                var base64Images = util.constructBase64ImageArray(dbImages);
+                
+                assert.equal(base64Images.length, dbImages.length);
+                for (var i = 0; i < base64Images.length; i++) {
+                    assert.equal(base64Images[i].data, imagesArr[i].imageBase64);
+                    assert.equal(base64Images[i].mimeType, imagesArr[i].mimeType);
+                    assert.equal(base64Images[i].id, imagesArr[i].id);
+                }
+            });
+            it("should return undefined if undefined is passed as array of image info", function () {
+                var base64Images = util.constructBase64ImageArray(undefined);
+
+                assert.equal(base64Images, undefined);
+            });
+            it("should return undefined if null is passed as array of image info", function () {
+                var base64Images = util.constructBase64ImageArray(null);
+
+                assert.equal(base64Images, undefined);
+            });
+            it("should return an array of 0 images if an array of 0 image infos is passed in", function() {
+                var base64Images = util.constructBase64ImageArray([]);
+
+                assert.ok(base64Images);
+                assert.equal(base64Images.length, 0);
             });
         });
     });
