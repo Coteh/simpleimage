@@ -186,11 +186,6 @@ describe("util", function() {
 
                 assert.equal(imageBase64, undefined);
             });
-            it("should return undefined if malformed binary image data is passed in", function() {
-                var imageBase64 = util.convertImageBinaryToBase64(new Buffer("corrupted data"));
-
-                assert.equal(imageBase64, undefined);
-            });
         });
         describe("constructBase64ImageArray", function() {
             it("should construct a set of base64 images (data + info) given array of image info from DB", function() {
@@ -222,30 +217,6 @@ describe("util", function() {
             it("should return undefined if null is passed as array of image info", function () {
                 var base64Images = util.constructBase64ImageArray(null);
 
-                assert.equal(base64Images, undefined);
-            });
-            it("should return undefined if malformed image data was encountered in the array of image info passed in", function() {
-                var dbImages = imagesArr.slice(0,1).map(function (item, index) {
-                    return {
-                        data: item.imageBuffer,
-                        mimetype: item.mimeType,
-                        id: item.id,
-                        encoding: "7bit",
-                        uploadeddate: new Date(0),
-                        _id: new ObjectID(index.toString().padStart(24, "a"))
-                    }
-                });
-                dbImages.push({
-                    data: new Buffer("corrupted data"),
-                    mimetype: "image/png",
-                    id: "fail_test",
-                    encoding: "7bit",
-                    uploadeddate: new Date(0),
-                    _id: new ObjectID("b".padStart(24, "a"))
-                });
-
-                var base64Images = util.constructBase64ImageArray(dbImages);
-                
                 assert.equal(base64Images, undefined);
             });
             it("should return an array of 0 images if an array of 0 image infos is passed in", function() {

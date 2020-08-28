@@ -21,98 +21,104 @@ describe("integ", () => {
     describe("user images", () => {
         let imagesArr = [];
         let imagesLookup = new Map();
-        const TEST_USER = "test-user";
+        let mongod;
 
         const findImagesForUserPromise = promisify(databaseOps.findImagesForUser);
 
         function performUserImageRequest(user) {
             return new Promise((resolve, reject) => {
-                agent = getServerAgent();
+                let agent = getServerAgent();
                 agent.get(`/users/${user}/images`)
                     .send()
                     .then((res) => {
                         resolve(res);
+                        agent.close();
                     })
                     .catch((err) => {
                         reject(err);
+                        agent.close();
                     });
             });
         }
 
         before(async function () {
-            mongod = new MongoMemoryServer();
-            await mongod.getUri();
-            await mongod.getPort();
-            await mongod.getDbPath();
-            await mongod.getDbName();
-            const testDBURL = mongod.getInstanceInfo().uri;
-            db = await MongoClient.connect(testDBURL);
-            return databaseOps.startDatabaseClient(function (err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-
-                const imageInfoArr = [
-                    {
-                        fileName: "Black_tea_pot_cropped.jpg",
-                        mimeType: "image/jpeg",
-                    },
-                    {
-                        fileName: "Ingranaggio.png",
-                        mimeType: "image/png",
-                    },
-                    {
-                        fileName: "1525676723.png",
-                        mimeType: "image/png",
+            return new Promise(async (resolve) => {
+                mongod = new MongoMemoryServer();
+                await mongod.getUri();
+                await mongod.getPort();
+                await mongod.getDbPath();
+                await mongod.getDbName();
+                const testDBURL = mongod.getInstanceInfo().uri;
+                db = await MongoClient.connect(testDBURL);
+                databaseOps.startDatabaseClient(function (err) {
+                    if (err) {
+                        console.error(err);
+                        return;
                     }
-                ];
-                imageInfoArr.forEach(function(item) {
-                    var imageFile = fs.readFileSync("./test/assets/images/" + item.fileName + "");
-                    imagesArr.push(Object.assign({
-                        imageBuffer: imageFile,
-                        mimeType: item.mimeType
-                    }, item));
-                });
-
-                imagesArr.forEach((image) => {
-                    databaseOps.addImage({
-                        data: image.imageBuffer,
-                        mimetype: image.mimeType,
-                        encoding: "7bit",
-                        username: TEST_USER
-                    }, (err, result) => {
-                        if (err) {
-                            assert.fail("Error uploading test image");
-                        }
-                        let imgResult = result.ops[0];
-                        imagesLookup.set(imgResult.id, imgResult);
+    
+                    databaseOps.addUser({
+                        username: "test-user",
+                        password: "test",
+                        email: "test@test.com"
+                    }, () => {
+                        const imageInfoArr = [
+                            {
+                                fileName: "Black_tea_pot_cropped.jpg",
+                                mimeType: "image/jpeg",
+                            },
+                            {
+                                fileName: "Ingranaggio.png",
+                                mimeType: "image/png",
+                            },
+                            {
+                                fileName: "1525676723.png",
+                                mimeType: "image/png",
+                            }
+                        ];
+                        imageInfoArr.forEach(function(item) {
+                            var imageFile = fs.readFileSync("./test/assets/images/" + item.fileName + "");
+                            imagesArr.push(Object.assign({
+                                imageBuffer: imageFile,
+                                mimeType: item.mimeType
+                            }, item));
+                        });
+        
+                        let numAdded = 0;
+                        imagesArr.forEach((image) => {
+                            databaseOps.addImage({
+                                data: image.imageBuffer,
+                                mimetype: image.mimeType,
+                                encoding: "7bit",
+                                username: "test-user"
+                            }, (err, result) => {
+                                if (err) {
+                                    assert.fail("Error uploading test image");
+                                }
+                                let imgResult = result.ops[0];
+                                imagesLookup.set(imgResult.id, imgResult);
+                                numAdded++;
+                                if (numAdded >= imagesArr.length) {
+                                    resolve();
+                                }
+                            });
+                        });
                     });
+                }, {
+                    dbURL: testDBURL
                 });
-            }, {
-                dbURL: testDBURL
-            });
-        });
-        beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: "test",
-                email: "test@test.com"
-            }, () => {
-                done();
             });
         });
 
         it("should successfully return all images belonging to specified user", () => {
             let resImages;
 
-            return performUserImageRequest(TEST_USER)
+            return performUserImageRequest("test-user")
                 .then((res) => {
                     assert.equal(res.statusCode, 200);
                     assert.isOk(res.body.images);
                     assert.equal(res.body.images.length, 3);
                     resImages = res.body.images;
-                    return findImagesForUserPromise(TEST_USER);
+                    return findImagesForUserPromise("test-user");
                 })
                 .then((images) => {
                     let imgMap = new Map();
@@ -128,13 +134,53 @@ describe("integ", () => {
                 });
         });
         it("should return no images if user has not uploaded any images", () => {
-            assert.fail("Not implemented");
+            databaseOps.addUser({
+                username: "user_with_no_images",
+                password: "test",
+                email: "test@test.com"
+            }, () => {
+                return performUserImageRequest("user_with_no_images")
+                .then((res) => {
+                    assert.equal(res.statusCode, 404);
+                    assert.isUndefined(res.body.images);
+                })
+                .catch((err) => {
+                    assert.fail(err);
+                });
+            });
         });
         it("should return no images if user does not exist", () => {
-            assert.fail("Not implemented");
+            return performUserImageRequest("does_not_exist")
+                .then((res) => {
+                    assert.equal(res.statusCode, 404);
+                    assert.isUndefined(res.body.images);
+                })
+                .catch((err) => {
+                    assert.fail(err);
+                });
         });
         it("should return an error if user parameter not specified", () => {
-            assert.fail("Not implemented");
+            return performUserImageRequest()
+                .then((res) => {
+                    assert.equal(res.statusCode, 404);
+                    assert.isUndefined(res.body.images);
+                })
+                .catch((err) => {
+                    assert.fail(err);
+                });
+        });
+
+        afterEach(async function () {
+            usersCollection = db.collection("users");
+            usersCollection.deleteMany({
+                username: {
+                    $not: new RegExp("test-user"),
+                }
+            });
+        });
+        after(async function() {
+            mongod.stop();
+            databaseOps.closeDatabaseClient();
         });
     });
 });
