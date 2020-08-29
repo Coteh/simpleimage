@@ -101,6 +101,27 @@ docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-co
 make deploy-test
 ~~~
 
+### Use HTTPS in dev
+
+Using [mkcert](https://github.com/FiloSottile/mkcert):
+
+```sh
+mkdir ssl
+cd ssl
+
+mkcert -install
+
+mkcert localhost 127.0.0.1 ::1
+```
+
+To run development environment using dev HTTPS certs:
+
+```sh
+make dds
+# or,
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.https.yml up
+```
+
 ### Known Limitations
 
 * Cannot change username/password/email

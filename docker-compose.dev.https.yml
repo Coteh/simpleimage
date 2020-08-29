@@ -1,0 +1,7 @@
+version: "3.2"
+services:
+    si_app:
+        environment:
+            - USE_DEV_HTTPS=true
+        ports:
+            - "8081:3011"
