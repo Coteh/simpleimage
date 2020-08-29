@@ -28,7 +28,7 @@ window.clearNotification = function() {
 
 window.constructCloseButton = function(html, onClose) {
     var closeButton = document.createElement("span");
-    closeButton.className = "collecticon collecticon-circle-xmark head-icon close-button";
+    closeButton.className = "collecticons collecticons-circle-xmark head-icon close-button";
     
     var closeText = document.createElement("span");
     closeText.innerText = " Close";
