@@ -81,3 +81,6 @@ tmp/
 
 # JUnit Reporter Results
 test-results.xml
+
+# SSL
+ssl/
