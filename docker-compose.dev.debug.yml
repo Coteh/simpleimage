@@ -1,0 +1,6 @@
+version: "3.2"
+services:
+    si_app:
+        ports:
+            - "9229:9229"
+        command: bash -c "npm run build:client && npm run start:debug"

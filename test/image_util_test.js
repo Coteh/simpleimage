@@ -1,10 +1,17 @@
 const assert = require("assert");
-const imageUtil = require("../lib/image-util");
 const piexifjs = require("piexifjs");
+const proxyquire = require("proxyquire");
 const fs = require("fs");
+const { EventEmitter } = require("events");
+const { spawn } = require("child_process");
+
+const childProcessStub = {};
+const imageUtil = proxyquire("../lib/image-util", {
+    "child_process": childProcessStub,    
+});
 
 describe("rotateImageEntry", function () {
-    it("should rotate an EXIF image to standard orientation (1)", function () {
+    it("should rotate an EXIF image to standard orientation (orientation value 1)", function () {
         var imageEntry = {
             data: fs.readFileSync("./test/assets/images/EXIF_rotate_test.jpg"),
             mimetype: "image/jpeg",
@@ -94,6 +101,37 @@ describe("rotateImageEntry", function () {
             .catch(function (err) {
                 assert.strictEqual(err.code, "IMG_ENTRY_NULL", err.message);
             });
+    });
+    it('should throw an error if spawning EXIF remover process ran into an error', function () {
+        let spawnStub = new EventEmitter();
+        spawnStub.stdout = new EventEmitter();
+        spawnStub.stderr = new EventEmitter();
+        childProcessStub.spawn = () => {
+            return spawnStub;
+        };
+        var imageEntry = {
+            data: fs.readFileSync("./test/assets/images/EXIF_rotate_test.jpg"),
+            mimetype: "image/jpeg",
+            encoding: "7bit",
+            username: "TestUser"
+        };
+
+        let promise = imageUtil.rotateImageEntry(imageEntry)
+            .then(function (data) {
+                assert.fail("This should not succeed. Failing...");
+            })
+            .catch(function (err) {
+                assert.strictEqual(err.code, "EXIF_REMOVE_ERROR", err.message);
+            });
+
+        spawnStub.emit("error", {
+            message: "some error"
+        });
+
+        return promise;
+    });
+    afterEach(() => {
+        childProcessStub.spawn = spawn;
     });
 });
 

@@ -22,6 +22,10 @@ deploy-dev-https:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.https.yml up
 dds: deploy-dev-https
 
+deploy-dev-debug:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.debug.yml up
+ddd: deploy-dev-debug
+
 deploy-test:
 	docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
 dt: deploy-test
