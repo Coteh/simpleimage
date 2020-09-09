@@ -1,3 +1,5 @@
 build:
   docker:
     web: Dockerfile
+run:
+   web: bash -c "npm run build:client && npm start"
