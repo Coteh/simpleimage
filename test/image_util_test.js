@@ -95,6 +95,9 @@ describe("rotateImageEntry", function () {
                 assert.strictEqual(err.code, "IMG_ENTRY_NULL", err.message);
             });
     });
+    it('should throw an error if process to be spawned does not exist', function () {
+        throw new Error('Not implemented');
+    });
 });
 
 describe("removeEXIFDataFromImageEntry", function () {
