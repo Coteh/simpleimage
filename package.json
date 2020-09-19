@@ -38,7 +38,7 @@
     "piexifjs": "^1.0.4",
     "rate-limit-redis": "^1.7.0",
     "redis": "^3.0.2",
-    "validator": "^9.4.1",
+    "validator": "^13.1.17",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.10",
     "winston": "^3.2.1",
