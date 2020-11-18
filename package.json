@@ -39,8 +39,8 @@
     "rate-limit-redis": "^1.7.0",
     "redis": "^3.0.2",
     "validator": "^9.4.1",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.10",
+    "webpack": "^5.1.1",
+    "webpack-cli": "^4.0.0",
     "winston": "^3.2.1",
     "winston-mongodb": "^4.0.9"
   },
