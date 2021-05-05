@@ -22,7 +22,7 @@
     "connect-redis": "^3.3.2",
     "copy-webpack-plugin": "^6.0.3",
     "csurf": "^1.11.0",
-    "dotenv": "^4.0.0",
+    "dotenv": "^8.5.1",
     "ejs": "^2.5.7",
     "ejs-lint": "^1.1.0",
     "exif": "^0.6.0",
