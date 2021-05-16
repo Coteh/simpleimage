@@ -32,6 +32,7 @@ MONGO_ROOT_PASSWORD=<root password for MongoDB instance>
 MONGO_INITIAL_DATABASE=<initial database for MongoDB instance>
 
 SESSION_SECRET=<session secret goes here>
+GA_TRACKING_ID=<Google Analytics Tracking ID (Universal Analytics)>
 ```
 
 ### Building and Running Locally
