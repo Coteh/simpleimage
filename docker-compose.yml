@@ -17,7 +17,7 @@ services:
         depends_on:
             - "si_db"
     si_db:
-        image: mongo:3.6.4
+        image: mongo:4.4.6-bionic
         container_name: si-db
         ports:
             - "27017:27017"
