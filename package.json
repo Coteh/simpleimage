@@ -30,7 +30,7 @@
     "express": "^4.14.0",
     "express-rate-limit": "^5.0.0",
     "express-session": "^1.15.6",
-    "file-type": "^7.4.0",
+    "file-type": "^16.4.0",
     "mime-types": "^2.1.27",
     "mongodb": "^2.2.9",
     "multer": "^1.2.0",
