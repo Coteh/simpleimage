@@ -8,6 +8,7 @@ const server = require("../../lib/server");
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
 const bcrypt = require("bcrypt");
+const { stub } = require("sinon");
 const { assert } = chai;
 
 chai.use(chaiHTTP);
@@ -63,56 +64,51 @@ describe("integ", () => {
 
         it("should report that a username is taken if it already exists", () => {
             return checkUsername(TEST_USER)
-                .then(async (res) => {
+                .then(res => {
                     assert.equal(res.statusCode, 200);
-                    console.log("username exists body", res.body);
-                    assert.ok(res.body.exists);
+                    const message = res.body.message;
+                    assert.isTrue(message.exists);
                 });
         });
 
         it("should report that a username is available if it's free", () => {
             return checkUsername("bob")
-                .then(async (res) => {
+                .then(res => {
                     assert.equal(res.statusCode, 200);
-                    assert.notOk(res.body.exists);
+                    const message = res.body.message;
+                    assert.isFalse(message.exists);
                 });
         });
 
-        it("should return an error if number of requests made to the endpoint exceeds the rate limit", () => {
-            return Promise.allSettled(new Array(10).fill(checkUsername(TEST_USER)))
-                .then(results => {
-                    let exceededLimit = false;
-                    results.forEach(res => {
-                        assert.equal(res.status, "fulfilled");
-                        console.log("the body", res.value.body);
-                        if (res.value.statusCode === 429) {
-                            assert.equal(res.value.body.errorID, "tooManyRequests");
-                        } else {
-                            assert.equal(res.value.statusCode, 200);
-                        }
-                    });
-                    console.log("rapid request result", res);
-                    throw new Error("Not implemented");
+        it("should return an error if database error occurs when processing the request", () => {
+            const findUserStub = stub(databaseOps, "findUser").callsArgWith(1, new Error("Error finding user"), null);
+            return checkUsername(TEST_USER)
+                .then(res => {
+                    assert.equal(res.statusCode, 500);
+                    assert.equal(res.body.errorID, "errorCheckingUser");
+                })
+                .finally(err => {
+                    findUserStub.restore();
                 });
         });
+
+        // TODO test rate limiting of check_username route.
+        // I believe this will require updating configuration for express-rate-limit in route.js
 
         it("should return an error if there was no user supplied to the request", () => {
             return checkUsername(undefined)
                 .then(res => {
-                    console.log("no usr body", res.body);
                     assert.equal(res.statusCode, 400);
-                    assert.isUndefined(res.body.exists);
                     assert.equal(res.body.errorID, "noUsernameToCheck");
-                    throw new Error("Not implemented");
                 });
         });
 
-        afterEach(async function () {
+        afterEach(() => {
             usersCollection = db.collection("users");
             usersCollection.deleteMany({});
             agent.close();
         });
-        after(async function() {
+        after(() => {
             mongod.stop();
             databaseOps.closeDatabaseClient();
         });
