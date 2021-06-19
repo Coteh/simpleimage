@@ -214,6 +214,7 @@ input[type="file"] {
     height: 0px;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
+    right: 0px;
 }
 
 #top-nav .nav-menu.nav-active .nav-menu-items {
