@@ -2,6 +2,7 @@ const chai = require("chai");
 const chaiHTTP = require("chai-http");
 const { stub } = require("sinon");
 const databaseOps = require("../../lib/database-ops");
+const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
@@ -96,6 +97,32 @@ describe("integ", () => {
                 .then(res => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "noUsernameToCheck");
+                });
+        });
+
+        it("should return an error if number of characters for username is over the limit", () => {
+            const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH;
+            process.env.MAX_USERNAME_LENGTH = 24;
+            return checkUsername("qwertyuiopasdfghjklzxcvbnm")
+                .then(res => {
+                    assert.equal(res.statusCode, 400);
+                    assert.equal(res.body.errorID, "usernameTooLong")
+                })
+                .finally(() => process.env.MAX_USERNAME_LENGTH = oldMaxUsernameLength);
+        });
+
+        it("should return an error if unknown username verification error occurred", () => {
+            const usernameCheckStub = stub(usernameUtil, "verifyUsername").returns({
+                valid: false,
+                error: "",
+            });
+            return checkUsername(TEST_USER)
+                .then(res => {
+                    assert.equal(res.statusCode, 400);
+                    assert.equal(res.body.errorID, "usernameUnknownError");
+                })
+                .finally(() => {
+                    usernameCheckStub.restore();
                 });
         });
 

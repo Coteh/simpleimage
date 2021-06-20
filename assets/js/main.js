@@ -119,7 +119,22 @@ window.openRegister = function() {
 /*--------------------------------------------*/
 
 const onUsernameChecked = function(username, field) {
-    if (this.status !== 200) {
+    if (this.status === 400) {
+        const jsonObj = JSON.parse(this.responseText);
+        field.classList.add('input-field-error');
+        const label = field.nextElementSibling;
+        if (label) {
+            const errorID = jsonObj.errorID;
+            switch (errorID) {
+                case "usernameTooLong":
+                    label.innerText = "Username is too long";
+                    break;
+                default:
+                    label.innerText = "Unknown error checking username. Try again later.";
+            }
+        }
+        return;
+    } else if (this.status !== 200) {
         return;
     }
     const jsonObj = JSON.parse(this.responseText);
@@ -128,7 +143,7 @@ const onUsernameChecked = function(username, field) {
     field.classList.add(`input-field-${exists ? "error" : "success"}`);
     const label = field.nextElementSibling;
     if (label) {
-        label.innerText = exists ? `${username} is not available` : "";
+        label.innerText = `${username} is ${!exists ? "" : "not "}available`;
     }
 }
 
