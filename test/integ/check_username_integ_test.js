@@ -1,14 +1,10 @@
 const chai = require("chai");
 const chaiHTTP = require("chai-http");
-const sinon = require("sinon");
-const auth = require("../../lib/auth");
+const { stub } = require("sinon");
 const databaseOps = require("../../lib/database-ops");
-const actionHistory = require("../../lib/action-history");
 const server = require("../../lib/server");
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
-const bcrypt = require("bcrypt");
-const { stub } = require("sinon");
 const { assert } = chai;
 
 chai.use(chaiHTTP);
