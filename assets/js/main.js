@@ -124,8 +124,7 @@ const onUsernameChecked = function(username, field) {
         field.classList.add('input-field-error');
         const label = field.nextElementSibling;
         if (label) {
-            const errorID = jsonObj.errorID;
-            switch (errorID) {
+            switch (jsonObj.errorID) {
                 case "usernameTooLong":
                     label.innerText = "Username is too long";
                     break;
