@@ -126,6 +126,17 @@ describe("integ", () => {
                 });
         });
 
+        it("should be safe against MongoDB attack", () => {
+            return agent.get("/check_username")
+                .query({
+                    "username[$gt]": "",
+                })
+                .then(res => {
+                    assert.equal(res.statusCode, 400);
+                    assert.equal(res.body.errorID, "errorCheckingUser");
+                });
+        });
+
         afterEach(() => {
             usersCollection = db.collection("users");
             usersCollection.deleteMany({});
