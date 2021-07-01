@@ -33,6 +33,7 @@ MONGO_INITIAL_DATABASE=<initial database for MongoDB instance>
 
 SESSION_SECRET=<session secret goes here>
 GA_TRACKING_ID=<Google Analytics Tracking ID (Universal Analytics)>
+LOGIN_TO_UPLOAD=true
 ```
 
 ### Building and Running Locally
