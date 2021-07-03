@@ -9,7 +9,7 @@
     "watch:client": "webpack -w",
     "start": "node app.js",
     "start:dev": "nodemon",
-    "start:debug": "nodemon --inspect-brk=0.0.0.0 .",
+    "start:debug": "nodemon --inspect=0.0.0.0 .",
     "test": "NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --recursive --exit",
     "test-ci": "NODE_ENV=test nyc --reporter=lcovonly mocha test --reporter mocha-junit-reporter --recursive --exit",
     "heroku-postbuild": "webpack -p"
