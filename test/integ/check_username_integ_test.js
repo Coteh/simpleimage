@@ -133,7 +133,7 @@ describe("integ", () => {
                 })
                 .then(res => {
                     assert.equal(res.statusCode, 400);
-                    assert.equal(res.body.errorID, "errorCheckingUser");
+                    assert.equal(res.body.errorID, "invalidUsernameToCheck");
                 });
         });
 
