@@ -137,6 +137,29 @@ describe("integ", () => {
                 });
         });
 
+        it("should only process the first username passed to it, if multiple were passed in", () => {
+            return agent.get("/check_username")
+                .query({
+                    "username": [TEST_USER, "someone_else"],
+                })
+                .then(res => {
+                    assert.equal(res.statusCode, 200);
+                    const message = res.body.message;
+                    assert.isTrue(message.exists);
+                });
+        });
+
+        it("should throw an error if an empty array is passed to check_username", () => {
+            return agent.get("/check_username")
+                .query({
+                    "username": [],
+                })
+                .then(res => {
+                    assert.equal(res.statusCode, 400);
+                    assert.equal(res.body.errorID, "noUsernameToCheck");
+                });
+        });
+
         afterEach(() => {
             usersCollection = db.collection("users");
             usersCollection.deleteMany({});
