@@ -112,7 +112,7 @@ describe("integ", () => {
         });
 
         it("should return an error if unknown username verification error occurred", () => {
-            const usernameCheckStub = stub(usernameUtil, "verifyUsername").returns({
+            const usernameCheckStub = stub(usernameUtil, "isValidUsername").returns({
                 valid: false,
                 error: "",
             });
