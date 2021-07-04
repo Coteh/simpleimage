@@ -2,6 +2,7 @@ const assert = require("assert");
 const util = require("../lib/util");
 const fs = require("fs");
 const ObjectID = require("mongodb").ObjectID;
+const usernameUtil = require("../lib/util/username");
 
 var testTransform = function(text) {
     return "Transformed";
@@ -224,6 +225,29 @@ describe("util", function() {
 
                 assert.ok(base64Images);
                 assert.equal(base64Images.length, 0);
+            });
+        });
+    });
+
+    describe("username utils", function () {
+        describe("isValidUsername", function () {
+            it("should pass a valid username", function () {
+                const result = usernameUtil.isValidUsername("testuser");
+                assert.ok(result.valid);
+                assert.strictEqual(result.error, null);
+            });
+            it("should reject a username that is too long", function () {
+                const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH;
+                process.env.MAX_USERNAME_LENGTH = 24;
+                const result = usernameUtil.isValidUsername("thisisaveryveryveryveryveryveryverylongusername");
+                assert.strictEqual(result.valid, false);
+                assert.strictEqual(result.error, usernameUtil.UsernameError.USERNAME_TOO_LONG);
+                process.env.MAX_USERNAME_LENGTH = oldMaxUsernameLength;
+            });
+            it("should reject a username that is not a string", function () {
+                const result = usernameUtil.isValidUsername(["multiple", "usernames", "should", "not", "work"]);
+                assert.strictEqual(result.valid, false);
+                assert.strictEqual(result.error, usernameUtil.UsernameError.USERNAME_NOT_STRING);
             });
         });
     });
