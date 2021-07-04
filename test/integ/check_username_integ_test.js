@@ -149,17 +149,6 @@ describe("integ", () => {
                 });
         });
 
-        it("should throw an error if an empty array is passed to check_username", () => {
-            return agent.get("/check_username")
-                .query({
-                    "username": [],
-                })
-                .then(res => {
-                    assert.equal(res.statusCode, 400);
-                    assert.equal(res.body.errorID, "noUsernameToCheck");
-                });
-        });
-
         afterEach(() => {
             usersCollection = db.collection("users");
             usersCollection.deleteMany({});
