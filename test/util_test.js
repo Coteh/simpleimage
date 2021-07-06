@@ -39,20 +39,6 @@ describe("util", function() {
         });
     });
 
-    describe("internal functions", function() {
-        describe("encodeHTML", function () {
-            it("should encode '<', '>', and '&' characters", function () {
-                assert.strictEqual(util.encodeHTML("<>&"), "&lt;&gt;&amp;");
-            });
-            it("should encode single quote and double quote characters", function () {
-                assert.strictEqual(util.encodeHTML("'\""), "&#39;&quot;");
-            });
-            it("should return undefined if undefined is passed in as the string", function () {
-                assert.strictEqual(util.encodeHTML(undefined), undefined);
-            });
-        });
-    });
-
     describe("external functions", function() {
         describe("extToMimeType", function() {
             it("should return a MIME type string given an extension string", function() {
@@ -120,13 +106,13 @@ describe("util", function() {
         });
         describe("escapeOutput", function () {
             it("should escape text with HTML special characters", function () {
-                assert.strictEqual(util.escapeOutput("<>&\"'"), "&lt;&gt;&amp;&quot;&#39;");
+                assert.strictEqual(util.escapeOutput("<>&\"'"), "&lt;&gt;&amp;&quot;&apos;");
             });
             it("should return empty string if empty string passed in", function () {
                 assert.strictEqual(util.escapeOutput(""), "");
             });
-            it("should return undefined if undefined passed in", function () {
-                assert.strictEqual(util.escapeOutput(undefined), undefined);
+            it("should return empty string if undefined passed in", function () {
+                assert.strictEqual(util.escapeOutput(undefined), "");
             });
         });
         describe("getRedirectPath", function () {
