@@ -97,40 +97,15 @@ $(document).ready(function() {
     fileSelect.addEventListener("change", onFileSelected);
 
     $("#select-button").on('click', function (evt) {
-        if(isLoginRequired === "true" && !isUserLoggedIn) {
-            checkUserLogin(function (status) {
-                if(status !== 200) {
-                    openLogin();
-                    return;
-                }
-                else {
-                    isUserLoggedIn = true;
-                    fileSelect.click();
-                }
-            });
-        }
-        else {
+        performLoggedInAction(evt, function() {
             fileSelect.click();
-        }
+        });
     });
 
     $("#upload-button").on("click", function (evt) {
-        if(isLoginRequired === "true" && !isUserLoggedIn) {
-            evt.preventDefault();
-            checkUserLogin(function (status) {
-                if(status !== 200) {
-                    openLogin();
-                    return;
-                }
-                else {
-                    isUserLoggedIn = true;
-                    uploadFile(currentFile);
-                }
-            });
-        }
-        else {
+        performLoggedInAction(evt, function() {
             uploadFile(currentFile);
-        }
+        });
     });
 });
 
@@ -140,5 +115,24 @@ var checkUserLogin = function (callback) {
     req.send();
     req.onload = function() {
         callback(this.status);
+    }
+}
+
+var performLoggedInAction = function(evt, callback) {
+    if(isLoginRequired === "true" && !isUserLoggedIn) {
+        evt.preventDefault();
+        checkUserLogin(function (status) {
+            if(status !== 200) {
+                openLogin();
+                return;
+            }
+            else {
+                isUserLoggedIn = true;
+                callback();
+            }
+        });
+    }
+    else {
+        callback();
     }
 }
