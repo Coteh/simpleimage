@@ -64,8 +64,6 @@ describe("integ", () => {
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 200);
-                    assert.equal(res.body.status, "success");
-                    assert.equal(res.body.message, "User Logged In");
                 });
         });
 
@@ -74,11 +72,10 @@ describe("integ", () => {
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "notSignedIn");
-                    assert.equal(res.body.message, "Cannot perform action. Not signed in.");
                 });
         });
 
-        it("Should fail if logged in user does not exist in database", () => {
+        it("should fail if logged in user does not exist in database", () => {
             return performUserLogin(TEST_USER)
                 .then(async () => {
                     usersCollection = db.collection("users");
@@ -87,7 +84,6 @@ describe("integ", () => {
                 }).then((res) => {
                     assert.equal(res.statusCode, 404);
                     assert.equal(res.body.errorID, "sessionUserNotFound");
-                    assert.equal(res.body.message, "Cannot perform action. User no longer exists.")
                 });
         });
 
