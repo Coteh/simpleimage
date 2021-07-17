@@ -2,6 +2,7 @@ const assert = require("assert");
 const util = require("../lib/util");
 const fs = require("fs");
 const ObjectID = require("mongodb").ObjectID;
+const usernameUtil = require("../lib/util/username");
 
 var testTransform = function(text) {
     return "Transformed";
@@ -35,20 +36,6 @@ describe("util", function() {
                 imageBuffer: imageFile,
                 imageBase64: expectedImageFileBase64
             }, item));
-        });
-    });
-
-    describe("internal functions", function() {
-        describe("encodeHTML", function () {
-            it("should encode '<', '>', and '&' characters", function () {
-                assert.strictEqual(util.encodeHTML("<>&"), "&lt;&gt;&amp;");
-            });
-            it("should encode single quote and double quote characters", function () {
-                assert.strictEqual(util.encodeHTML("'\""), "&#39;&quot;");
-            });
-            it("should return undefined if undefined is passed in as the string", function () {
-                assert.strictEqual(util.encodeHTML(undefined), undefined);
-            });
         });
     });
 
@@ -119,13 +106,13 @@ describe("util", function() {
         });
         describe("escapeOutput", function () {
             it("should escape text with HTML special characters", function () {
-                assert.strictEqual(util.escapeOutput("<>&\"'"), "&lt;&gt;&amp;&quot;&#39;");
+                assert.strictEqual(util.escapeOutput("<>&\"'"), "&lt;&gt;&amp;&quot;&apos;");
             });
             it("should return empty string if empty string passed in", function () {
                 assert.strictEqual(util.escapeOutput(""), "");
             });
-            it("should return undefined if undefined passed in", function () {
-                assert.strictEqual(util.escapeOutput(undefined), undefined);
+            it("should return empty string if undefined passed in", function () {
+                assert.strictEqual(util.escapeOutput(undefined), "");
             });
         });
         describe("getRedirectPath", function () {
@@ -224,6 +211,29 @@ describe("util", function() {
 
                 assert.ok(base64Images);
                 assert.equal(base64Images.length, 0);
+            });
+        });
+    });
+
+    describe("username utils", function () {
+        describe("isValidUsername", function () {
+            it("should pass a valid username", function () {
+                const result = usernameUtil.isValidUsername("testuser");
+                assert.ok(result.valid);
+                assert.strictEqual(result.error, null);
+            });
+            it("should reject a username that is too long", function () {
+                const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH;
+                process.env.MAX_USERNAME_LENGTH = 24;
+                const result = usernameUtil.isValidUsername("thisisaveryveryveryveryveryveryverylongusername");
+                assert.strictEqual(result.valid, false);
+                assert.strictEqual(result.error, usernameUtil.UsernameError.USERNAME_TOO_LONG);
+                process.env.MAX_USERNAME_LENGTH = oldMaxUsernameLength;
+            });
+            it("should reject a username that is not a string", function () {
+                const result = usernameUtil.isValidUsername(["multiple", "usernames", "should", "not", "work"]);
+                assert.strictEqual(result.valid, false);
+                assert.strictEqual(result.error, usernameUtil.UsernameError.USERNAME_NOT_STRING);
             });
         });
     });

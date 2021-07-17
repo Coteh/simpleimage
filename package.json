@@ -9,7 +9,7 @@
     "watch:client": "webpack -w",
     "start": "node app.js",
     "start:dev": "nodemon",
-    "start:debug": "nodemon --inspect-brk=0.0.0.0 .",
+    "start:debug": "nodemon --inspect=0.0.0.0 .",
     "test": "NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --recursive --exit",
     "test-ci": "NODE_ENV=test nyc --reporter=lcovonly mocha test --reporter mocha-junit-reporter --recursive --exit",
     "heroku-postbuild": "webpack -p"
@@ -31,7 +31,9 @@
     "express-rate-limit": "^5.0.0",
     "express-session": "^1.15.6",
     "file-type": "^7.4.0",
+    "html-entities": "^2.3.2",
     "mime-types": "^2.1.27",
+    "mongo-sanitize": "^1.1.0",
     "mongodb": "^2.2.9",
     "multer": "^1.2.0",
     "owasp-password-strength-test": "^1.3.0",

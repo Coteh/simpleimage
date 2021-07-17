@@ -118,6 +118,34 @@ window.openRegister = function() {
 
 /*--------------------------------------------*/
 
+const onUsernameChecked = function(username, field) {
+    if (this.status === 400) {
+        const jsonObj = JSON.parse(this.responseText);
+        field.classList.add('input-field-error');
+        const label = field.nextElementSibling;
+        if (label) {
+            switch (jsonObj.errorID) {
+                case "usernameTooLong":
+                    label.innerText = "Username is too long";
+                    break;
+                default:
+                    label.innerText = "Unknown error checking username. Try again later.";
+            }
+        }
+        return;
+    } else if (this.status !== 200) {
+        return;
+    }
+    const jsonObj = JSON.parse(this.responseText);
+    const message = jsonObj.message;
+    const exists = message.exists;
+    field.classList.add(`input-field-${exists ? "error" : "success"}`);
+    const label = field.nextElementSibling;
+    if (label) {
+        label.innerText = `${username} is ${!exists ? "" : "not "}available`;
+    }
+}
+
 var onLoginSubmitted = function(form) {
     var jsonObj;
     if (this.status !== 200) {
@@ -174,6 +202,29 @@ window.submitLogin = function(e) {
     req.send($(form).serialize());
 };
 
+window.performUsernameCheck = (e) => {
+    const field = e.target;
+    // Clear classes for username field (either error or success effects from previous check)
+    field.className = "";
+    // Also clear message if there was one (when last username check failed)
+    const label = field.nextElementSibling;
+    if (label) {
+        label.innerText = "";
+    }
+    const username = field.value;
+    // If nothing typed, do not request username check
+    if (!username) {
+        return;
+    }
+    const req = new XMLHttpRequest();
+
+    req.onload = function () {
+        onUsernameChecked.bind(this)(username, field);
+    };
+    req.open("get", `/check_username?username=${username}`);
+    req.send();
+};
+
 function onLoginLoaded(err) {
     if (err) {
         return;
@@ -210,6 +261,11 @@ function onRegisterLoaded(err) {
         return false;
     });
     $("input[name='username']").focus();
+    $("input[name='username']").focusout(function (e) {
+        e.preventDefault();
+        performUsernameCheck(e);
+        return false;
+    });
     setScalableWidth($("#overlay-container").get(0), 420);
     setScalableHeight($("#overlay-container").get(0), 400);
     $("form[id='register-form'] .submit-button").click(function (e) {

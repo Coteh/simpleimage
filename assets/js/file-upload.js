@@ -1,6 +1,7 @@
 var uploadPreview;
 var fileSelect;
 var currentFile;
+var isUserLoggedIn = false;
 
 var onFileSelected = function() {
     var files = fileSelect.files;
@@ -96,10 +97,42 @@ $(document).ready(function() {
     fileSelect.addEventListener("change", onFileSelected);
 
     $("#select-button").on('click', function (evt) {
-        fileSelect.click();
+        performLoggedInAction(evt, function() {
+            fileSelect.click();
+        });
     });
 
-    $("#upload-button").on("click", function () {
-        uploadFile(currentFile);
+    $("#upload-button").on("click", function (evt) {
+        performLoggedInAction(evt, function() {
+            uploadFile(currentFile);
+        });
     });
 });
+
+var checkUserLogin = function (callback) {
+    var req = new XMLHttpRequest();
+    req.open("get", "/user");
+    req.send();
+    req.onload = function() {
+        callback(this.status);
+    }
+}
+
+var performLoggedInAction = function(evt, callback) {
+    if(isLoginRequired === "true" && !isUserLoggedIn) {
+        evt.preventDefault();
+        checkUserLogin(function (status) {
+            if(status !== 200) {
+                openLogin();
+                return;
+            }
+            else {
+                isUserLoggedIn = true;
+                callback();
+            }
+        });
+    }
+    else {
+        callback();
+    }
+}

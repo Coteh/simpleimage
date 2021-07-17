@@ -10,6 +10,10 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
     <script src="assets/js/home.bundle.js"></script>
+    <script type="text/javascript">
+        var isLoginRequired = '<%= process.env.LOGIN_TO_UPLOAD %>';
+    </script>
+    
     <%- include("headers") %>
 </head>
 
@@ -33,7 +37,7 @@
                     <span class="collecticons collecticons-picture head-icon"></span>
                 </div>
                 <div class="button" id="upload-button">
-                    <span class="collecticons collecticons-upload head-icon"></span>
+                    <span class="collecticons collecticons-upload-2 head-icon"></span>
                 </div>
             </div>
         </div>
