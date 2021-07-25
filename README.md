@@ -17,6 +17,8 @@ A simple image hosting web application that I created and implemented using Node
 * User profile page
     * Join date
     * Comment history and total number of comments posted
+* User settings
+    * Change password
 * Rotates JPEG images based on Orientation tag in EXIF metadata
 * Strips EXIF metadata from JPEG images
 
@@ -126,7 +128,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose
 
 ### Known Limitations
 
-* Cannot change username/password/email
+* Cannot change username/email
 * Some of the popup dialogs need a bit of size tweaking (e.g. signup dialog)
 * No image upload history (Currently being worked on in [dev/image-history branch](https://github.com/Coteh/simpleimage/tree/dev/image-history))
 * No option for anonymous users to upload an image with ability to delete
