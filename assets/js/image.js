@@ -76,6 +76,7 @@ window.deleteImage = function (imageID) {
     var req = new XMLHttpRequest();
     req.onload = onImageDeleted;
     req.open("delete", "/images/" + imageID + "?type=json");
+    req.setRequestHeader("X-CSRF-TOKEN", csrfToken);
     req.send();
 };
 
