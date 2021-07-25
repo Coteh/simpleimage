@@ -50,6 +50,8 @@ form input {
     opacity: 0;
     transition: opacity 0.25s ease;
     border-radius: 8px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 #overlay-container.open {
