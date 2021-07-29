@@ -238,8 +238,10 @@ function onLoginLoaded(err) {
     setScalableWidth($("#overlay-container").get(0), 300);
     setScalableHeight($("#overlay-container").get(0), 450);
     $("#register-via-login-button").click(function(e) {
+        const userName = $("#input-login-username").val();
         clearOverlay(e);
         openRegister(e);
+        if (userName) $("#input-register-username").val(userName);
     });
     $("form[id='login-form'] .submit-button").click(function() {
         $("form[id='login-form']").submit();
