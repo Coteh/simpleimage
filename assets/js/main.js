@@ -107,10 +107,12 @@ window.openLogin = function() {
     req.send();
 };
 
-window.openRegister = function() {
+window.openRegister = function(callback) {
     var req = new XMLHttpRequest();
     req.onload = function (progressEvent) {
         onOverlayLoaded.call(this, progressEvent, onRegisterLoaded);
+        if(callback)
+            callback();
     };
     req.open("get", "/register?responseType=json");
     req.send();
@@ -238,10 +240,12 @@ function onLoginLoaded(err) {
     setScalableWidth($("#overlay-container").get(0), 300);
     setScalableHeight($("#overlay-container").get(0), 450);
     $("#register-via-login-button").click(function(e) {
-        const userName = $("#input-login-username").val();
+        const username = $("#input-login-username").val();
         clearOverlay(e);
-        openRegister(e);
-        if (userName) $("#input-register-username").val(userName);
+        openRegister(()=>{
+            if (username) $("#input-register-username").val(username);
+        });
+        
     });
     $("form[id='login-form'] .submit-button").click(function() {
         $("form[id='login-form']").submit();
