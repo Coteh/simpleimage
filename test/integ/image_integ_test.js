@@ -47,7 +47,7 @@ describe("integ", () => {
                 agent.get(`/images/${imageID}.${ext}`)
                     .then((res) => {
                         if (res.statusCode !== 200) {
-                            reject({
+                            resolve({
                                 statusCode: res.statusCode,
                             });
                             return;
@@ -187,11 +187,8 @@ describe("integ", () => {
         it("should return 500 status code if database encountered an error when searching for image", () => {
             const databaseOpsStub = stub(databaseOps, "findImage").callsArgWith(1, new Error("Error finding image"), null);
             return fetchImage(imagesLookupByExt.get("png").id, "png")
-                .then(() => {
-                    assert.fail("Should not have returned result");
-                })
-                .catch((err) => {
-                    assert.equal(err.statusCode, 500, `err: ${err}`);
+                .then((res) => {
+                    assert.equal(res.statusCode, 500);
                 })
                 .finally(() => {
                     databaseOpsStub.restore();
