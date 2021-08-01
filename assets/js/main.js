@@ -111,7 +111,7 @@ window.openRegister = function(callback) {
     var req = new XMLHttpRequest();
     req.onload = function (progressEvent) {
         onOverlayLoaded.call(this, progressEvent, onRegisterLoaded);
-        if(callback)
+        if(callback && typeof callback === "function")
             callback();
     };
     req.open("get", "/register?responseType=json");
