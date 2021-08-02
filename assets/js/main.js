@@ -245,7 +245,6 @@ function onLoginLoaded(err) {
         openRegister(()=>{
             if (username) $("#input-register-username").val(username);
         });
-        
     });
     $("form[id='login-form'] .submit-button").click(function() {
         $("form[id='login-form']").submit();
