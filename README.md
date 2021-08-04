@@ -37,6 +37,7 @@ SESSION_SECRET=<session secret goes here>
 GA_TRACKING_ID=<Google Analytics Tracking ID (Universal Analytics)>
 LOGIN_TO_UPLOAD=true  # omit this variable if you don't want to require users to login to upload
 EVALUATION_MODE=true # omit this variable to diable automatic removal of images
+EXPIRE_AFTER_SECONDS=300 # set this to set time for the images to be stored in database in evaluation mdoe
 ```
 
 ### Building and Running Locally
