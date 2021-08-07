@@ -53,10 +53,11 @@ describe("integ", () => {
                             return;
                         }
                         resolve(res.body);
-                        agent.close();
                     })
                     .catch((err) => {
                         reject(err);
+                    })
+                    .finally(() => {
                         agent.close();
                     });
             });

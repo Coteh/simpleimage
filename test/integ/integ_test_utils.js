@@ -6,10 +6,9 @@ module.exports.addImagesForUser = (imageInfoArr, user) => {
     return new Promise((resolve, reject) => {
         const imagesArr = [];
         imageInfoArr.forEach(function(item) {
-            var imageFile = fs.readFileSync("./test/assets/images/" + item.fileName + "");
+            var imageFile = fs.readFileSync("./test/assets/images/" + item.fileName);
             imagesArr.push(Object.assign({
                 imageBuffer: imageFile,
-                mimeType: item.mimeType
             }, item));
         });
     
@@ -20,7 +19,7 @@ module.exports.addImagesForUser = (imageInfoArr, user) => {
                 data: image.imageBuffer,
                 mimetype: image.mimeType,
                 encoding: "7bit",
-                username: "test-user"
+                username: user,
             }, (err, result) => {
                 if (err) {
                     assert.fail("Error uploading test image");
