@@ -1,7 +1,6 @@
 const chai = require("chai");
 const chaiHTTP = require("chai-http");
 const { assert } = require("chai");
-const fs = require("fs");
 
 const databaseOps = require("../../lib/database-ops");
 const { MongoMemoryServer } = require('mongodb-memory-server');
@@ -9,6 +8,8 @@ const { MongoClient } = require("mongodb");
 const { Agent } = require("http");
 const server = require("../../lib/server");
 const { promisify } = require("util");
+
+const integTestUtils = require('./integ_test_utils');
 
 chai.use(chaiHTTP);
 chai.should();
@@ -19,7 +20,6 @@ function getServerAgent() {
 
 describe("integ", () => {
     describe("user images", () => {
-        let imagesArr = [];
         let imagesLookup = new Map();
         let mongod;
 
@@ -61,7 +61,7 @@ describe("integ", () => {
                         password: "test",
                         email: "test@test.com"
                     }, () => {
-                        const imageInfoArr = [
+                        integTestUtils.addImagesForUser([
                             {
                                 fileName: "Black_tea_pot_cropped.jpg",
                                 mimeType: "image/jpeg",
@@ -74,34 +74,13 @@ describe("integ", () => {
                                 fileName: "1525676723.png",
                                 mimeType: "image/png",
                             }
-                        ];
-                        imageInfoArr.forEach(function(item) {
-                            var imageFile = fs.readFileSync("./test/assets/images/" + item.fileName + "");
-                            imagesArr.push(Object.assign({
-                                imageBuffer: imageFile,
-                                mimeType: item.mimeType
-                            }, item));
-                        });
-        
-                        let numAdded = 0;
-                        imagesArr.forEach((image) => {
-                            databaseOps.addImage({
-                                data: image.imageBuffer,
-                                mimetype: image.mimeType,
-                                encoding: "7bit",
-                                username: "test-user"
-                            }, (err, result) => {
-                                if (err) {
-                                    assert.fail("Error uploading test image");
-                                }
-                                let imgResult = result.ops[0];
-                                imagesLookup.set(imgResult.id, imgResult);
-                                numAdded++;
-                                if (numAdded >= imagesArr.length) {
-                                    resolve();
-                                }
+                        ], 'test-user')
+                            .then((imgs) => {
+                                imgs.forEach(imgResult => {
+                                    imagesLookup.set(imgResult.id, imgResult);
+                                });
+                                resolve();
                             });
-                        });
                     });
                 }, {
                     dbURL: testDBURL
