@@ -17,6 +17,8 @@
   "author": "James Cote (Coteh)",
   "license": "MIT",
   "dependencies": {
+    "@sentry/browser": "^6.11.0",
+    "@sentry/tracing": "^6.11.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.18.2",
     "connect-redis": "^3.3.2",
@@ -47,6 +49,7 @@
     "winston-mongodb": "^4.0.9"
   },
   "devDependencies": {
+    "@sentry/webpack-plugin": "^1.17.1",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "mocha": "^7.1.2",
