@@ -52,6 +52,7 @@
     "@sentry/webpack-plugin": "^1.17.1",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "html-validate": "^5.2.1",
     "mocha": "^7.1.2",
     "mocha-junit-reporter": "^1.23.3",
     "mongodb-memory-server": "^6.7.0",

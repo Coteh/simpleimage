@@ -9,6 +9,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
 const bcrypt = require("bcrypt");
 const { assert } = chai;
+const { performUserLogin } = require('./integ_test_utils');
 
 chai.use(chaiHTTP);
 
@@ -25,24 +26,6 @@ describe("integ", () => {
         var agent = null;
         var usersCollection = null;
         const TEST_USER = "test-user";
-
-        function performUserLogin() {
-            return new Promise((resolve, reject) => {
-                agent = getServerAgent();
-                agent.post("/login")
-                    .type("form")
-                    .send({
-                        "username": "test-user",
-                        "password": "test"
-                    })
-                    .then((res) => {
-                        resolve(res);
-                    })
-                    .catch((err) => {
-                        reject(err);
-                    });
-            });
-        }
 
         function checkPassword(username, password) {
             return new Promise((resolve, reject) => {
@@ -100,13 +83,14 @@ describe("integ", () => {
                 password: "test",
                 email: "test@test.com"
             }, () => {
+                agent = getServerAgent();
                 done();
             });
         });
 
         it("should change user password", () => {
             const newPassword = "Qwerty123!";
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     return changePassword("test", newPassword, newPassword);
@@ -118,7 +102,7 @@ describe("integ", () => {
                 })
         });
         it("should not change user password if they provided the wrong old password", () => {
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     return changePassword("dsfsd", "Qwerty123!", "Qwerty123!")
@@ -130,7 +114,6 @@ describe("integ", () => {
                 })
         });
         it("should not change user password if the aren't signed in (ie. are guest)", () => {
-            agent = getServerAgent();
             return checkPassword(TEST_USER, "test")
                 .then(() => {
                     return changePassword("test", "Qwerty123!", "Qwerty123!")
@@ -142,7 +125,7 @@ describe("integ", () => {
                 });
         });
         it("should not change user password if old password is not provided", () => {
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     return changePassword(undefined, "Qwerty123!", "Qwerty123!");
@@ -154,7 +137,7 @@ describe("integ", () => {
                 });
         });
         it("should not change user password if new password is not provided", () => {
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     return changePassword("test", undefined, "Qwerty123!");
@@ -166,7 +149,7 @@ describe("integ", () => {
                 })
         });
         it("should not change user password if new password confirmation is not provided", () => {
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     return changePassword("test", "Qwerty123!", undefined);
@@ -178,7 +161,7 @@ describe("integ", () => {
                 });
         });
         it("should not change user password if new password and its confirmation don't match", () => {
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     return changePassword("test", "dsfds", "Qwerty123!");
@@ -190,7 +173,7 @@ describe("integ", () => {
                 });
         });
         it('should not change user password if new password is the same as the old password', () => {
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     return changePassword("test", "test", "test");
@@ -202,7 +185,7 @@ describe("integ", () => {
                 });
         });
         it("should not change user password if new password is not strong enough", () => {
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     return changePassword("test", "weak", "weak");
@@ -214,7 +197,7 @@ describe("integ", () => {
                 });
         });
         it("should not change user password if user doesn't exist", () => {
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     usersCollection = db.collection("users");
@@ -239,7 +222,7 @@ describe("integ", () => {
         });
         it("should not change user password if changing password encountered an error", () => {
             var stub;
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     stub = sinon.stub(databaseOps, "changeUserPassword").rejects(new Error("Error changing password"));
@@ -258,7 +241,7 @@ describe("integ", () => {
         });
         it("should not change user password if database error occurs while finding user", () => {
             var stub;
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     stub = sinon.stub(databaseOps, "findUser").callsArgWith(1, new Error("Error finding user"), null);
@@ -277,7 +260,7 @@ describe("integ", () => {
         });
         it("should not change user password if user not found in database", () => {
             var stub;
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     stub = sinon.stub(databaseOps, "findUser").callsArgWith(1, undefined, []);
@@ -297,7 +280,7 @@ describe("integ", () => {
         it("should change user password if user password change successful but action history cannot write entry due to error", () => {
             var stub;
             const newPassword = "Qwerty123!";
-            return performUserLogin()
+            return performUserLogin(agent, TEST_USER, "test")
                 .then(async () => {
                     await checkPassword(TEST_USER, "test");
                     stub = sinon.stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
