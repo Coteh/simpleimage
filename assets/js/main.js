@@ -1,3 +1,5 @@
+require("./sentry");
+
 window.isNotificationOpen = false;
 
 window.clearOverlay = function() {

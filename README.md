@@ -36,8 +36,13 @@ MONGO_INITIAL_DATABASE=<initial database for MongoDB instance>
 SESSION_SECRET=<session secret goes here>
 GA_TRACKING_ID=<Google Analytics Tracking ID (Universal Analytics)>
 LOGIN_TO_UPLOAD=true  # omit this variable if you don't want to require users to login to upload
+
 EVALUATION_MODE=true # omit this variable to diable automatic removal of images
 EXPIRE_AFTER_SECONDS=300 # set this to set time for the images to be stored in database in evaluation mode (default is 300 if unspecified)
+
+SENTRY_DSN=<Sentry DSN>                     # endpoint to upload Sentry events
+SENTRY_AUTH_TOKEN=<Sentry Auth Token>       # used for uploading source maps to Sentry
+SENTRY_ORG=<Sentry Organization (slug)>     # used for associating the Sentry organization to upload source maps to
 ```
 
 ### Building and Running Locally
