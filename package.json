@@ -42,6 +42,7 @@
     "piexifjs": "^1.0.4",
     "rate-limit-redis": "^1.7.0",
     "redis": "^3.1.2",
+    "sharp": "^0.28.3",
     "validator": "^9.4.1",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.10",
