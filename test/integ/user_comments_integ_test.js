@@ -217,5 +217,31 @@ describe("integ", () => {
             assert.match(commentsBody, new RegExp(`"/images/${uploadedImages[0].id}"`, "g"));
             assert.match(commentsBody, new RegExp(`"/images/removed.png"`, "g"));
         });
+
+        it("should fail to return user comments if fail to retrieve image entry attributes from database", async () => {
+            // Upload an image
+            const uploadedImages = await addImagesForUser([
+                {
+                    fileName: "Black_tea_pot_cropped.jpg",
+                    mimeType: "image/jpeg",
+                },
+            ], TEST_USER);
+            // Write comment on image
+            const writeResult = await writeComment(agent, TEST_USER, uploadedImages[0].id, COMMENT_TEXT);
+            if (writeResult.statusCode !== 200) {
+                assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
+            }
+            // Stub databaseOps findImageAttributes
+            const findImageAttributesStub = stub(databaseOps, "findImageAttributes").callsArgWith(1, new Error("Error finding image"), null);
+            // Verify that comments could not load due to an error
+            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            assert.equal(commentsResult.statusCode, 500);
+            const commentsBody = commentsResult.text;
+            const validateReport = htmlValidate.validateString(commentsBody);
+            assert.ok(validateReport.valid, `HTML is not valid: ${JSON.stringify(validateReport.results, null, 2)}`);
+            assert.match(commentsBody, new RegExp(`IMAGE_ATTRIBS_ERROR`, "g"));
+            // Restore original databaseOps findImageAttributes
+            findImageAttributesStub.restore();
+        });
     });
 });

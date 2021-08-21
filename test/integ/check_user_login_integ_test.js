@@ -1,6 +1,5 @@
 const chai = require("chai");
 const chaiHTTP = require("chai-http");
-const { stub } = require("sinon");
 const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
