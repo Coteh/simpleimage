@@ -19,6 +19,12 @@ const htmlValidate = new HtmlValidate({
         "close-order": "error",
         "no-inline-style": "off",
     },
+    elements: ["html5", {
+        // Overrides "html" tag required attributes from "html5" ruleset to not require "lang" attribute
+        "html": {
+            requiredAttributes: [],
+        }
+    }],
 });
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
@@ -192,6 +198,28 @@ describe("integ", () => {
             assert.match(commentsBody, new RegExp(`"/images/${uploadedImages[0].id}.jpeg"`, "g"));
         });
 
+        it("should return posted timestamp within the comment HTML", async () => {
+            // Upload an image
+            const uploadedImages = await addImagesForUser([
+                {
+                    fileName: "Black_tea_pot_cropped.jpg",
+                    mimeType: "image/jpeg",
+                },
+            ], TEST_USER);
+            // Write comment on image
+            const writeResult = await writeComment(agent, TEST_USER, uploadedImages[0].id, COMMENT_TEXT);
+            if (writeResult.statusCode !== 200) {
+                assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
+            }
+            // Get posted comment from response
+            const postedComment = writeResult.body.message;
+            // Verify that posted date exists in API response
+            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            assert.equal(commentsResult.statusCode, 200);
+            const commentsBody = commentsResult.text;
+            assert.match(commentsBody, new RegExp(new Date(postedComment.postedDate).toUTCString(), "g"));
+        });
+
         it("should return removed image link within comment HTML if referenced image has been deleted", async () => {
             // Upload an image
             const uploadedImages = await addImagesForUser([
@@ -239,7 +267,7 @@ describe("integ", () => {
             const commentsBody = commentsResult.text;
             const validateReport = htmlValidate.validateString(commentsBody);
             assert.ok(validateReport.valid, `HTML is not valid: ${JSON.stringify(validateReport.results, null, 2)}`);
-            assert.match(commentsBody, new RegExp(`IMAGE_ATTRIBS_ERROR`, "g"));
+            assert.match(commentsBody, new RegExp(`imageAttribsError`, "g"));
             // Restore original databaseOps findImageAttributes
             findImageAttributesStub.restore();
         });

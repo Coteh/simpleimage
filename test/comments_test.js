@@ -1,6 +1,6 @@
 const { HtmlValidate } = require('html-validate');
 const { assert, expect } = require("chai");
-const { generateCommentHTML, prepareCommentsJSON, generateCommentErrorHTML } = require("../lib/comments");
+const { generateCommentHTML, prepareCommentsJSON } = require("../lib/comments");
 
 const htmlValidate = new HtmlValidate({
     root: true,
@@ -112,15 +112,6 @@ describe("comments", () => {
                 assert.lengthOf(comments, 1);
                 assert.equal(comments[0].postedDate, POSTED_DATE);
             });
-        });
-    });
-    describe("comments error", () => {
-        it("should be valid HTML", () => {
-            const validateReport = htmlValidate.validateString(generateCommentErrorHTML(ERROR_CODE));
-            assert.ok(validateReport.valid, `HTML is not valid: ${JSON.stringify(validateReport.results, null, 2)}`);
-        });
-        it("should show supplied error code", () => {
-            assert.match(generateCommentErrorHTML(ERROR_CODE), new RegExp(ERROR_CODE, "g"));
         });
     });
 });
