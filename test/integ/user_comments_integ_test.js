@@ -125,6 +125,8 @@ describe("integ", () => {
             if (writeResult.statusCode !== 200) {
                 assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
             }
+            // Get posted comment from response
+            const postedComment = writeResult.body.message;
             // Verify that comment exists when API request is made
             const commentsResult = await getUserComments(agent, TEST_USER, "json");
             assert.equal(commentsResult.statusCode, 200);
@@ -134,6 +136,7 @@ describe("integ", () => {
             assert.equal(comments[0].username, TEST_USER);
             assert.equal(comments[0].imageID, uploadedImages[0].id);
             assert.equal(comments[0].comment, COMMENT_TEXT);
+            assert.equal(comments[0].postedDate, postedComment.postedDate);
         });
 
         it("should return valid HTML when returned in HTML format", async () => {
