@@ -26,6 +26,7 @@ describe("integ", () => {
         var agent = null;
         var usersCollection = null;
         const TEST_USER = "test-user";
+        const TEST_PASSWORD = "Testing123!@#";
 
         function checkPassword(username, password) {
             return new Promise((resolve, reject) => {
@@ -80,7 +81,7 @@ describe("integ", () => {
         beforeEach((done) => {
             databaseOps.addUser({
                 username: TEST_USER,
-                password: "test",
+                password: TEST_PASSWORD,
                 email: "test@test.com"
             }, () => {
                 agent = getServerAgent();
@@ -90,10 +91,10 @@ describe("integ", () => {
 
         it("should change user password", () => {
             const newPassword = "Qwerty123!";
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
-                    return changePassword("test", newPassword, newPassword);
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
+                    return changePassword(TEST_PASSWORD, newPassword, newPassword);
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 200);
@@ -102,115 +103,115 @@ describe("integ", () => {
                 })
         });
         it("should not change user password if they provided the wrong old password", () => {
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
                     return changePassword("dsfsd", "Qwerty123!", "Qwerty123!")
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "oldPasswordIncorrect");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
         });
         it("should not change user password if the aren't signed in (ie. are guest)", () => {
-            return checkPassword(TEST_USER, "test")
+            return checkPassword(TEST_USER, TEST_PASSWORD)
                 .then(() => {
-                    return changePassword("test", "Qwerty123!", "Qwerty123!")
+                    return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!")
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "notSignedIn");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
         it("should not change user password if old password is not provided", () => {
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
                     return changePassword(undefined, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "missingOldPassword");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
         it("should not change user password if new password is not provided", () => {
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
-                    return changePassword("test", undefined, "Qwerty123!");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
+                    return changePassword(TEST_PASSWORD, undefined, "Qwerty123!");
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "missingNewPassword");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
         });
         it("should not change user password if new password confirmation is not provided", () => {
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
-                    return changePassword("test", "Qwerty123!", undefined);
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
+                    return changePassword(TEST_PASSWORD, "Qwerty123!", undefined);
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "missingNewPasswordConfirm");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
         it("should not change user password if new password and its confirmation don't match", () => {
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
-                    return changePassword("test", "dsfds", "Qwerty123!");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
+                    return changePassword(TEST_PASSWORD, "dsfds", "Qwerty123!");
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "passwordsDoNotMatch");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
         it('should not change user password if new password is the same as the old password', () => {
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
-                    return changePassword("test", "test", "test");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
+                    return changePassword(TEST_PASSWORD, TEST_PASSWORD, TEST_PASSWORD);
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "passwordSame");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
         it("should not change user password if new password is not strong enough", () => {
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
-                    return changePassword("test", "weak", "weak");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
+                    return changePassword(TEST_PASSWORD, "weak", "weak");
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "passwordNotStrong");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
         it("should not change user password if user doesn't exist", () => {
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
                     usersCollection = db.collection("users");
                     return usersCollection.deleteOne({ username: TEST_USER })
                 })
                 .then((res) => {
                     assert.strictEqual(res.deletedCount, 1);
-                    return changePassword("test", "something", "something");
+                    return changePassword(TEST_PASSWORD, "something", "something");
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 404);
                     assert.equal(res.body.errorID, "sessionUserNotFound");
-                    return checkPassword(TEST_USER, "test")
+                    return checkPassword(TEST_USER, TEST_PASSWORD)
                         .then(() => {
                             assert.fail("User should not be in DB");
                         })
@@ -222,17 +223,17 @@ describe("integ", () => {
         });
         it("should not change user password if changing password encountered an error", () => {
             var stub;
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
                     stub = sinon.stub(databaseOps, "changeUserPassword").rejects(new Error("Error changing password"));
-                    return changePassword("test", "Qwerty123!", "Qwerty123!");
+                    return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
                     stub.restore();
                     assert.equal(res.statusCode, 500);
                     assert.equal(res.body.errorID, "errorChangingPassword");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
                 .catch((err) => {
                     stub.restore();
@@ -241,17 +242,17 @@ describe("integ", () => {
         });
         it("should not change user password if database error occurs while finding user", () => {
             var stub;
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
                     stub = sinon.stub(databaseOps, "findUser").callsArgWith(1, new Error("Error finding user"), null);
-                    return changePassword("test", "Qwerty123!", "Qwerty123!");
+                    return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
                     stub.restore();
                     assert.equal(res.statusCode, 500);
                     assert.equal(res.body.errorID, "userNotFound");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
                 .catch((err) => {
                     stub.restore();
@@ -260,17 +261,17 @@ describe("integ", () => {
         });
         it("should not change user password if user not found in database", () => {
             var stub;
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
                     stub = sinon.stub(databaseOps, "findUser").callsArgWith(1, undefined, []);
-                    return changePassword("test", "Qwerty123!", "Qwerty123!");
+                    return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
                     stub.restore();
                     assert.equal(res.statusCode, 500);
                     assert.equal(res.body.errorID, "userNotFound");
-                    return checkPassword(TEST_USER, "test");
+                    return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
                 .catch((err) => {
                     stub.restore();
@@ -280,11 +281,11 @@ describe("integ", () => {
         it("should change user password if user password change successful but action history cannot write entry due to error", () => {
             var stub;
             const newPassword = "Qwerty123!";
-            return performUserLogin(agent, TEST_USER, "test")
+            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    await checkPassword(TEST_USER, "test");
+                    await checkPassword(TEST_USER, TEST_PASSWORD);
                     stub = sinon.stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
-                    return changePassword("test", newPassword, newPassword);
+                    return changePassword(TEST_PASSWORD, newPassword, newPassword);
                 })
                 .then((res) => {
                     stub.restore();
