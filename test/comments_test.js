@@ -78,17 +78,29 @@ describe("comments", () => {
                 const validateReport = htmlValidate.validateString(commentHTML);
                 assert.ok(validateReport.valid, `HTML is not valid: ${JSON.stringify(validateReport.results, null, 2)}`);
             });
-            it("should contain image ID of image being commented on", () => {
+            it("should contain link to image being commented on", () => {
                 const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "user", IMAGE_DATA_PAYLOAD);
-                assert.match(commentHTML, new RegExp(IMAGE_ID, "g"));
+                assert.match(commentHTML, new RegExp(`"/images/${IMAGE_ID}"`, "g"));
+            });
+            it("should contain image link of image being commented on", () => {
+                const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "user", IMAGE_DATA_PAYLOAD);
+                assert.match(commentHTML, new RegExp(`"/images/${IMAGE_ID}.png"`, "g"));
             });
             it("should contain comment text", () => {
                 const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "user", IMAGE_DATA_PAYLOAD);
                 assert.match(commentHTML, new RegExp(COMMENT_TEXT, "g"));
             });
-            it("should contain a link to 'removed' placeholder image if data is not present", () => {
+            it("should contain a link to 'removed' placeholder image if image data is not present", () => {
                 const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "user");
                 assert.match(commentHTML, new RegExp("removed.png", "g"));
+            });
+            it("should still contain link to image being commented on even if image data is not present", () => {
+                const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "user");
+                assert.match(commentHTML, new RegExp(`"/images/${IMAGE_ID}"`, "g"));
+            });
+            it("should not contain image link of image being commented on if image data is not present", () => {
+                const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "user");
+                assert.notMatch(commentHTML, new RegExp(`"/images/${IMAGE_ID}.png"`, "g"));
             });
             it("should contain timestamp of comment", () => {
                 const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "user", IMAGE_DATA_PAYLOAD);
