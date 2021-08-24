@@ -16,7 +16,6 @@ describe("comments", () => {
     const USERNAME = "test-user";
     const IMAGE_ID = "abc123";
     const POSTED_DATE = new Date();
-    const ERROR_CODE = "TEST_ERROR";
 
     const COMMENT_PAYLOAD = {
         postedDate: POSTED_DATE,
