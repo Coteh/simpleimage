@@ -152,7 +152,7 @@ describe("integ", () => {
             if (writeResult.statusCode !== 200) {
                 assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
             }
-            // Verify that HTML returned from API request is valid
+            // Verify that HTML returned from API response is valid
             const commentsResult = await getUserComments(agent, TEST_USER, "html");
             assert.equal(commentsResult.statusCode, 200);
             const commentsBody = commentsResult.text;
@@ -173,7 +173,7 @@ describe("integ", () => {
             if (writeResult.statusCode !== 200) {
                 assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
             }
-            // Verify that comment exists when API request is made
+            // Verify that comment exists in API response
             const commentsResult = await getUserComments(agent, TEST_USER, "html");
             assert.equal(commentsResult.statusCode, 200);
             const commentsBody = commentsResult.text;
