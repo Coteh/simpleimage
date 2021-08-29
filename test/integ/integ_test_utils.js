@@ -34,3 +34,24 @@ module.exports.addImagesForUser = (imageInfoArr, user) => {
         });
     });
 };
+
+module.exports.performUserLogin = (agent, username, password) => {
+    return new Promise((resolve, reject) => {
+        agent.post("/login")
+            .type("form")
+            .send({
+                username,
+                password,
+            })
+            .then((res) => {
+                if (res.statusCode !== 200) {
+                    reject(`Cannot log in: resp: ${res.body}`);
+                    return;
+                }
+                resolve(res);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+};
