@@ -92,7 +92,7 @@ describe("comments", () => {
             });
             it("should contain a link to 'removed' placeholder image if image data is not present", () => {
                 const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "user");
-                assert.match(commentHTML, new RegExp("removed.png", "g"));
+                assert.match(commentHTML, new RegExp("/images/removed.png", "g"));
             });
             it("should still contain link to image being commented on even if image data is not present", () => {
                 const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "user");

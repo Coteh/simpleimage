@@ -46,6 +46,7 @@ module.exports.performUserLogin = (agent, username, password) => {
             .then((res) => {
                 if (res.statusCode !== 200) {
                     reject(`Cannot log in: resp: ${res.body}`);
+                    return;
                 }
                 resolve(res);
             })
