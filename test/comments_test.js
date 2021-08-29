@@ -1,5 +1,5 @@
 const { HtmlValidate } = require('html-validate');
-const { assert, expect } = require("chai");
+const { assert } = require("chai");
 const { generateCommentHTML, prepareCommentsJSON } = require("../lib/comments");
 
 const htmlValidate = new HtmlValidate({
@@ -15,7 +15,7 @@ describe("comments", () => {
     const COMMENT_TEXT = "Hello World";
     const USERNAME = "test-user";
     const IMAGE_ID = "abc123";
-    const POSTED_DATE = new Date();
+    const POSTED_DATE = new Date(0);
 
     const COMMENT_PAYLOAD = {
         postedDate: POSTED_DATE,
@@ -40,9 +40,13 @@ describe("comments", () => {
                 const validateReport = htmlValidate.validateString(commentHTML);
                 assert.ok(validateReport.valid, `HTML is not valid: ${JSON.stringify(validateReport.results, null, 2)}`);
             });
-            it("should contain username of commenter", () => {
+            it("should contain a label for username of commenter", () => {
                 const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "image");
-                assert.match(commentHTML, new RegExp(USERNAME, "g"));
+                assert.match(commentHTML, new RegExp(`[^"]${USERNAME}[^"]`, "g"));
+            });
+            it("should contain a link to commenter's user page", () => {
+                const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "image");
+                assert.match(commentHTML, new RegExp(`"/users/${USERNAME}"`, "g"));
             });
             it("should contain comment text", () => {
                 const commentHTML = generateCommentHTML(COMMENT_PAYLOAD, "image");

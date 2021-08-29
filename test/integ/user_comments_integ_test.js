@@ -245,8 +245,33 @@ describe("integ", () => {
             const commentsResult = await getUserComments(agent, TEST_USER, "html");
             assert.equal(commentsResult.statusCode, 200);
             const commentsBody = commentsResult.text;
-            assert.match(commentsBody, new RegExp(`"/images/${uploadedImages[0].id}"`, "g"));
             assert.match(commentsBody, new RegExp(`"/images/removed.png"`, "g"));
+        });
+
+        it("should still link to the image page within comment HTML, even if the image has been deleted", async () => {
+            // Upload an image
+            const uploadedImages = await addImagesForUser([
+                {
+                    fileName: "Black_tea_pot_cropped.jpg",
+                    mimeType: "image/jpeg",
+                },
+            ], TEST_USER);
+            // Write comment on image
+            const writeResult = await writeComment(agent, TEST_USER, uploadedImages[0].id, COMMENT_TEXT);
+            if (writeResult.statusCode !== 200) {
+                assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
+            }
+            // Delete image
+            const deleteResult = await deleteImage(agent, uploadedImages[0].id);
+            if (deleteResult.statusCode !== 200) {
+                assert.fail(`Could not delete image, status code: ${deleteResult.statusCode}, resp: ${JSON.stringify(deleteResult.body)}`);
+            }
+            // Verify that image page link exists in API response
+            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            assert.equal(commentsResult.statusCode, 200);
+            const commentsBody = commentsResult.text;
+            assert.notMatch(commentsBody, new RegExp(`"/images/removed"`, "g"));
+            assert.match(commentsBody, new RegExp(`"/images/${uploadedImages[0].id}"`, "g"));
         });
 
         it("should fail to return user comments if fail to retrieve image entry attributes from database", async () => {
