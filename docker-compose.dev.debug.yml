@@ -3,4 +3,4 @@ services:
     si_app:
         ports:
             - "9229:9229"
-        command: bash -c "npm run build:client && npm run start:debug"
+        command: bash -c "npm run watch:client & npm run start:debug"
