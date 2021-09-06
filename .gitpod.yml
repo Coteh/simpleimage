@@ -1,5 +1,6 @@
 tasks:
   - init: |
+      cp .env.example .env
       docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
   - command: |
       docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.debug.yml up
