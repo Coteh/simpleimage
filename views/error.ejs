@@ -21,6 +21,11 @@
             <br>
             <br>
             <i><%= message %></i>
+<% if (errorID) { %>
+            <br>
+            <br>
+            <b>Error Code:</b> <i><%= errorID %></i>
+<% } %>
             <br>
             <br>
             <a href="/">

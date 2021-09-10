@@ -45,6 +45,7 @@ module.exports = {
             release: "simpleimage@" + process.env.npm_package_version,
             // rewrites "~/public/assets/js" prefix into "~/assets/js" so Sentry can detect the source maps
             urlPrefix: "~/assets/js",
+            dryRun: process.env.NODE_ENV === "development",
 
             // webpack-specific configuration
             include: ["./public/assets/js"],

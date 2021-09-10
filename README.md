@@ -1,6 +1,7 @@
 # ![simpleimage logo](assets/images/logo.svg "simpleimage")
 
 [![CircleCI](https://circleci.com/gh/Coteh/simpleimage.svg?style=shield)](https://circleci.com/gh/Coteh/simpleimage)
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/Coteh/simpleimage)
 
 A simple image hosting web application that I created and implemented using Node.js and Express, with MongoDB as the database and Redis as the session store for production.
 
@@ -133,7 +134,7 @@ make dds
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.https.yml up
 ```
 
-### Known Limitations
+## Known Limitations
 
 * Cannot change username/email
 * Some of the popup dialogs need a bit of size tweaking (e.g. signup dialog)
@@ -142,7 +143,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose
     * Delete links based on user session are being considered (which is what imgur does as well)
 * See [Issues](https://github.com/Coteh/simpleimage/issues) page for more
 
-### Future Additions
+## Future Additions
 
 * User preferences menu
 * Ability to change email and/or username
