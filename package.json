@@ -42,7 +42,7 @@
     "redis": "^3.1.2",
     "validator": "^9.4.1",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.10",
+    "webpack-cli": "^4.0.0",
     "winston": "^3.3.3",
     "winston-mongodb": "^4.0.9"
   },
