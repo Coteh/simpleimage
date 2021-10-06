@@ -4,15 +4,21 @@ const logger = require("./lib/logger").logger;
 
 var port = process.env.PORT || 3010;
 
-databaseOps.startDatabaseClient(function(err) {
+databaseOps.startDatabaseClient((err, database) => {
     if (err) {
-        logger.error(err);
-        return;
+        return logger.error(err);
     }
-    server.runServer(port, function(err) {
+    server.runServer(port, (err) => {
         if (err) {
-            logger.error("Could not run server due to an error:");
-            logger.error(err);
+            return logger.error(`Could not run server due to an error: ${err}`);
         }
+        database.on("close", () => {
+            logger.info(`Database has been closed, stopping server...`);
+            server.closeServer((err) => {
+                if (err) {
+                    return logger.error(`Could not stop server due to an error: ${err}`);
+                }
+            });
+        });
     });
 });
