@@ -153,7 +153,12 @@ const onUsernameChecked = function(username, field) {
 var onLoginSubmitted = function(form) {
     var jsonObj;
     if (this.status !== 200) {
-        jsonObj = JSON.parse(this.responseText);
+        try {
+            jsonObj = JSON.parse(this.responseText);
+        } catch (err) {
+            handleResponseFailure(this.status);
+            return console.error("[onLoginSubmitted]", "Error occurred when parsing error response", err);
+        }
 
         // Show error message on notification overlay
         showNotification(jsonObj.message, {
