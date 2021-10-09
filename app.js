@@ -18,6 +18,8 @@ databaseOps.startDatabaseClient((err, database) => {
                 if (err) {
                     return logger.error(`Could not stop server due to an error: ${err}`);
                 }
+                logger.info("Server has been stopped. Exiting process...");
+                process.exit(1);
             });
         });
     });
