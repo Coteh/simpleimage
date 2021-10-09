@@ -29,13 +29,18 @@ var onCommentsLoaded = function() {
 var onCommentSubmitted = function() {
     var submittedComment;
     var parentElement = document.querySelector("#comments-container #comments");
+    let jsonObj;
+    try {
+        jsonObj = JSON.parse(this.responseText);
+    } catch (err) {
+        handleResponseFailure(this.status);
+        return console.error("[onCommentSubmitted]", "Error occurred when parsing response", err);
+    }
     if (this.status !== 200) {
-        var jsonObj = JSON.parse(this.responseText);
         showNotification(jsonObj.message, {
             error: true
         });
     } else {
-        var jsonObj = JSON.parse(this.responseText);
         submittedComment = jsonObj.message;
         
         commentCount++;
