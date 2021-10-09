@@ -157,7 +157,7 @@ var onLoginSubmitted = function(form) {
             jsonObj = JSON.parse(this.responseText);
         } catch (err) {
             handleResponseFailure(this.status);
-            return console.error("[onLoginSubmitted]", "Error occurred when parsing error response", err);
+            return console.error("[onLoginSubmitted]", "Error occurred when parsing response", err);
         }
 
         // Show error message on notification overlay

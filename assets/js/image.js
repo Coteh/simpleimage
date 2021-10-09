@@ -52,7 +52,13 @@ var onCommentSubmitted = function() {
 };
 
 var onImageDeleted = function() {
-    var jsonObj = JSON.parse(this.responseText);
+    let jsonObj;
+    try {
+        jsonObj = JSON.parse(this.responseText);
+    } catch (err) {
+        handleResponseFailure(this.status);
+        return console.error("[onImageDeleted]", "Error occurred when parsing response", err);
+    }
     var html = "<div>" + jsonObj.message + "</div>"
     showOverlay(html, {
         error: (this.status === 500),
