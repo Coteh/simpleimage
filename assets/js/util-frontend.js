@@ -37,6 +37,7 @@ window.handleResponseFailure = (status) => {
         : "Unknown error. Please try again later.";
     showNotification(message, {
         error: true,
-        clear: true
+        clear: true,
+        clearAfterMs: 10000,
     });
 };

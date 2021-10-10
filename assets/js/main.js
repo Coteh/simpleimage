@@ -78,6 +78,11 @@ window.showNotification = function(message, options) {
     }
     notificationOverlayContainer.appendChild(errorMessage);
     window.isNotificationOpen = true;
+    if (options.clearAfterMs) {
+        setTimeout(() => {
+            clearNotification();
+        }, options.clearAfterMs);
+    }
 };
 
 var onOverlayLoaded = function(progressEvent, callback) {
