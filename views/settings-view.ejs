@@ -13,13 +13,18 @@
     <script src="/assets/js/user.bundle.js"></script>
     <script>
         var onPasswordResetSubmitted = function() {
+            let jsonObj;
+            try {
+                jsonObj = JSON.parse(this.responseText);
+            } catch (err) {
+                handleResponseFailure(this.status);
+                return console.error("[onPasswordResetSubmitted]", "Error occurred when parsing response", err);
+            }
             if (this.status !== 200) {
-                var jsonObj = JSON.parse(this.responseText);
                 showNotification(jsonObj.message, {
                     error: true
                 });
             } else {
-                var jsonObj = JSON.parse(this.responseText);
                 showNotification(jsonObj.message, {
                     error: false
                 });
