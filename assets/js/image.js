@@ -9,11 +9,18 @@ var updateCommentsCounter = function() {
 var onCommentsLoaded = function() {
     var commentsElements;
     var parentElement = document.getElementById("comments-container");
+    let jsonObj;
+    try {
+        jsonObj = JSON.parse(this.responseText);
+    } catch (err) {
+        handleResponseFailure(this.status);
+        commentsElements = "<div id='comments' class='message'>Could not load comments. Please try again later.</div>";
+        parentElement.innerHTML = commentsElements;
+        return console.error("[onCommentsLoaded]", "Error occurred when parsing response", err);
+    }
     if (this.status !== 200) {
-        var jsonObj = JSON.parse(this.responseText);
-        commentsElements = "<div id='comments' class='error'>Could not load comments: " + jsonObj.message + "</div>"
+        commentsElements = "<div id='comments' class='message'>Could not load comments: " + jsonObj.message + "</div>"
     } else {
-        var jsonObj = JSON.parse(this.responseText);
         if (jsonObj.message !== undefined) {
             commentsElements = "<div id='comments' class='message'>" + jsonObj.message + "</div>"
         } else {
@@ -41,6 +48,13 @@ var onCommentSubmitted = function() {
             error: true
         });
     } else {
+        if (!parentElement) {
+            return showNotification("Comment has been posted successfully, but cannot be displayed at this time. Please try again later.", {
+                error: true,
+                close: true,
+            });
+        }
+
         submittedComment = jsonObj.message;
         
         commentCount++;

@@ -32,3 +32,14 @@
         width: 100%;
     }
 }
+
+#comments-placeholder {
+    display: flex;
+    height: 80px;
+}
+
+#comments-placeholder > div {
+    height: 50px;
+    width: 50px;
+    margin: auto;
+}
