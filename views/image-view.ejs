@@ -54,7 +54,14 @@
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>"></input>
                 </form><br/>
             <% } %>
-            <div id="comments-container"></div>
+            <div id="comments-container">
+                <div id="comments-placeholder">
+                    <div>
+                        <div class="spinner">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <%- include("footer") %>
     </div>

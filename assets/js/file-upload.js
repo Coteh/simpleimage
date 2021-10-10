@@ -53,7 +53,13 @@ var onFileSelected = function() {
 }
 
 var onFileUploaded = function() {
-    var json = JSON.parse(this.responseText);
+    let json;
+    try {
+        json = JSON.parse(this.responseText);
+    } catch (err) {
+        handleResponseFailure(this.status);
+        return console.error("[onFileUploaded]", "Error occurred when parsing response", err);
+    }
     fileSelect.value = "";
     if (this.status !== 200) {
         console.error("An error ocurred: " + json.message);

@@ -4,6 +4,10 @@ var CopyWebpackPlugin = require("copy-webpack-plugin");
 const SentryWebpackPlugin = require("@sentry/webpack-plugin");
 const { DefinePlugin } = require("webpack");
 
+if (!process.env.SENTRY_ORG) {
+    console.warn("SENTRY_ORG not provided, going to run Sentry webpack plugin in dry run mode");
+}
+
 module.exports = {
     mode: "production",
     devtool: "source-map",
@@ -45,7 +49,7 @@ module.exports = {
             release: "simpleimage@" + process.env.npm_package_version,
             // rewrites "~/public/assets/js" prefix into "~/assets/js" so Sentry can detect the source maps
             urlPrefix: "~/assets/js",
-            dryRun: process.env.NODE_ENV === "development",
+            dryRun: !process.env.SENTRY_ORG || process.env.NODE_ENV === "development",
 
             // webpack-specific configuration
             include: ["./public/assets/js"],

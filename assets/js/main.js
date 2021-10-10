@@ -78,6 +78,11 @@ window.showNotification = function(message, options) {
     }
     notificationOverlayContainer.appendChild(errorMessage);
     window.isNotificationOpen = true;
+    if (options.clearAfterMs) {
+        setTimeout(() => {
+            clearNotification();
+        }, options.clearAfterMs);
+    }
 };
 
 var onOverlayLoaded = function(progressEvent, callback) {
@@ -123,8 +128,13 @@ window.openRegister = function(callback) {
 /*--------------------------------------------*/
 
 const onUsernameChecked = function(username, field) {
+    let jsonObj;
     if (this.status === 400) {
-        const jsonObj = JSON.parse(this.responseText);
+        try {
+            jsonObj = JSON.parse(this.responseText);
+        } catch (err) {
+            return console.error("[onUsernameChecked]", "Error occurred when parsing response", err);
+        }
         field.classList.add('input-field-error');
         const label = field.nextElementSibling;
         if (label) {
@@ -140,7 +150,11 @@ const onUsernameChecked = function(username, field) {
     } else if (this.status !== 200) {
         return;
     }
-    const jsonObj = JSON.parse(this.responseText);
+    try {
+        jsonObj = JSON.parse(this.responseText);
+    } catch (err) {
+        return console.error("[onUsernameChecked]", "Error occurred when parsing response", err);
+    }
     const message = jsonObj.message;
     const exists = message.exists;
     field.classList.add(`input-field-${exists ? "error" : "success"}`);
@@ -153,7 +167,12 @@ const onUsernameChecked = function(username, field) {
 var onLoginSubmitted = function(form) {
     var jsonObj;
     if (this.status !== 200) {
-        jsonObj = JSON.parse(this.responseText);
+        try {
+            jsonObj = JSON.parse(this.responseText);
+        } catch (err) {
+            handleResponseFailure(this.status);
+            return console.error("[onLoginSubmitted]", "Error occurred when parsing response", err);
+        }
 
         // Show error message on notification overlay
         showNotification(jsonObj.message, {
