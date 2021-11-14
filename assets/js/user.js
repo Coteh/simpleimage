@@ -1,5 +1,6 @@
 var onUserCommentsLoaded = function (callback) {
     const parentElement = document.getElementById("comments-container");
+    parentElement.innerHTML = "";
     const commentsElements = document.createElement("div");
     commentsElements.id = "comments";
     if (this.status !== 200) {

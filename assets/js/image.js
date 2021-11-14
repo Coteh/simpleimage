@@ -14,10 +14,16 @@ const renderImageComment = (comment) => `
 
 var onCommentsLoaded = function() {
     let parentElement = document.getElementById("comments-container");
-    let jsonObj = JSON.parse(this.responseText);
+    let jsonObj;
+    try {
+        jsonObj = JSON.parse(this.responseText);
+    } catch (err) {
+        handleResponseFailure(this.status);
+        parentElement.innerHTML = "<div id='comments' class='message'>Could not load comments. Please try again later.</div>";
+        return console.error("[onCommentsLoaded]", "Error occurred when parsing response", err);
+    }
     if (this.status !== 200) {
-        parentElement.innerHTML = "<div id='comments' class='error'>Could not load comments: " + jsonObj.message + "</div>"
-        return;
+        return parentElement.innerHTML = "<div id='comments' class='error'>Could not load comments: " + jsonObj.message + "</div>"
     }
     if (jsonObj.message) {
         parentElement.innerHTML = "<div id='comments' class='message'>" + jsonObj.message + "</div>"
@@ -30,6 +36,7 @@ var onCommentsLoaded = function() {
             return acc + renderImageComment(comment);
         }, "");
         commentCount = comments.length;
+        parentElement.innerHTML = "";
         parentElement.appendChild(commentsElements);
     }
     updateCommentsCounter();
@@ -38,12 +45,25 @@ var onCommentsLoaded = function() {
 var onCommentSubmitted = function() {
     var submittedComment;
     var parentElement = document.querySelector("#comments-container #comments");
-    var jsonObj = JSON.parse(this.responseText);
+    let jsonObj;
+    try {
+        jsonObj = JSON.parse(this.responseText);
+    } catch (err) {
+        handleResponseFailure(this.status);
+        return console.error("[onCommentSubmitted]", "Error occurred when parsing response", err);
+    }
     if (this.status !== 200) {
         showNotification(jsonObj.message, {
             error: true
         });
     } else {
+        if (!parentElement) {
+            return showNotification("Comment has been posted successfully, but cannot be displayed at this time. Please try again later.", {
+                error: true,
+                close: true,
+            });
+        }
+
         submittedComment = jsonObj.comment;
         
         commentCount++;
@@ -62,7 +82,13 @@ var onCommentSubmitted = function() {
 };
 
 var onImageDeleted = function() {
-    var jsonObj = JSON.parse(this.responseText);
+    let jsonObj;
+    try {
+        jsonObj = JSON.parse(this.responseText);
+    } catch (err) {
+        handleResponseFailure(this.status);
+        return console.error("[onImageDeleted]", "Error occurred when parsing response", err);
+    }
     var html = "<div>" + jsonObj.message + "</div>"
     showOverlay(html, {
         error: (this.status === 500),
