@@ -6,39 +6,15 @@ const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
-const { performUserLogin, addImagesForUser } = require('./integ_test_utils');
+const { getServerAgent, assertUserLogin, addImagesForUser } = require('./integ_test_utils');
 const { assert } = chai;
-const { HtmlValidate } = require('html-validate');
 
 chai.use(chaiHTTP);
 
-const htmlValidate = new HtmlValidate({
-    root: true,
-    extends: ["html-validate:recommended"],
-    rules: {
-        "close-order": "error",
-        "no-inline-style": "off",
-    },
-    elements: ["html5", {
-        // Overrides "html" tag required attributes from "html5" ruleset to not require "lang" attribute
-        "html": {
-            requiredAttributes: [],
-        }
-    }],
-});
-
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
 
-function getServerAgent() {
-    return chai.request.agent(server.app);
-}
-
 function getUserComments(agent, username, type) {
-    return agent.get(`/users/${username}/comments`)
-        .accept(type)
-        .query({
-            type,
-        });
+    return agent.get(`/users/${username}/comments`);
 }
 
 function writeComment(agent, username, imageID, comment) {
@@ -92,7 +68,7 @@ describe("integ", () => {
                 email: "test@test.com"
             }, async () => {
                 agent = getServerAgent();
-                await performUserLogin(agent, TEST_USER, "test");
+                await assertUserLogin(agent, TEST_USER, "test");
                 done();
             });
         });
@@ -125,62 +101,19 @@ describe("integ", () => {
             if (writeResult.statusCode !== 200) {
                 assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
             }
-            // Get posted comment from response
-            const postedComment = writeResult.body.message;
             // Verify that comment exists when API request is made
             const commentsResult = await getUserComments(agent, TEST_USER, "json");
             assert.equal(commentsResult.statusCode, 200);
             const commentsBody = commentsResult.body;
-            assert.equal(commentsBody.result_count, 1);
-            const comments = commentsBody.results;
+            assert.equal(commentsBody.status, "success");
+            const comments = commentsBody.data;
+            assert.equal(comments.length, 1);
             assert.equal(comments[0].username, TEST_USER);
             assert.equal(comments[0].imageID, uploadedImages[0].id);
             assert.equal(comments[0].comment, COMMENT_TEXT);
-            assert.equal(comments[0].postedDate, postedComment.postedDate);
         });
 
-        it("should return valid HTML when returned in HTML format", async () => {
-            // Upload an image
-            const uploadedImages = await addImagesForUser([
-                {
-                    fileName: "Black_tea_pot_cropped.jpg",
-                    mimeType: "image/jpeg",
-                },
-            ], TEST_USER);
-            // Write comment on image
-            const writeResult = await writeComment(agent, TEST_USER, uploadedImages[0].id, COMMENT_TEXT);
-            if (writeResult.statusCode !== 200) {
-                assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
-            }
-            // Verify that HTML returned from API response is valid
-            const commentsResult = await getUserComments(agent, TEST_USER, "html");
-            assert.equal(commentsResult.statusCode, 200);
-            const commentsBody = commentsResult.text;
-            const validateReport = htmlValidate.validateString(commentsBody);
-            assert.ok(validateReport.valid, `HTML is not valid: ${JSON.stringify(validateReport.results, null, 2)}`);
-        });
-
-        it("should return comments written by the user in HTML format", async () => {
-            // Upload an image
-            const uploadedImages = await addImagesForUser([
-                {
-                    fileName: "Black_tea_pot_cropped.jpg",
-                    mimeType: "image/jpeg",
-                },
-            ], TEST_USER);
-            // Write comment on image
-            const writeResult = await writeComment(agent, TEST_USER, uploadedImages[0].id, COMMENT_TEXT);
-            if (writeResult.statusCode !== 200) {
-                assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
-            }
-            // Verify that comment exists in API response
-            const commentsResult = await getUserComments(agent, TEST_USER, "html");
-            assert.equal(commentsResult.statusCode, 200);
-            const commentsBody = commentsResult.text;
-            assert.match(commentsBody, new RegExp(COMMENT_TEXT, "g"));
-        });
-
-        it("should return valid image links within the comment HTML", async () => {
+        it("should return valid image links within the comment response", async () => {
             // Upload an image
             const uploadedImages = await addImagesForUser([
                 {
@@ -196,12 +129,13 @@ describe("integ", () => {
             // Verify that image link exists in API response
             const commentsResult = await getUserComments(agent, TEST_USER, "html");
             assert.equal(commentsResult.statusCode, 200);
-            const commentsBody = commentsResult.text;
-            assert.match(commentsBody, new RegExp(`"/images/${uploadedImages[0].id}"`, "g"));
-            assert.match(commentsBody, new RegExp(`"/images/${uploadedImages[0].id}.jpeg"`, "g"));
+            const comments = commentsResult.body.data;
+            assert.strictEqual(comments.length, 1);
+            assert.strictEqual(comments[0].imagePageURL, `/images/${uploadedImages[0].id}`);
+            assert.strictEqual(comments[0].imageURL, `/images/${uploadedImages[0].id}.jpeg`);
         });
 
-        it("should return posted timestamp within the comment HTML", async () => {
+        it("should return posted timestamp within the comment response", async () => {
             // Upload an image
             const uploadedImages = await addImagesForUser([
                 {
@@ -215,15 +149,16 @@ describe("integ", () => {
                 assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
             }
             // Get posted comment from response
-            const postedComment = writeResult.body.message;
+            const postedComment = writeResult.body.comment;
             // Verify that posted date exists in API response
             const commentsResult = await getUserComments(agent, TEST_USER, "html");
             assert.equal(commentsResult.statusCode, 200);
-            const commentsBody = commentsResult.text;
-            assert.match(commentsBody, new RegExp(new Date(postedComment.postedDate).toUTCString(), "g"));
+            const comments = commentsResult.body.data;
+            assert.strictEqual(comments.length, 1);
+            assert.equal(comments[0].postedDate, postedComment.postedDate);
         });
 
-        it("should return removed image link within comment HTML if referenced image has been deleted", async () => {
+        it("should return removed image link within comment response if referenced image has been deleted", async () => {
             // Upload an image
             const uploadedImages = await addImagesForUser([
                 {
@@ -244,11 +179,12 @@ describe("integ", () => {
             // Verify that 'removed' image link exists in API response
             const commentsResult = await getUserComments(agent, TEST_USER, "html");
             assert.equal(commentsResult.statusCode, 200);
-            const commentsBody = commentsResult.text;
-            assert.match(commentsBody, new RegExp(`"/images/removed.png"`, "g"));
+            const comments = commentsResult.body.data;
+            assert.strictEqual(comments.length, 1);
+            assert.strictEqual(comments[0].imageURL, `/images/removed.png`);
         });
 
-        it("should still link to the image page within comment HTML, even if the image has been deleted", async () => {
+        it("should still return a link to the image page within comment response, even if the image has been deleted", async () => {
             // Upload an image
             const uploadedImages = await addImagesForUser([
                 {
@@ -269,9 +205,66 @@ describe("integ", () => {
             // Verify that image page link exists in API response
             const commentsResult = await getUserComments(agent, TEST_USER, "html");
             assert.equal(commentsResult.statusCode, 200);
-            const commentsBody = commentsResult.text;
-            assert.notMatch(commentsBody, new RegExp(`"/images/removed"`, "g"));
-            assert.match(commentsBody, new RegExp(`"/images/${uploadedImages[0].id}"`, "g"));
+            const comments = commentsResult.body.data;
+            assert.strictEqual(comments.length, 1);
+            assert.strictEqual(comments[0].imagePageURL, `/images/${uploadedImages[0].id}`);
+        });
+
+        it("should return an empty array if no comments are found", async () => {
+            // Get comments
+            const commentsResult = await getUserComments(agent, TEST_USER, "json");
+            assert.equal(commentsResult.statusCode, 200);
+            const comments = commentsResult.body.data;
+            assert.isArray(comments);
+            assert.isEmpty(comments);
+        });
+
+        it("should return comment text sanitized", async () => {
+            // Add test image under test user
+            const uploadedImages = await addImagesForUser([
+                {
+                    fileName: "Black_tea_pot_cropped.jpg",
+                    mimeType: "image/jpeg",
+                },
+            ], TEST_USER);
+            // Write comment with malicious script
+            const writeResult = await writeComment(agent, TEST_USER, uploadedImages[0].id, `<script>alert('Hello there')</script>`);
+            if (writeResult.statusCode !== 200) {
+                assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
+            }
+            // Verify that comment text is sanitized
+            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            assert.equal(commentsResult.statusCode, 200);
+            const comments = commentsResult.body.data;
+            assert.strictEqual(comments.length, 1);
+            assert.strictEqual(comments[0].comment, `&lt;script&gt;alert(&apos;Hello there&apos;)&lt;/script&gt;`);
+        });
+
+        it("should fail to return user comments if fail to retrieve comments", async () => {
+            // Upload an image
+            const uploadedImages = await addImagesForUser([
+                {
+                    fileName: "Black_tea_pot_cropped.jpg",
+                    mimeType: "image/jpeg",
+                },
+            ], TEST_USER);
+            // Write comment on image
+            const writeResult = await writeComment(agent, TEST_USER, uploadedImages[0].id, COMMENT_TEXT);
+            if (writeResult.statusCode !== 200) {
+                assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
+            }
+            // Stub databaseOps findCommentsForUser
+            const findCommentsForUserStub = stub(databaseOps, "findCommentsForUser").callsArgWith(1, new Error("Error finding image"), null);
+            // Verify that comments could not load due to an error
+            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            assert.equal(commentsResult.statusCode, 500);
+            const response = commentsResult.body;
+            assert.strictEqual(response.status, "error");
+            assert.strictEqual(response.errorID, "userCommentsError");
+            // Verify that databaseOps was called
+            assert.equal(findCommentsForUserStub.callCount, 1);
+            // Restore original databaseOps findCommentsForUser
+            findCommentsForUserStub.restore();
         });
 
         it("should fail to return user comments if fail to retrieve image entry attributes from database", async () => {
@@ -292,10 +285,11 @@ describe("integ", () => {
             // Verify that comments could not load due to an error
             const commentsResult = await getUserComments(agent, TEST_USER, "html");
             assert.equal(commentsResult.statusCode, 500);
-            const commentsBody = commentsResult.text;
-            const validateReport = htmlValidate.validateString(commentsBody);
-            assert.ok(validateReport.valid, `HTML is not valid: ${JSON.stringify(validateReport.results, null, 2)}`);
-            assert.match(commentsBody, new RegExp(`imageAttribsError`, "g"));
+            const response = commentsResult.body;
+            assert.strictEqual(response.status, "error");
+            assert.strictEqual(response.errorID, "imageAttribsError");
+            // Verify that databaseOps was called
+            assert.equal(findImageAttributesStub.callCount, 1);
             // Restore original databaseOps findImageAttributes
             findImageAttributesStub.restore();
         });

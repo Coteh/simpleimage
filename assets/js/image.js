@@ -1,47 +1,57 @@
-import { setTimeout } from "timers";
-
 var commentCount = 0;
 
 var updateCommentsCounter = function() {
     $("#comment-count").text(commentCount.toString() + " comment" + ((commentCount != 1) ? "s" : ""));
 };
 
+const renderImageComment = (comment) => `
+    <div class="comment">
+        <a href="/users/${comment.username}">${comment.username}</a><br>
+        <span class="time">${timeUTCToLocal(comment.postedDate)}</span><br>
+        ${comment.comment}
+    </div>
+`;
+
 var onCommentsLoaded = function() {
-    var commentsElements;
-    var parentElement = document.getElementById("comments-container");
+    let parentElement = document.getElementById("comments-container");
+    let jsonObj = JSON.parse(this.responseText);
     if (this.status !== 200) {
-        var jsonObj = JSON.parse(this.responseText);
-        commentsElements = "<div id='comments' class='error'>Could not load comments: " + jsonObj.message + "</div>"
-    } else {
-        var jsonObj = JSON.parse(this.responseText);
-        if (jsonObj.message !== undefined) {
-            commentsElements = "<div id='comments' class='message'>" + jsonObj.message + "</div>"
-        } else {
-            commentsElements = jsonObj.results;
-        }
+        parentElement.innerHTML = "<div id='comments' class='error'>Could not load comments: " + jsonObj.message + "</div>"
+        return;
     }
-    parentElement.innerHTML = commentsElements;
-    convertTimeElementsToLocalTime(parentElement);
-    commentCount = numberOfCommentHTMLElements(commentsElements);
+    if (jsonObj.message) {
+        parentElement.innerHTML = "<div id='comments' class='message'>" + jsonObj.message + "</div>"
+        commentCount = 0;
+    } else {
+        const comments = jsonObj.data;
+        const commentsElements = document.createElement("div");
+        commentsElements.id = "comments";
+        commentsElements.innerHTML = comments.reduce((acc, comment) => {
+            return acc + renderImageComment(comment);
+        }, "");
+        commentCount = comments.length;
+        parentElement.appendChild(commentsElements);
+    }
     updateCommentsCounter();
 };
 
 var onCommentSubmitted = function() {
     var submittedComment;
     var parentElement = document.querySelector("#comments-container #comments");
+    var jsonObj = JSON.parse(this.responseText);
     if (this.status !== 200) {
-        var jsonObj = JSON.parse(this.responseText);
         showNotification(jsonObj.message, {
             error: true
         });
     } else {
-        var jsonObj = JSON.parse(this.responseText);
-        submittedComment = jsonObj.message;
+        submittedComment = jsonObj.comment;
         
         commentCount++;
         updateCommentsCounter();
 
-        var formattedCmt = $(submittedComment)
+        const imageCommentHTML = renderImageComment(submittedComment);
+
+        var formattedCmt = $(imageCommentHTML)
             .css("background-color", "#FFEB3B");
         parentElement.innerHTML = formattedCmt.get(0).outerHTML + ((commentCount > 1) ? parentElement.innerHTML : "");
         parentElement.classList.remove("message");
@@ -68,14 +78,14 @@ var onImageDeleted = function() {
 window.requestComments = function(imageID) {
     var req = new XMLHttpRequest();
     req.onload = onCommentsLoaded;
-    req.open("get", "/images/" + imageID + "/comments?type=json&responseType=html");
+    req.open("get", "/images/" + imageID + "/comments");
     req.send();
 };
 
 window.deleteImage = function (imageID) {
     var req = new XMLHttpRequest();
     req.onload = onImageDeleted;
-    req.open("delete", "/images/" + imageID + "?type=json");
+    req.open("delete", `/images/${imageID}`);
     req.setRequestHeader("X-CSRF-TOKEN", csrfToken);
     req.send();
 };

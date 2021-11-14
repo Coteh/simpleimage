@@ -6,14 +6,11 @@ const server = require("../../lib/server");
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
 const { assert } = chai;
+const { getServerAgent, assertUserLogin } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
-
-function getServerAgent() {
-    return chai.request.agent(server.app);
-}
 
 describe("integ", () => {
     describe("check user login", () => {
@@ -22,6 +19,7 @@ describe("integ", () => {
         var agent = null;
         var usersCollection = null;
         const TEST_USER = "test-user";
+        const TEST_PASSWORD = "test-password";
 
         function checkUserLogin() {
             return new Promise((resolve, reject) => {
@@ -38,28 +36,10 @@ describe("integ", () => {
             });
         }
 
-        function performUserLogin() {
-            return new Promise((resolve, reject) => {
-                agent = getServerAgent();
-                agent.post("/login")
-                    .type("form")
-                    .send({
-                        "username": "test-user",
-                        "password": "test"
-                    })
-                    .then((res) => {
-                        resolve(res);
-                    })
-                    .catch((err) => {
-                        reject(err);
-                    });
-            });
-        }
-
         it("should pass if user is logged in", () => {
-            return performUserLogin(TEST_USER)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    return checkUserLogin();     
+                    return checkUserLogin();
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 200);
@@ -75,7 +55,7 @@ describe("integ", () => {
         });
 
         it("should fail if logged in user does not exist in database", () => {
-            return performUserLogin(TEST_USER)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     usersCollection = db.collection("users");
                     await usersCollection.deleteOne({ username: TEST_USER });
@@ -107,7 +87,7 @@ describe("integ", () => {
         beforeEach((done) => {
             databaseOps.addUser({
                 username: TEST_USER,
-                password: "test",
+                password: TEST_PASSWORD,
                 email: "test@test.com"
             }, () => {
                 agent = getServerAgent();

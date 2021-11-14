@@ -7,14 +7,11 @@ const server = require("../../lib/server");
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
 const { assert } = chai;
+const { getServerAgent } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
-
-function getServerAgent() {
-    return chai.request.agent(server.app);
-}
 
 describe("integ", () => {
     describe("check username", () => {
@@ -63,8 +60,7 @@ describe("integ", () => {
             return checkUsername(TEST_USER)
                 .then(res => {
                     assert.equal(res.statusCode, 200);
-                    const message = res.body.message;
-                    assert.isTrue(message.exists);
+                    assert.isTrue(res.body.exists);
                 });
         });
 
@@ -72,8 +68,7 @@ describe("integ", () => {
             return checkUsername("bob")
                 .then(res => {
                     assert.equal(res.statusCode, 200);
-                    const message = res.body.message;
-                    assert.isFalse(message.exists);
+                    assert.isFalse(res.body.exists);
                 });
         });
 
@@ -101,7 +96,7 @@ describe("integ", () => {
         });
 
         it("should return an error if number of characters for username is over the limit", () => {
-            const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH;
+            const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH || 24;
             process.env.MAX_USERNAME_LENGTH = 24;
             return checkUsername("qwertyuiopasdfghjklzxcvbnm")
                 .then(res => {
@@ -144,8 +139,7 @@ describe("integ", () => {
                 })
                 .then(res => {
                     assert.equal(res.statusCode, 200);
-                    const message = res.body.message;
-                    assert.isTrue(message.exists);
+                    assert.isTrue(res.body.exists);
                 });
         });
 

@@ -7,29 +7,12 @@ const server = require("../../lib/server");
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
 const { assert } = chai;
-const integTestUtils = require('./integ_test_utils');
 const fs = require("fs");
+const { getServerAgent, addImagesForUser, getImageExt } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
-
-function getServerAgent() {
-    return chai.request.agent(server.app);
-}
-
-function getImageExt(mimeType) {
-    switch (mimeType) {
-        case "image/png":
-            return "png";
-        case "image/jpeg":
-            return "jpg";
-        case "image/bmp":
-            return "bmp";
-        case "image/gif":
-            return "gif";
-    }
-}
 
 describe("integ", () => {
     describe("images", () => {
@@ -83,7 +66,7 @@ describe("integ", () => {
                         password: "test",
                         email: "test@test.com"
                     }, () => {
-                        integTestUtils.addImagesForUser([
+                        addImagesForUser([
                             {
                                 fileName: "PNGtest.png",
                                 mimeType: "image/png",
@@ -144,9 +127,9 @@ describe("integ", () => {
         });
 
         it("should return JPEG image data if it exists", () => {
-            return fetchImage(imagesLookupByExt.get("jpg").id, "jpg")
+            return fetchImage(imagesLookupByExt.get("jpeg").id, "jpeg")
                 .then((img) => {
-                    assert(img.equals(imagesLookupByExt.get("jpg").data), "Buffers don't match");
+                    assert(img.equals(imagesLookupByExt.get("jpeg").data), "Buffers don't match");
                 });
         });
 
@@ -197,7 +180,7 @@ describe("integ", () => {
         });
 
         it("should return placeholder image if incorrect extension for image is provided", () => {
-            return fetchImage(imagesLookupByExt.get("png").id, "jpg")
+            return fetchImage(imagesLookupByExt.get("png").id, "jpeg")
                 .then((img) => {
                     assert(img.equals(placeholderImage), "Buffers don't match");
                 });

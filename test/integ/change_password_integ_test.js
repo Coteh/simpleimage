@@ -9,15 +9,11 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require("mongodb");
 const bcrypt = require("bcrypt");
 const { assert } = chai;
-const { performUserLogin } = require('./integ_test_utils');
+const { getServerAgent, assertUserLogin } = require('./integ_test_utils');
 
 chai.use(chaiHTTP);
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
-
-function getServerAgent() {
-    return chai.request.agent(server.app);
-}
 
 describe("integ", () => {
     describe("change password", () => {
@@ -91,19 +87,19 @@ describe("integ", () => {
 
         it("should change user password", () => {
             const newPassword = "Qwerty123!";
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     return changePassword(TEST_PASSWORD, newPassword, newPassword);
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 200);
-                    assert.equal(res.body.message, "Password changed");
+                    assert.equal(res.body.message, "Password changed.");
                     return checkPassword(TEST_USER, newPassword);
                 })
         });
         it("should not change user password if they provided the wrong old password", () => {
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     return changePassword("dsfsd", "Qwerty123!", "Qwerty123!")
@@ -126,7 +122,7 @@ describe("integ", () => {
                 });
         });
         it("should not change user password if old password is not provided", () => {
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     return changePassword(undefined, "Qwerty123!", "Qwerty123!");
@@ -138,7 +134,7 @@ describe("integ", () => {
                 });
         });
         it("should not change user password if new password is not provided", () => {
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     return changePassword(TEST_PASSWORD, undefined, "Qwerty123!");
@@ -150,7 +146,7 @@ describe("integ", () => {
                 })
         });
         it("should not change user password if new password confirmation is not provided", () => {
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     return changePassword(TEST_PASSWORD, "Qwerty123!", undefined);
@@ -162,7 +158,7 @@ describe("integ", () => {
                 });
         });
         it("should not change user password if new password and its confirmation don't match", () => {
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     return changePassword(TEST_PASSWORD, "dsfds", "Qwerty123!");
@@ -174,7 +170,7 @@ describe("integ", () => {
                 });
         });
         it('should not change user password if new password is the same as the old password', () => {
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     return changePassword(TEST_PASSWORD, TEST_PASSWORD, TEST_PASSWORD);
@@ -186,7 +182,7 @@ describe("integ", () => {
                 });
         });
         it("should not change user password if new password is not strong enough", () => {
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     return changePassword(TEST_PASSWORD, "weak", "weak");
@@ -198,11 +194,11 @@ describe("integ", () => {
                 });
         });
         it("should not change user password if user doesn't exist", () => {
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     usersCollection = db.collection("users");
-                    return usersCollection.deleteOne({ username: TEST_USER })
+                    return usersCollection.deleteOne({ username: TEST_USER });
                 })
                 .then((res) => {
                     assert.strictEqual(res.deletedCount, 1);
@@ -223,7 +219,7 @@ describe("integ", () => {
         });
         it("should not change user password if changing password encountered an error", () => {
             var stub;
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     stub = sinon.stub(databaseOps, "changeUserPassword").rejects(new Error("Error changing password"));
@@ -242,7 +238,7 @@ describe("integ", () => {
         });
         it("should not change user password if database error occurs while finding user", () => {
             var stub;
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     stub = sinon.stub(databaseOps, "findUser").callsArgWith(1, new Error("Error finding user"), null);
@@ -261,7 +257,7 @@ describe("integ", () => {
         });
         it("should not change user password if user not found in database", () => {
             var stub;
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     stub = sinon.stub(databaseOps, "findUser").callsArgWith(1, undefined, []);
@@ -281,7 +277,7 @@ describe("integ", () => {
         it("should change user password if user password change successful but action history cannot write entry due to error", () => {
             var stub;
             const newPassword = "Qwerty123!";
-            return performUserLogin(agent, TEST_USER, TEST_PASSWORD)
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
                     stub = sinon.stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
@@ -291,7 +287,7 @@ describe("integ", () => {
                     stub.restore();
                     assert.equal(res.statusCode, 200);
                     sinon.assert.calledOnce(stub);
-                    assert.equal(res.body.message, "Password changed");
+                    assert.equal(res.body.message, "Password changed.");
                     return checkPassword(TEST_USER, newPassword);
                 })
                 .catch((err) => {
