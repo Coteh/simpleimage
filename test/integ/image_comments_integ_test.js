@@ -19,10 +19,6 @@ const getImageComments = (agent, imageID) => {
 
 function writeComment(agent, username, imageID, comment) {
     return agent.post("/comment")
-        .accept("json")
-        .query({
-            type: "json",
-        })
         .send({
             imageID,
             comment,
@@ -113,7 +109,7 @@ describe("integ", () => {
             if (writeResult.statusCode !== 200) {
                 assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
             }
-            // Verify that comment exists when API request is made
+            // Verify that comment exists and is sanitized
             const commentsResult = await getImageComments(agent, uploadedImages[0].id);
             assert.equal(commentsResult.statusCode, 200);
             const commentsBody = commentsResult.body;

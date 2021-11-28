@@ -200,7 +200,7 @@ describe("integ", () => {
                 });
         });
 
-        it("should not be able to upload a file if user does not exist", () => {
+        it("should not be able to upload a file if logged in user does not exist", () => {
             imagesCollection = db.collection("image-entries");
             return imagesCollection.find().toArray()
                 .then((docs) => {
@@ -324,8 +324,6 @@ describe("integ", () => {
                 .then((docs) => {
                     assert.equal(docs.length, 1);
                     assert.equal(docs[0].id, uploadedImageID);
-                    assert.isDefined(docs[0].data);
-                    assertBuffers(docs[0].data.buffer, jpegImage);
                     assert.isTrue(docs[0].temp);
                 })
                 .finally(() => {
@@ -353,8 +351,6 @@ describe("integ", () => {
                 .then((docs) => {
                     assert.equal(docs.length, 1);
                     assert.equal(docs[0].id, uploadedImageID);
-                    assert.isDefined(docs[0].data);
-                    assertBuffers(docs[0].data.buffer, jpegImage);
                     assert.isFalse(docs[0].temp);
                 });
         });

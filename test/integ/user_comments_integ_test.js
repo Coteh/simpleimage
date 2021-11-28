@@ -13,7 +13,7 @@ chai.use(chaiHTTP);
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
 
-function getUserComments(agent, username, type) {
+function getUserComments(agent, username) {
     return agent.get(`/users/${username}/comments`);
 }
 
@@ -102,7 +102,7 @@ describe("integ", () => {
                 assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
             }
             // Verify that comment exists when API request is made
-            const commentsResult = await getUserComments(agent, TEST_USER, "json");
+            const commentsResult = await getUserComments(agent, TEST_USER);
             assert.equal(commentsResult.statusCode, 200);
             const commentsBody = commentsResult.body;
             assert.equal(commentsBody.status, "success");
@@ -127,7 +127,7 @@ describe("integ", () => {
                 assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
             }
             // Verify that image link exists in API response
-            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            const commentsResult = await getUserComments(agent, TEST_USER);
             assert.equal(commentsResult.statusCode, 200);
             const comments = commentsResult.body.data;
             assert.strictEqual(comments.length, 1);
@@ -151,7 +151,7 @@ describe("integ", () => {
             // Get posted comment from response
             const postedComment = writeResult.body.comment;
             // Verify that posted date exists in API response
-            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            const commentsResult = await getUserComments(agent, TEST_USER);
             assert.equal(commentsResult.statusCode, 200);
             const comments = commentsResult.body.data;
             assert.strictEqual(comments.length, 1);
@@ -177,7 +177,7 @@ describe("integ", () => {
                 assert.fail(`Could not delete image, status code: ${deleteResult.statusCode}, resp: ${JSON.stringify(deleteResult.body)}`);
             }
             // Verify that 'removed' image link exists in API response
-            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            const commentsResult = await getUserComments(agent, TEST_USER);
             assert.equal(commentsResult.statusCode, 200);
             const comments = commentsResult.body.data;
             assert.strictEqual(comments.length, 1);
@@ -203,7 +203,7 @@ describe("integ", () => {
                 assert.fail(`Could not delete image, status code: ${deleteResult.statusCode}, resp: ${JSON.stringify(deleteResult.body)}`);
             }
             // Verify that image page link exists in API response
-            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            const commentsResult = await getUserComments(agent, TEST_USER);
             assert.equal(commentsResult.statusCode, 200);
             const comments = commentsResult.body.data;
             assert.strictEqual(comments.length, 1);
@@ -212,7 +212,7 @@ describe("integ", () => {
 
         it("should return an empty array if no comments are found", async () => {
             // Get comments
-            const commentsResult = await getUserComments(agent, TEST_USER, "json");
+            const commentsResult = await getUserComments(agent, TEST_USER);
             assert.equal(commentsResult.statusCode, 200);
             const comments = commentsResult.body.data;
             assert.isArray(comments);
@@ -233,7 +233,7 @@ describe("integ", () => {
                 assert.fail(`Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(writeResult.body)}`);
             }
             // Verify that comment text is sanitized
-            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            const commentsResult = await getUserComments(agent, TEST_USER);
             assert.equal(commentsResult.statusCode, 200);
             const comments = commentsResult.body.data;
             assert.strictEqual(comments.length, 1);
@@ -256,7 +256,7 @@ describe("integ", () => {
             // Stub databaseOps findCommentsForUser
             const findCommentsForUserStub = stub(databaseOps, "findCommentsForUser").callsArgWith(1, new Error("Error finding image"), null);
             // Verify that comments could not load due to an error
-            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            const commentsResult = await getUserComments(agent, TEST_USER);
             assert.equal(commentsResult.statusCode, 500);
             const response = commentsResult.body;
             assert.strictEqual(response.status, "error");
@@ -283,7 +283,7 @@ describe("integ", () => {
             // Stub databaseOps findImageAttributes
             const findImageAttributesStub = stub(databaseOps, "findImageAttributes").callsArgWith(1, new Error("Error finding image"), null);
             // Verify that comments could not load due to an error
-            const commentsResult = await getUserComments(agent, TEST_USER, "html");
+            const commentsResult = await getUserComments(agent, TEST_USER);
             assert.equal(commentsResult.statusCode, 500);
             const response = commentsResult.body;
             assert.strictEqual(response.status, "error");

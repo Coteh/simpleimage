@@ -89,6 +89,7 @@ describe("integ", () => {
         it("should still succeed if user does not exist", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 then(() => {
+                    usersCollection = db.collection("users");
                     return usersCollection.deleteOne({ username: TEST_USER });
                 })
                 .then((res) => {

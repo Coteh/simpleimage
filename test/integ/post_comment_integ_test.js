@@ -24,10 +24,6 @@ describe("integ", () => {
         // TODO make this a util function
         function postComment(agent, imageID, comment) {
             return agent.post("/comment")
-                .accept("json")
-                .query({
-                    type: "json",
-                })
                 .send({
                     imageID,
                     comment,
