@@ -4,8 +4,36 @@ const { assert } = require("chai");
 const server = require("../../lib/server");
 const chai = require("chai");
 const chaiHTTP = require("chai-http");
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const { MongoClient } = require("mongodb");
 
 chai.use(chaiHTTP);
+
+module.exports.MongoMemoryTestClient = class {
+    constructor() {
+        this.mongod = new MongoMemoryServer();
+    }
+    async initConnection() {
+        await Promise.all([this.mongod.getUri(), this.mongod.getPort(), this.mongod.getDbPath(), this.mongod.getDbName()]);
+        const testDBURL = this.mongod.getInstanceInfo().uri;
+        this.db = await MongoClient.connect(testDBURL);
+        return new Promise((resolve, reject) => {
+            return databaseOps.startDatabaseClient(function (err) {
+                if (err) {
+                    console.error(err);
+                    return reject(err);
+                }
+                resolve();
+            }, {
+                dbURL: testDBURL
+            });
+        });
+    }
+    async deinitConnection() {
+        this.mongod.stop();
+        databaseOps.closeDatabaseClient();
+    }
+}
 
 module.exports.getServerAgent = () => {
     return chai.request.agent(server.app);
@@ -80,8 +108,33 @@ module.exports.assertUserLogin = (agent, username, password) => {
     });
 };
 
+module.exports.assertUserExists = (username) => {
+    return new Promise((resolve) => {
+        databaseOps.findUser(username, (err, result) => {
+            assert.isTrue(!err && result.length > 0, `User ${username} does not exist, should exist`);
+            assert.strictEqual(result[0].username, username);
+            resolve();
+        });
+    });
+};
+
+module.exports.assertUserDoesNotExist = (username) => {
+    return new Promise((resolve) => {
+        databaseOps.findUser(username, (err, result) => {
+            assert.isTrue(err || result.length === 0, `User ${username} exists, should not exist`);
+            resolve();
+        });
+    });
+};
+
 module.exports.assertBuffers = (actualBuffer, expectedBuffer) => {
     assert(actualBuffer.equals(expectedBuffer), "Buffers don't match");
+};
+
+// regex lifted from https://stackoverflow.com/a/52869830
+module.exports.assertTimestampIsISO8601 = (timestamp) => {
+    assert.isTrue(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(timestamp), "Invalid timestamp format. Should be ISO 8601.");
+    assert.strictEqual(new Date(timestamp).toISOString(), timestamp);
 };
 
 module.exports.getImageExt = (mimeType) => {

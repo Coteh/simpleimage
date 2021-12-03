@@ -4,10 +4,8 @@ const { stub } = require("sinon");
 const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const { MongoClient } = require("mongodb");
 const { assert } = chai;
-const { getServerAgent } = require("./integ_test_utils");
+const { getServerAgent, MongoMemoryTestClient } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
@@ -15,8 +13,7 @@ chai.use(chaiHTTP);
 
 describe("integ", () => {
     describe("check username", () => {
-        var mongod = null;
-        var db = null;
+        let mongoTestClient = new MongoMemoryTestClient();
         var agent = null;
         var usersCollection = null;
         const TEST_USER = "test-user";
@@ -27,34 +24,6 @@ describe("integ", () => {
                     username,
                 });
         }
-
-        before(async function () {
-            mongod = new MongoMemoryServer();
-            await mongod.getUri();
-            await mongod.getPort();
-            await mongod.getDbPath();
-            await mongod.getDbName();
-            const testDBURL = mongod.getInstanceInfo().uri;
-            db = await MongoClient.connect(testDBURL);
-            return databaseOps.startDatabaseClient(function (err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-            }, {
-                dbURL: testDBURL
-            });
-        });
-        beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: "test",
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
-        });
 
         it("should report that a username is taken if it already exists", () => {
             return checkUsername(TEST_USER)
@@ -143,14 +112,29 @@ describe("integ", () => {
                 });
         });
 
+        before(() => {
+            return mongoTestClient.initConnection();
+        });
+
+        beforeEach((done) => {
+            databaseOps.addUser({
+                username: TEST_USER,
+                password: "test",
+                email: "test@test.com"
+            }, () => {
+                agent = getServerAgent();
+                done();
+            });
+        });
+
         afterEach(() => {
-            usersCollection = db.collection("users");
+            usersCollection = mongoTestClient.db.collection("users");
             usersCollection.deleteMany({});
             agent.close();
         });
+
         after(() => {
-            mongod.stop();
-            databaseOps.closeDatabaseClient();
+            return mongoTestClient.deinitConnection();
         });
     });
 });

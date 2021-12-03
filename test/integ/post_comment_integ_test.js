@@ -2,18 +2,15 @@ const chai = require("chai");
 const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const { MongoClient } = require("mongodb");
 const { assert } = require("chai");
 const { stub } = require("sinon");
-const { getServerAgent, addUser, assertUserLogin, addImagesForUser, assertBuffers } = require('./integ_test_utils');
+const { getServerAgent, addUser, assertUserLogin, addImagesForUser, assertBuffers, MongoMemoryTestClient } = require('./integ_test_utils');
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
 
 describe("integ", () => {
     describe("post comment", () => {
-        var mongod = null;
-        var db = null;
+        let mongoTestClient = new MongoMemoryTestClient();
         var agent = null;
         var usersCollection = null;
         let testImage = null;
@@ -89,7 +86,7 @@ describe("integ", () => {
                 })
                 .then((res) => {
                     assert.isEmpty(res.body.data);
-                    usersCollection = db.collection("users");
+                    usersCollection = mongoTestClient.db.collection("users");
                     return usersCollection.deleteOne({ username: TEST_USER });
                 })
                 .then((res) => {
@@ -115,7 +112,7 @@ describe("integ", () => {
                 })
                 .then((res) => {
                     assert.isEmpty(res.body.data);
-                    const imagesCollection = db.collection("image-entries");
+                    const imagesCollection = mongoTestClient.db.collection("image-entries");
                     return imagesCollection.deleteOne({ id: testImage.id });
                 })
                 .then((res) => {
@@ -172,22 +169,8 @@ describe("integ", () => {
                 });
         });
 
-        before(async function () {
-            mongod = new MongoMemoryServer();
-            await mongod.getUri();
-            await mongod.getPort();
-            await mongod.getDbPath();
-            await mongod.getDbName();
-            const testDBURL = mongod.getInstanceInfo().uri;
-            db = await MongoClient.connect(testDBURL);
-            return databaseOps.startDatabaseClient(function (err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-            }, {
-                dbURL: testDBURL
-            });
+        before(() => {
+            return mongoTestClient.initConnection();
         });
 
         beforeEach((done) => {
@@ -209,14 +192,13 @@ describe("integ", () => {
         });
 
         afterEach(() => {
-            usersCollection = db.collection("users");
+            usersCollection = mongoTestClient.db.collection("users");
             usersCollection.deleteMany({});
             agent.close();
         });
 
         after(() => {
-            mongod.stop();
-            databaseOps.closeDatabaseClient();
+            return mongoTestClient.deinitConnection();
         });
     });
 });

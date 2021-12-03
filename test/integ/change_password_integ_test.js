@@ -5,11 +5,9 @@ const auth = require("../../lib/auth");
 const databaseOps = require("../../lib/database-ops");
 const actionHistory = require("../../lib/action-history");
 const server = require("../../lib/server");
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const { MongoClient } = require("mongodb");
 const bcrypt = require("bcrypt");
 const { assert } = chai;
-const { getServerAgent, assertUserLogin } = require('./integ_test_utils');
+const { getServerAgent, assertUserLogin, MongoMemoryTestClient } = require('./integ_test_utils');
 
 chai.use(chaiHTTP);
 
@@ -17,8 +15,7 @@ chai.use(chaiHTTP);
 
 describe("integ", () => {
     describe("change password", () => {
-        var mongod = null;
-        var db = null;
+        let mongoTestClient = new MongoMemoryTestClient();
         var agent = null;
         var usersCollection = null;
         const TEST_USER = "test-user";
@@ -26,7 +23,7 @@ describe("integ", () => {
 
         function checkPassword(username, password) {
             return new Promise((resolve, reject) => {
-                usersCollection = db.collection("users");
+                usersCollection = mongoTestClient.db.collection("users");
                 usersCollection.find({ username })
                     .toArray((err, users) => {
                         if (err) {
@@ -57,34 +54,6 @@ describe("integ", () => {
                 });
         }
 
-        before(async function () {
-            mongod = new MongoMemoryServer();
-            await mongod.getUri();
-            await mongod.getPort();
-            await mongod.getDbPath();
-            await mongod.getDbName();
-            const testDBURL = mongod.getInstanceInfo().uri;
-            db = await MongoClient.connect(testDBURL);
-            return databaseOps.startDatabaseClient(function (err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-            }, {
-                dbURL: testDBURL
-            });
-        });
-        beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: TEST_PASSWORD,
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
-        });
-
         it("should change user password", () => {
             const newPassword = "Qwerty123!";
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
@@ -98,6 +67,7 @@ describe("integ", () => {
                     return checkPassword(TEST_USER, newPassword);
                 })
         });
+
         it("should not change user password if they provided the wrong old password", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
@@ -110,6 +80,7 @@ describe("integ", () => {
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
         });
+
         it("should not change user password if the aren't signed in (ie. are guest)", () => {
             return checkPassword(TEST_USER, TEST_PASSWORD)
                 .then(() => {
@@ -121,6 +92,7 @@ describe("integ", () => {
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
+
         it("should not change user password if old password is not provided", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
@@ -133,6 +105,7 @@ describe("integ", () => {
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
+
         it("should not change user password if new password is not provided", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
@@ -145,6 +118,7 @@ describe("integ", () => {
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
         });
+
         it("should not change user password if new password confirmation is not provided", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
@@ -157,6 +131,7 @@ describe("integ", () => {
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
+
         it("should not change user password if new password and its confirmation don't match", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
@@ -169,6 +144,7 @@ describe("integ", () => {
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
+
         it('should not change user password if new password is the same as the old password', () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
@@ -181,6 +157,7 @@ describe("integ", () => {
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
+
         it("should not change user password if new password is not strong enough", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
@@ -193,11 +170,12 @@ describe("integ", () => {
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
+
         it("should not change user password if user doesn't exist", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
-                    usersCollection = db.collection("users");
+                    usersCollection = mongoTestClient.db.collection("users");
                     return usersCollection.deleteOne({ username: TEST_USER });
                 })
                 .then((res) => {
@@ -217,6 +195,7 @@ describe("integ", () => {
                         });
                 });
         });
+
         it("should not change user password if changing password encountered an error", () => {
             var stub;
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
@@ -236,6 +215,7 @@ describe("integ", () => {
                     assert.fail(err);
                 });
         });
+
         it("should not change user password if database error occurs while finding user", () => {
             var stub;
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
@@ -255,6 +235,7 @@ describe("integ", () => {
                     assert.fail(err);
                 });
         });
+
         it("should not change user password if user not found in database", () => {
             var stub;
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
@@ -274,6 +255,7 @@ describe("integ", () => {
                     assert.fail(err);
                 });
         });
+
         it("should change user password if user password change successful but action history cannot write entry due to error", () => {
             var stub;
             const newPassword = "Qwerty123!";
@@ -296,14 +278,29 @@ describe("integ", () => {
                 });
         });
 
+        before(() => {
+            return mongoTestClient.initConnection();
+        });
+
+        beforeEach((done) => {
+            databaseOps.addUser({
+                username: TEST_USER,
+                password: TEST_PASSWORD,
+                email: "test@test.com"
+            }, () => {
+                agent = getServerAgent();
+                done();
+            });
+        });
+
         afterEach(async function () {
-            usersCollection = db.collection("users");
+            usersCollection = mongoTestClient.db.collection("users");
             usersCollection.deleteMany({});
             agent.close();
         });
-        after(async function() {
-            mongod.stop();
-            databaseOps.closeDatabaseClient();
+
+        after(() => {
+            return mongoTestClient.deinitConnection();
         });
     });
 });

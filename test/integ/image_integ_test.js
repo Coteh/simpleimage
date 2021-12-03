@@ -4,11 +4,9 @@ const { stub } = require("sinon");
 const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const { MongoClient } = require("mongodb");
 const { assert } = chai;
 const fs = require("fs");
-const { getServerAgent, addImagesForUser, getImageExt } = require("./integ_test_utils");
+const { getServerAgent, addImagesForUser, getImageExt, MongoMemoryTestClient } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
@@ -16,8 +14,7 @@ chai.use(chaiHTTP);
 
 describe("integ", () => {
     describe("images", () => {
-        var mongod = null;
-        var db = null;
+        let mongoTestClient = new MongoMemoryTestClient();
         var agent = null;
         var usersCollection = null;
         const TEST_USER = "test-user";
@@ -45,79 +42,6 @@ describe("integ", () => {
                     });
             });
         }
-
-        before(function () {
-            return new Promise(async (resolve) => {
-                mongod = new MongoMemoryServer();
-                await mongod.getUri();
-                await mongod.getPort();
-                await mongod.getDbPath();
-                await mongod.getDbName();
-                const testDBURL = mongod.getInstanceInfo().uri;
-                db = await MongoClient.connect(testDBURL);
-                databaseOps.startDatabaseClient(function (err) {
-                    if (err) {
-                        console.error(err);
-                        return;
-                    }
-    
-                    databaseOps.addUser({
-                        username: "test-user",
-                        password: "test",
-                        email: "test@test.com"
-                    }, () => {
-                        addImagesForUser([
-                            {
-                                fileName: "PNGtest.png",
-                                mimeType: "image/png",
-                            },
-                            {
-                                fileName: "JPEGtest.jpg",
-                                mimeType: "image/jpeg",
-                            },
-                            {
-                                fileName: "BMPtest.bmp",
-                                mimeType: "image/bmp",
-                            },
-                            {
-                                fileName: "GIFtest.gif",
-                                mimeType: "image/gif",
-                            },
-                        ], 'test-user')
-                            .then((imgs) => {
-                                imgs.forEach(imgResult => {
-                                    imagesLookupByExt.set(getImageExt(imgResult.mimetype), imgResult);
-                                });
-                                resolve();
-                            });
-                    });
-                }, {
-                    dbURL: testDBURL
-                });
-            });
-        });
-
-        beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: "test",
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
-        });
-
-        afterEach(() => {
-            usersCollection = db.collection("users");
-            usersCollection.deleteMany({});
-            agent.close();
-        });
-
-        after(() => {
-            mongod.stop();
-            databaseOps.closeDatabaseClient();
-        });
 
         it("should return PNG image data if it exists", () => {
             return fetchImage(imagesLookupByExt.get("png").id, "png")
@@ -184,6 +108,63 @@ describe("integ", () => {
                 .then((img) => {
                     assert(img.equals(placeholderImage), "Buffers don't match");
                 });
+        });
+
+        before(async () => {
+            await mongoTestClient.initConnection();
+            return new Promise(async (resolve) => {
+                databaseOps.addUser({
+                    username: "test-user",
+                    password: "test",
+                    email: "test@test.com"
+                }, () => {
+                    addImagesForUser([
+                        {
+                            fileName: "PNGtest.png",
+                            mimeType: "image/png",
+                        },
+                        {
+                            fileName: "JPEGtest.jpg",
+                            mimeType: "image/jpeg",
+                        },
+                        {
+                            fileName: "BMPtest.bmp",
+                            mimeType: "image/bmp",
+                        },
+                        {
+                            fileName: "GIFtest.gif",
+                            mimeType: "image/gif",
+                        },
+                    ], 'test-user')
+                        .then((imgs) => {
+                            imgs.forEach(imgResult => {
+                                imagesLookupByExt.set(getImageExt(imgResult.mimetype), imgResult);
+                            });
+                            resolve();
+                        });
+                });
+            });
+        });
+
+        beforeEach((done) => {
+            databaseOps.addUser({
+                username: TEST_USER,
+                password: "test",
+                email: "test@test.com"
+            }, () => {
+                agent = getServerAgent();
+                done();
+            });
+        });
+
+        afterEach(() => {
+            usersCollection = mongoTestClient.db.collection("users");
+            usersCollection.deleteMany({});
+            agent.close();
+        });
+
+        after(() => {
+            return mongoTestClient.deinitConnection();
         });
     });
 });

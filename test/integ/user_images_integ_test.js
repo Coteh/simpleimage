@@ -3,14 +3,12 @@ const chaiHTTP = require("chai-http");
 const { assert } = require("chai");
 
 const databaseOps = require("../../lib/database-ops");
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const { MongoClient } = require("mongodb");
 const { Agent } = require("http");
 const server = require("../../lib/server");
 const { promisify } = require("util");
 const { stub } = require("sinon");
 
-const { getServerAgent, addImagesForUser, getImageExt } = require("./integ_test_utils");
+const { getServerAgent, addImagesForUser, getImageExt, MongoMemoryTestClient } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 chai.should();
@@ -18,7 +16,7 @@ chai.should();
 describe("integ", () => {
     describe("user images", () => {
         let imagesLookup = new Map();
-        let mongod;
+        let mongoTestClient = new MongoMemoryTestClient();
 
         const findImagesForUserPromise = promisify(databaseOps.findImagesForUser);
 
@@ -37,53 +35,6 @@ describe("integ", () => {
                     });
             });
         }
-
-        before(async function () {
-            return new Promise(async (resolve) => {
-                mongod = new MongoMemoryServer();
-                await mongod.getUri();
-                await mongod.getPort();
-                await mongod.getDbPath();
-                await mongod.getDbName();
-                const testDBURL = mongod.getInstanceInfo().uri;
-                db = await MongoClient.connect(testDBURL);
-                databaseOps.startDatabaseClient(function (err) {
-                    if (err) {
-                        console.error(err);
-                        return;
-                    }
-    
-                    databaseOps.addUser({
-                        username: "test-user",
-                        password: "test",
-                        email: "test@test.com"
-                    }, () => {
-                        addImagesForUser([
-                            {
-                                fileName: "Black_tea_pot_cropped.jpg",
-                                mimeType: "image/jpeg",
-                            },
-                            {
-                                fileName: "Ingranaggio.png",
-                                mimeType: "image/png",
-                            },
-                            {
-                                fileName: "1525676723.png",
-                                mimeType: "image/png",
-                            }
-                        ], 'test-user')
-                            .then((imgs) => {
-                                imgs.forEach(imgResult => {
-                                    imagesLookup.set(imgResult.id, imgResult);
-                                });
-                                resolve();
-                            });
-                    });
-                }, {
-                    dbURL: testDBURL
-                });
-            });
-        });
 
         // TODO add a frontend integ test (with Cypress or another tool) that asserts user images displayed on the page
         // match expected image buffer
@@ -195,17 +146,49 @@ describe("integ", () => {
                 });
         });
 
+        before(async function () {
+            await mongoTestClient.initConnection();
+            return new Promise(async (resolve) => {
+                databaseOps.addUser({
+                    username: "test-user",
+                    password: "test",
+                    email: "test@test.com"
+                }, () => {
+                    addImagesForUser([
+                        {
+                            fileName: "Black_tea_pot_cropped.jpg",
+                            mimeType: "image/jpeg",
+                        },
+                        {
+                            fileName: "Ingranaggio.png",
+                            mimeType: "image/png",
+                        },
+                        {
+                            fileName: "1525676723.png",
+                            mimeType: "image/png",
+                        }
+                    ], 'test-user')
+                        .then((imgs) => {
+                            imgs.forEach(imgResult => {
+                                imagesLookup.set(imgResult.id, imgResult);
+                            });
+                            resolve();
+                        });
+                });
+            });
+        });
+
         afterEach(async function () {
-            usersCollection = db.collection("users");
+            usersCollection = mongoTestClient.db.collection("users");
             usersCollection.deleteMany({
                 username: {
                     $not: new RegExp("test-user"),
                 }
             });
         });
-        after(async function() {
-            mongod.stop();
-            databaseOps.closeDatabaseClient();
+
+        after(() => {
+            return mongoTestClient.deinitConnection();
         });
     });
 });

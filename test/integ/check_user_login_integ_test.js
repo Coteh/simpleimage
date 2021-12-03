@@ -3,10 +3,8 @@ const chaiHTTP = require("chai-http");
 const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const { MongoClient } = require("mongodb");
 const { assert } = chai;
-const { getServerAgent, assertUserLogin } = require("./integ_test_utils");
+const { getServerAgent, assertUserLogin, MongoMemoryTestClient } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
@@ -14,8 +12,7 @@ chai.use(chaiHTTP);
 
 describe("integ", () => {
     describe("check user login", () => {
-        var mongod = null;
-        var db = null;
+        let mongoTestClient = new MongoMemoryTestClient();
         var agent = null;
         var usersCollection = null;
         const TEST_USER = "test-user";
@@ -57,7 +54,7 @@ describe("integ", () => {
         it("should fail if logged in user does not exist in database", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
-                    usersCollection = db.collection("users");
+                    usersCollection = mongoTestClient.db.collection("users");
                     await usersCollection.deleteOne({ username: TEST_USER });
                     return checkUserLogin();
                 }).then((res) => {
@@ -66,22 +63,8 @@ describe("integ", () => {
                 });
         });
 
-        before(async function () {
-            mongod = new MongoMemoryServer();
-            await mongod.getUri();
-            await mongod.getPort();
-            await mongod.getDbPath();
-            await mongod.getDbName();
-            const testDBURL = mongod.getInstanceInfo().uri;
-            db = await MongoClient.connect(testDBURL);
-            return databaseOps.startDatabaseClient(function (err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-            }, {
-                dbURL: testDBURL
-            });
+        before(() => {
+            return mongoTestClient.initConnection();
         });
 
         beforeEach((done) => {
@@ -96,14 +79,13 @@ describe("integ", () => {
         });
 
         afterEach(() => {
-            usersCollection = db.collection("users");
+            usersCollection = mongoTestClient.db.collection("users");
             usersCollection.deleteMany({});
             agent.close();
         });
 
         after(() => {
-            mongod.stop();
-            databaseOps.closeDatabaseClient();
+            return mongoTestClient.deinitConnection();
         });
     });
 });

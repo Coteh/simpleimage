@@ -3,11 +3,9 @@ const chaiHTTP = require("chai-http");
 const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const { MongoClient } = require("mongodb");
 const { assert } = chai;
 const { stub } = require("sinon");
-const { getServerAgent, addImagesForUser, assertUserLogin } = require("./integ_test_utils");
+const { getServerAgent, addImagesForUser, assertUserLogin, assertTimestampIsISO8601, MongoMemoryTestClient } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
@@ -32,8 +30,7 @@ function deleteImage(agent, imageID) {
 
 describe("integ", () => {
     describe("image comments", () => {
-        var mongod = null;
-        var db = null;
+        let mongoTestClient = new MongoMemoryTestClient();
         var agent = null;
         var usersCollection = null;
         const TEST_USER = "test-user";
@@ -92,6 +89,7 @@ describe("integ", () => {
             assert.equal(comments.length, 1);
             assert.equal(comments[0].imageID, uploadedImages[0].id);
             assert.equal(comments[0].postedDate, postedComment.postedDate);
+            assertTimestampIsISO8601(comments[0].postedDate);
         });
 
         it("should return comment text sanitized", async () => {
@@ -167,22 +165,8 @@ describe("integ", () => {
             assert.isEmpty(commentsResult.body.data);
         });
 
-        before(async function () {
-            mongod = new MongoMemoryServer();
-            await mongod.getUri();
-            await mongod.getPort();
-            await mongod.getDbPath();
-            await mongod.getDbName();
-            const testDBURL = mongod.getInstanceInfo().uri;
-            db = await MongoClient.connect(testDBURL);
-            return databaseOps.startDatabaseClient(function (err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-            }, {
-                dbURL: testDBURL
-            });
+        before(() => {
+            return mongoTestClient.initConnection();
         });
 
         beforeEach((done) => {
@@ -197,18 +181,17 @@ describe("integ", () => {
         });
 
         afterEach(() => {
-            usersCollection = db.collection("users");
+            usersCollection = mongoTestClient.db.collection("users");
             usersCollection.deleteMany({});
-            imageCollection = db.collection("image-entries");
+            imageCollection = mongoTestClient.db.collection("image-entries");
             imageCollection.deleteMany({});
-            commentsCollection = db.collection("comments");
+            commentsCollection = mongoTestClient.db.collection("comments");
             commentsCollection.deleteMany({});
             agent.close();
         });
 
         after(() => {
-            mongod.stop();
-            databaseOps.closeDatabaseClient();
+            return mongoTestClient.deinitConnection();
         });
     });
 });

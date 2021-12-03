@@ -1,10 +1,8 @@
 const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const { MongoClient } = require("mongodb");
 const { assert } = require("chai");
-const { getServerAgent, assertUserLogin } = require("./integ_test_utils");
+const { getServerAgent, assertUserLogin, MongoMemoryTestClient } = require("./integ_test_utils");
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
 
@@ -20,8 +18,7 @@ const performUserCheck = async (agent) => agent.get("/user");
 
 describe("integ", () => {
     describe("user logout", () => {
-        var mongod = null;
-        var db = null;
+        let mongoTestClient = new MongoMemoryTestClient();
         var agent = null;
         var usersCollection = null;
         const TEST_USER = "test-user";
@@ -89,7 +86,7 @@ describe("integ", () => {
         it("should still succeed if user does not exist", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 then(() => {
-                    usersCollection = db.collection("users");
+                    usersCollection = mongoTestClient.db.collection("users");
                     return usersCollection.deleteOne({ username: TEST_USER });
                 })
                 .then((res) => {
@@ -101,22 +98,8 @@ describe("integ", () => {
                 });
         });
 
-        before(async function () {
-            mongod = new MongoMemoryServer();
-            await mongod.getUri();
-            await mongod.getPort();
-            await mongod.getDbPath();
-            await mongod.getDbName();
-            const testDBURL = mongod.getInstanceInfo().uri;
-            db = await MongoClient.connect(testDBURL);
-            return databaseOps.startDatabaseClient(function (err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-            }, {
-                dbURL: testDBURL
-            });
+        before(() => {
+            return mongoTestClient.initConnection();
         });
 
         beforeEach((done) => {
@@ -131,14 +114,13 @@ describe("integ", () => {
         });
 
         afterEach(() => {
-            usersCollection = db.collection("users");
+            usersCollection = mongoTestClient.db.collection("users");
             usersCollection.deleteMany({});
             agent.close();
         });
 
         after(() => {
-            mongod.stop();
-            databaseOps.closeDatabaseClient();
+            return mongoTestClient.deinitConnection();
         });
     });
 });

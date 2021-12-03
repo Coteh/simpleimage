@@ -3,12 +3,10 @@ const chaiHTTP = require("chai-http");
 const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const { MongoClient } = require("mongodb");
 const { assert } = chai;
 const { stub } = require("sinon");
 const fs = require('fs');
-const { getServerAgent, assertUserLogin, assertBuffers } = require('./integ_test_utils');
+const { getServerAgent, assertUserLogin, assertBuffers, MongoMemoryTestClient } = require('./integ_test_utils');
 
 chai.use(chaiHTTP);
 
@@ -18,8 +16,7 @@ chai.use(chaiHTTP);
 
 describe("integ", () => {
     describe("upload", () => {
-        var mongod = null;
-        var db = null;
+        let mongoTestClient = new MongoMemoryTestClient();
         var agent = null;
         let usersCollection;
         let imagesCollection;
@@ -38,7 +35,7 @@ describe("integ", () => {
         };
 
         it("should be able to upload a JPEG", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
             return imagesCollection.find().toArray()
                 .then((docs) => {
@@ -62,7 +59,7 @@ describe("integ", () => {
         });
 
         it("should be able to upload a PNG", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
             return imagesCollection.find().toArray()
                 .then((docs) => {
@@ -86,7 +83,7 @@ describe("integ", () => {
         });
 
         it("should be able to upload a BMP", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
             return imagesCollection.find().toArray()
                 .then((docs) => {
@@ -110,7 +107,7 @@ describe("integ", () => {
         });
 
         it("should be able to upload a GIF", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
             return imagesCollection.find().toArray()
                 .then((docs) => {
@@ -134,7 +131,7 @@ describe("integ", () => {
         });
 
         it("should not be able to upload an invalid file type", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             return imagesCollection.find().toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
@@ -154,7 +151,7 @@ describe("integ", () => {
         });
 
         it("should upload an image under anonymous (username is empty) if uploaded by guest", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
             return imagesCollection.find().toArray()
                 .then((docs) => {
@@ -177,7 +174,7 @@ describe("integ", () => {
         });
 
         it("should upload an image under the logged in user", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
             return imagesCollection.find().toArray()
                 .then((docs) => {
@@ -201,14 +198,14 @@ describe("integ", () => {
         });
 
         it("should not be able to upload a file if logged in user does not exist", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             return imagesCollection.find().toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                     return assertUserLogin(agent, TEST_USER, TEST_PASSWORD);
                 })
                 .then(() => {
-                    usersCollection = db.collection("users");
+                    usersCollection = mongoTestClient.db.collection("users");
                     return usersCollection.deleteOne({ username: TEST_USER });
                 })
                 .then((res) => {
@@ -227,7 +224,7 @@ describe("integ", () => {
 
         it("should fail if login to upload is turned on and user is not logged in when uploading image", () => {
             process.env.LOGIN_TO_UPLOAD = "true";
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             return imagesCollection.find().toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
@@ -250,7 +247,7 @@ describe("integ", () => {
 
         it("should upload image successfully if login to upload is enabled and user is logged in", () => {
             process.env.LOGIN_TO_UPLOAD = "true";
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
             return imagesCollection.find().toArray()
                 .then((docs) => {
@@ -305,7 +302,7 @@ describe("integ", () => {
 
         it("should mark uploaded image as temporary if evaluation mode is enabled", () => {
             process.env.EVALUATION_MODE = "true";
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
             return imagesCollection.find().toArray()
                 .then((docs) => {
@@ -332,7 +329,7 @@ describe("integ", () => {
         });
 
         it("should not mark image as temporary if evaluation mode is not enabled", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
             return imagesCollection.find().toArray()
                 .then((docs) => {
@@ -356,7 +353,7 @@ describe("integ", () => {
         });
 
         it("should fail if no files were sent for upload", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             return imagesCollection.find().toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
@@ -378,7 +375,7 @@ describe("integ", () => {
         });
 
         it("should fail gracefully if non-multipart request was sent", () => {
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             return imagesCollection.find().toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
@@ -400,7 +397,7 @@ describe("integ", () => {
 
         it("should fail if database failed when writing image", () => {
             const addImageStub = stub(databaseOps, "addImage").callsArgWith(1, new Error("Error adding image"), null);
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             return imagesCollection.find().toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
@@ -421,22 +418,8 @@ describe("integ", () => {
                 });
         });
 
-        before(async function () {
-            mongod = new MongoMemoryServer();
-            await mongod.getUri();
-            await mongod.getPort();
-            await mongod.getDbPath();
-            await mongod.getDbName();
-            const testDBURL = mongod.getInstanceInfo().uri;
-            db = await MongoClient.connect(testDBURL);
-            return databaseOps.startDatabaseClient(function (err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-            }, {
-                dbURL: testDBURL
-            });
+        before(() => {
+            return mongoTestClient.initConnection();
         });
 
         beforeEach((done) => {
@@ -455,16 +438,15 @@ describe("integ", () => {
         });
 
         afterEach(() => {
-            usersCollection = db.collection("users");
+            usersCollection = mongoTestClient.db.collection("users");
             usersCollection.deleteMany({});
-            imagesCollection = db.collection("image-entries");
+            imagesCollection = mongoTestClient.db.collection("image-entries");
             imagesCollection.deleteMany({});
             agent.close();
         });
 
         after(() => {
-            mongod.stop();
-            databaseOps.closeDatabaseClient();
+            return mongoTestClient.deinitConnection();
         });
     });
 });
