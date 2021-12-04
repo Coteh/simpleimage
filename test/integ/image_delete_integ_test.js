@@ -1,5 +1,6 @@
 const { stub } = require("sinon");
 const databaseOps = require("../../lib/database-ops");
+const actionHistory = require("../../lib/action-history");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { assert } = require("chai");
@@ -194,6 +195,33 @@ describe("integ", () => {
                 })
                 .then((res) => {
                     assertBuffers(res, testImage.data);
+                });
+        });
+
+        it("should still succeed if writing to action history fails", () => {
+            const actionHistoryStub = stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
+                .then(() => {
+                    return fetchImage(testImage.id, "jpg");
+                })
+                .then((res) => {
+                    assertBuffers(res, testImage.data);
+                })
+                .then(() => {
+                    return deleteImage(testImage.id, "jpg");
+                })
+                .then((res) => {
+                    assert.equal(res.statusCode, 200);
+                })
+                .then(() => {
+                    return fetchImage(testImage.id, "jpg");
+                })
+                .then((res) => {
+                    assertBuffers(res, placeholderImage);
+                    assert.isTrue(actionHistoryStub.calledOnce);
+                })
+                .finally(() => {
+                    actionHistoryStub.restore();
                 });
         });
 

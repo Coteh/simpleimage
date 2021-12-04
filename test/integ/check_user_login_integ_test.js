@@ -19,18 +19,7 @@ describe("integ", () => {
         const TEST_PASSWORD = "test-password";
 
         function checkUserLogin() {
-            return new Promise((resolve, reject) => {
-                agent.get("/user")
-                .send()
-                .then((res) => {
-                    resolve(res);
-                    agent.close();
-                })
-                .catch((err) => {
-                    reject(err);
-                    agent.close();
-                });
-            });
+            return agent.get("/user");
         }
 
         it("should pass if user is logged in", () => {

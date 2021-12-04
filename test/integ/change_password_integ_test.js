@@ -100,7 +100,7 @@ describe("integ", () => {
                     return changePassword(undefined, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
-                    assert.equal(res.statusCode, 400);
+                    assert.equal(res.statusCode, 422);
                     assert.equal(res.body.errorID, "missingOldPassword");
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
@@ -113,7 +113,7 @@ describe("integ", () => {
                     return changePassword(TEST_PASSWORD, undefined, "Qwerty123!");
                 })
                 .then((res) => {
-                    assert.equal(res.statusCode, 400);
+                    assert.equal(res.statusCode, 422);
                     assert.equal(res.body.errorID, "missingNewPassword");
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
@@ -126,7 +126,7 @@ describe("integ", () => {
                     return changePassword(TEST_PASSWORD, "Qwerty123!", undefined);
                 })
                 .then((res) => {
-                    assert.equal(res.statusCode, 400);
+                    assert.equal(res.statusCode, 422);
                     assert.equal(res.body.errorID, "missingNewPasswordConfirm");
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
@@ -205,14 +205,12 @@ describe("integ", () => {
                     return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
-                    stub.restore();
                     assert.equal(res.statusCode, 500);
                     assert.equal(res.body.errorID, "errorChangingPassword");
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
-                .catch((err) => {
+                .finally(() => {
                     stub.restore();
-                    assert.fail(err);
                 });
         });
 
@@ -225,14 +223,12 @@ describe("integ", () => {
                     return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
-                    stub.restore();
                     assert.equal(res.statusCode, 500);
-                    assert.equal(res.body.errorID, "userNotFound");
+                    assert.equal(res.body.errorID, "databaseError");
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
-                .catch((err) => {
+                .finally(() => {
                     stub.restore();
-                    assert.fail(err);
                 });
         });
 
@@ -245,14 +241,12 @@ describe("integ", () => {
                     return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
-                    stub.restore();
-                    assert.equal(res.statusCode, 500);
+                    assert.equal(res.statusCode, 404);
                     assert.equal(res.body.errorID, "userNotFound");
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 })
-                .catch((err) => {
+                .finally(() => {
                     stub.restore();
-                    assert.fail(err);
                 });
         });
 
@@ -266,15 +260,13 @@ describe("integ", () => {
                     return changePassword(TEST_PASSWORD, newPassword, newPassword);
                 })
                 .then((res) => {
-                    stub.restore();
                     assert.equal(res.statusCode, 200);
                     sinon.assert.calledOnce(stub);
                     assert.equal(res.body.message, "Password changed.");
                     return checkPassword(TEST_USER, newPassword);
                 })
-                .catch((err) => {
+                .finally(() => {
                     stub.restore();
-                    assert.fail(err);
                 });
         });
 

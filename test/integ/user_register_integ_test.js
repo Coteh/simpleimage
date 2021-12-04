@@ -239,7 +239,7 @@ describe("integ", () => {
         });
 
         it("should still succeed if writing to action history fails", () => {
-            actionHistoryStub = stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
+            const actionHistoryStub = stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
             return assertUserDoesNotExist(TEST_USER)
                 .then(() => {
                     return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);

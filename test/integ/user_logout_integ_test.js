@@ -2,7 +2,7 @@ const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { assert } = require("chai");
-const { getServerAgent, assertUserLogin, MongoMemoryTestClient } = require("./integ_test_utils");
+const { getServerAgent, assertUserLogin, MongoMemoryTestClient, assertUserLoggedIn, assertUserNotLoggedIn } = require("./integ_test_utils");
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
 
@@ -13,8 +13,6 @@ const performUserLogout = async (agent, referrer) => {
     }
     return logout;
 };
-
-const performUserCheck = async (agent) => agent.get("/user");
 
 describe("integ", () => {
     describe("user logout", () => {
@@ -27,10 +25,7 @@ describe("integ", () => {
         it("should be able to logout user successfully", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(() => {
-                    return performUserCheck(agent);
-                })
-                .then((res) => {
-                    assert.equal(res.status, 200);
+                    return assertUserLoggedIn(agent);
                 })
                 .then(() => {
                     return performUserLogout(agent);
@@ -39,10 +34,7 @@ describe("integ", () => {
                     assert.equal(res.status, 200);
                 })
                 .then(() => {
-                    return performUserCheck(agent);
-                })
-                .then((res) => {
-                    assert.equal(res.status, 400);
+                    return assertUserNotLoggedIn(agent);
                 });
         });
 

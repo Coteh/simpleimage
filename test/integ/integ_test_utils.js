@@ -88,6 +88,10 @@ module.exports.addImagesForUser = (imageInfoArr, user) => {
     });
 };
 
+module.exports.assertUserLoggedIn = async (agent) => agent.get("/user").then(res => assert.isTrue(res.statusCode === 200, "User is not logged in but they should be"));
+
+module.exports.assertUserNotLoggedIn = async (agent) => agent.get("/user").then(res => assert.isFalse(res.statusCode === 200, "User is logged in but they should not be"));
+
 module.exports.assertUserLogin = (agent, username, password) => {
     return new Promise((resolve, reject) => {
         agent.post("/login")

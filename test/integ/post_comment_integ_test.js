@@ -1,5 +1,6 @@
 const chai = require("chai");
 const databaseOps = require("../../lib/database-ops");
+const actionHistory = require("../../lib/action-history");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { assert } = require("chai");
@@ -142,6 +143,52 @@ describe("integ", () => {
                 });
         });
 
+        it("should not be able to post a comment if image ID is undefined", () => {
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
+                .then(() => {
+                    return getImageComments(agent, testImage.id);
+                })
+                .then((res) => {
+                    assert.isEmpty(res.body.data);
+                })
+                .then(() => {
+                    return postComment(agent, undefined, TEST_COMMENT);
+                })
+                .then((res) => {
+                    assert.equal(res.statusCode, 422);
+                    assert.equal(res.body.errorID, "missingImageID");
+                })
+                .then(() => {
+                    return getImageComments(agent, testImage.id);
+                })
+                .then((res) => {
+                    assert.isEmpty(res.body.data);
+                });
+        });
+
+        it("should not be able to post a comment if comment text is undefined", () => {
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
+                .then(() => {
+                    return getImageComments(agent, testImage.id);
+                })
+                .then((res) => {
+                    assert.isEmpty(res.body.data);
+                })
+                .then(() => {
+                    return postComment(agent, testImage.id, undefined);
+                })
+                .then((res) => {
+                    assert.equal(res.statusCode, 422);
+                    assert.equal(res.body.errorID, "missingComment");
+                })
+                .then(() => {
+                    return getImageComments(agent, testImage.id);
+                })
+                .then((res) => {
+                    assert.isEmpty(res.body.data);
+                });
+        });
+
         it("should fail if database error when posting comment", () => {
             const addCommentStub = stub(databaseOps, "addComment").callsArgWith(1, new Error("Error adding comment to image"), null);
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
@@ -166,6 +213,38 @@ describe("integ", () => {
                 })
                 .finally(() => {
                     addCommentStub.restore();
+                });
+        });
+
+        it("should still succeed in posting a comment if action history failed", () => {
+            const actionHistoryStub = stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
+                .then(() => {
+                    return getImageComments(agent, testImage.id);
+                })
+                .then((res) => {
+                    assert.isEmpty(res.body.data);
+                })
+                .then(() => {
+                    return postComment(agent, testImage.id, TEST_COMMENT);
+                })
+                .then((res) => {
+                    assert.equal(res.statusCode, 200);
+                    const comment = res.body.comment;
+                    assert.equal(comment.username, TEST_USER);
+                    assert.equal(comment.comment, TEST_COMMENT);
+                })
+                .then(() => {
+                    return getImageComments(agent, testImage.id);
+                })
+                .then((res) => {
+                    assert.equal(res.body.data.length, 1);
+                    assert.equal(res.body.data[0].username, TEST_USER);
+                    assert.equal(res.body.data[0].comment, TEST_COMMENT);
+                    assert.isTrue(actionHistoryStub.calledOnce);
+                })
+                .finally(() => {
+                    actionHistoryStub.restore();
                 });
         });
 
