@@ -5,8 +5,13 @@ const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { assert } = chai;
 const { stub } = require("sinon");
-const fs = require('fs');
-const { getServerAgent, assertUserLogin, assertBuffers, MongoMemoryTestClient } = require('./integ_test_utils');
+const fs = require("fs");
+const {
+    getServerAgent,
+    assertUserLogin,
+    assertBuffers,
+    MongoMemoryTestClient,
+} = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
@@ -30,14 +35,15 @@ describe("integ", () => {
         const pdfImage = fs.readFileSync("./test/assets/images/PDFtest.pdf");
 
         const uploadImage = (agent, buffer, filename) => {
-            return agent.post("/upload")
-                .attach('image', buffer, filename);
+            return agent.post("/upload").attach("image", buffer, filename);
         };
 
         it("should be able to upload a JPEG", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                 })
@@ -61,7 +67,9 @@ describe("integ", () => {
         it("should be able to upload a PNG", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                 })
@@ -85,7 +93,9 @@ describe("integ", () => {
         it("should be able to upload a BMP", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                 })
@@ -109,7 +119,9 @@ describe("integ", () => {
         it("should be able to upload a GIF", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                 })
@@ -132,7 +144,9 @@ describe("integ", () => {
 
         it("should not be able to upload an invalid file type", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                 })
@@ -153,7 +167,9 @@ describe("integ", () => {
         it("should upload an image under anonymous (username is empty) if uploaded by guest", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                 })
@@ -176,7 +192,9 @@ describe("integ", () => {
         it("should upload an image under the logged in user", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                     return assertUserLogin(agent, TEST_USER, TEST_PASSWORD);
@@ -199,7 +217,9 @@ describe("integ", () => {
 
         it("should not be able to upload a file if logged in user does not exist", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                     return assertUserLogin(agent, TEST_USER, TEST_PASSWORD);
@@ -225,7 +245,9 @@ describe("integ", () => {
         it("should fail if login to upload is turned on and user is not logged in when uploading image", () => {
             process.env.LOGIN_TO_UPLOAD = "true";
             imagesCollection = mongoTestClient.db.collection("image-entries");
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                 })
@@ -249,7 +271,9 @@ describe("integ", () => {
             process.env.LOGIN_TO_UPLOAD = "true";
             imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                     return assertUserLogin(agent, TEST_USER, TEST_PASSWORD);
@@ -281,7 +305,7 @@ describe("integ", () => {
         // return new Promise(resolve => {
         //     /*
         //         "The TTL index does not guarantee that expired data will be deleted immediately upon expiration.
-        //         There may be a delay between the time a document expires and the time that MongoDB removes the 
+        //         There may be a delay between the time a document expires and the time that MongoDB removes the
         //         document from the database.
 
         //         The background task that removes expired documents runs every 60 seconds.
@@ -304,7 +328,9 @@ describe("integ", () => {
             process.env.EVALUATION_MODE = "true";
             imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                     return assertUserLogin(agent, TEST_USER, TEST_PASSWORD);
@@ -331,7 +357,9 @@ describe("integ", () => {
         it("should not mark image as temporary if evaluation mode is not enabled", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
             let uploadedImageID;
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                     return assertUserLogin(agent, TEST_USER, TEST_PASSWORD);
@@ -354,13 +382,16 @@ describe("integ", () => {
 
         it("should fail if no files were sent for upload", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                     return assertUserLogin(agent, TEST_USER, TEST_PASSWORD);
                 })
                 .then(() => {
-                    return agent.post("/upload")
+                    return agent
+                        .post("/upload")
                         .set("Content-Type", "multipart/form-data; boundary=X-INTEGTEST-BOUNDARY")
                         .send("--X-INTEGTEST-BOUNDARY--");
                 })
@@ -376,14 +407,15 @@ describe("integ", () => {
 
         it("should fail gracefully if non-multipart request was sent", () => {
             imagesCollection = mongoTestClient.db.collection("image-entries");
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                     return assertUserLogin(agent, TEST_USER, TEST_PASSWORD);
                 })
                 .then(() => {
-                    return agent.post("/upload")
-                        .send();
+                    return agent.post("/upload").send();
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
@@ -396,9 +428,15 @@ describe("integ", () => {
         });
 
         it("should fail if database failed when writing image", () => {
-            const addImageStub = stub(databaseOps, "addImage").callsArgWith(1, new Error("Error adding image"), null);
+            const addImageStub = stub(databaseOps, "addImage").callsArgWith(
+                1,
+                new Error("Error adding image"),
+                null
+            );
             imagesCollection = mongoTestClient.db.collection("image-entries");
-            return imagesCollection.find().toArray()
+            return imagesCollection
+                .find()
+                .toArray()
                 .then((docs) => {
                     assert.equal(docs.length, 0);
                 })
@@ -423,14 +461,17 @@ describe("integ", () => {
         });
 
         beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: TEST_PASSWORD,
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
+            databaseOps.addUser(
+                {
+                    username: TEST_USER,
+                    password: TEST_PASSWORD,
+                    email: "test@test.com",
+                },
+                () => {
+                    agent = getServerAgent();
+                    done();
+                }
+            );
             // TODO add a config to simpleimage so that environment variables don't need to be manipulated for tests
             delete process.env.LOGIN_TO_UPLOAD;
             delete process.env.EVALUATION_MODE;

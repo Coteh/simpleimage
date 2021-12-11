@@ -25,7 +25,9 @@ var onUserCommentsLoaded = function (callback) {
     const comments = commentsResp.data;
 
     commentsElements.innerHTML = comments.reduce((acc, comment) => {
-        return acc + `
+        return (
+            acc +
+            `
             <div class="comment">
                 <a aria-label="Image Link" href="${comment.imagePageURL}">
                     <img alt="Image" style="width:100px" src="${comment.imageURL}">
@@ -33,7 +35,8 @@ var onUserCommentsLoaded = function (callback) {
                 <span class="time">${timeUTCToLocal(comment.postedDate)}</span><br>
                 ${comment.comment}
             </div>
-        `;
+        `
+        );
     }, "");
 
     parentElement.appendChild(commentsElements);
@@ -50,7 +53,8 @@ var onUserImagesLoaded = function (callback) {
     imagesElement.style.display = "none";
 
     if (this.status !== 200) {
-        imagesElement.innerHTML = "<div class='info-box'>Could not get images due to an error.</div>";
+        imagesElement.innerHTML =
+            "<div class='info-box'>Could not get images due to an error.</div>";
         placeholderElement.style.display = "none";
         imagesElement.style.display = "";
         parentElement.appendChild(imagesElement);
@@ -68,22 +72,26 @@ var onUserImagesLoaded = function (callback) {
     var userImagesCount = userImages.length;
 
     if (userImagesCount === 0) {
-        imagesElement.innerHTML = "<div class='info-box'>This user has not uploaded any images.</div>";
+        imagesElement.innerHTML =
+            "<div class='info-box'>This user has not uploaded any images.</div>";
         placeholderElement.style.display = "none";
         imagesElement.style.display = "";
     } else {
         let elem = document.createElement("div");
         elem.id = "user-images";
         elem.innerHTML = userImages.reduce((acc, userImage) => {
-            return acc + `<a href="${userImage.url}">
+            return (
+                acc +
+                `<a href="${userImage.url}">
                 <img class="user-image" style="max-width: 200px; max-height: 200px;" src="${userImage.imageURL}"/>
-            </a>`;
+            </a>`
+            );
         }, "");
         imagesElement.appendChild(elem);
 
         var loadedCount = 0;
 
-        document.querySelectorAll(".user-image").forEach(elem => {
+        document.querySelectorAll(".user-image").forEach((elem) => {
             elem.addEventListener("load", function () {
                 loadedCount++;
                 if (loadedCount >= userImagesCount) {
@@ -101,7 +109,7 @@ var onUserImagesLoaded = function (callback) {
 
 window.requestCommentsUser = function (username, callback) {
     var req = new XMLHttpRequest();
-    req.onload = function() {
+    req.onload = function () {
         var func = onUserCommentsLoaded.bind(this, callback);
         func();
     };
@@ -111,7 +119,7 @@ window.requestCommentsUser = function (username, callback) {
 
 window.requestImagesUser = function (username, callback) {
     var req = new XMLHttpRequest();
-    req.onload = function() {
+    req.onload = function () {
         var func = onUserImagesLoaded.bind(this, callback);
         func();
     };

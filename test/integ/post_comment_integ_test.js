@@ -5,7 +5,14 @@ const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { assert } = require("chai");
 const { stub } = require("sinon");
-const { getServerAgent, addUser, assertUserLogin, addImagesForUser, assertBuffers, MongoMemoryTestClient } = require('./integ_test_utils');
+const {
+    getServerAgent,
+    addUser,
+    assertUserLogin,
+    addImagesForUser,
+    assertBuffers,
+    MongoMemoryTestClient,
+} = require("./integ_test_utils");
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
 
@@ -21,17 +28,15 @@ describe("integ", () => {
 
         // TODO make this a util function
         function postComment(agent, imageID, comment) {
-            return agent.post("/comment")
-                .send({
-                    imageID,
-                    comment,
-                });
+            return agent.post("/comment").send({
+                imageID,
+                comment,
+            });
         }
 
         // TODO make this a util function
         function getImageComments(agent, imageID) {
-            return agent.get(`/images/${imageID}/comments`)
-                .query();
+            return agent.get(`/images/${imageID}/comments`).query();
         }
 
         it("should be able to post a comment successfully", () => {
@@ -139,7 +144,10 @@ describe("integ", () => {
                 .then((res) => {
                     assert.equal(res.statusCode, 200);
                     const comment = res.body.comment;
-                    assert.equal(comment.comment, "&lt;script&gt;alert(&apos;hello&apos;)&lt;/script&gt;");
+                    assert.equal(
+                        comment.comment,
+                        "&lt;script&gt;alert(&apos;hello&apos;)&lt;/script&gt;"
+                    );
                 });
         });
 
@@ -190,7 +198,11 @@ describe("integ", () => {
         });
 
         it("should fail if database error when posting comment", () => {
-            const addCommentStub = stub(databaseOps, "addComment").callsArgWith(1, new Error("Error adding comment to image"), null);
+            const addCommentStub = stub(databaseOps, "addComment").callsArgWith(
+                1,
+                new Error("Error adding comment to image"),
+                null
+            );
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(() => {
                     return getImageComments(agent, testImage.id);
@@ -217,7 +229,11 @@ describe("integ", () => {
         });
 
         it("should still succeed in posting a comment if action history failed", () => {
-            const actionHistoryStub = stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
+            const actionHistoryStub = stub(actionHistory, "writeActionHistory").callsArgWith(
+                1,
+                new Error("Could not write action history entry"),
+                null
+            );
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(() => {
                     return getImageComments(agent, testImage.id);
@@ -255,12 +271,15 @@ describe("integ", () => {
         beforeEach((done) => {
             addUser(TEST_USER, TEST_PASSWORD, "test@test.com")
                 .then(() => {
-                    return addImagesForUser([
-                        {
-                            fileName: "Black_tea_pot_cropped.jpg",
-                            mimeType: "image/jpeg",
-                        },
-                    ], TEST_USER);
+                    return addImagesForUser(
+                        [
+                            {
+                                fileName: "Black_tea_pot_cropped.jpg",
+                                mimeType: "image/jpeg",
+                            },
+                        ],
+                        TEST_USER
+                    );
                 })
                 .then((imgs) => {
                     assert.equal(imgs.length, 1);

@@ -4,7 +4,8 @@ form input {
     margin: 10px 10px 10px 10px;
 }
 
-.register-view, .login-view {
+.register-view,
+.login-view {
     color: black;
 }
 
@@ -39,7 +40,7 @@ form input {
     bottom: -10px;
     overflow: hidden;
     overflow-wrap: break-word;
-    font-size: .8em;
+    font-size: 0.8em;
     pointer-events: none;
 }
 

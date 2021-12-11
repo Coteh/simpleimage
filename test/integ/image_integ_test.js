@@ -6,7 +6,12 @@ const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { assert } = chai;
 const fs = require("fs");
-const { getServerAgent, addImagesForUser, getImageExt, MongoMemoryTestClient } = require("./integ_test_utils");
+const {
+    getServerAgent,
+    addImagesForUser,
+    getImageExt,
+    MongoMemoryTestClient,
+} = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
@@ -24,7 +29,8 @@ describe("integ", () => {
 
         function fetchImage(imageID, ext) {
             return new Promise((resolve, reject) => {
-                agent.get(`/images/${imageID}.${ext}`)
+                agent
+                    .get(`/images/${imageID}.${ext}`)
                     .then((res) => {
                         if (res.statusCode !== 200) {
                             resolve({
@@ -44,56 +50,53 @@ describe("integ", () => {
         }
 
         it("should return PNG image data if it exists", () => {
-            return fetchImage(imagesLookupByExt.get("png").id, "png")
-                .then((img) => {
-                    assert(img.equals(imagesLookupByExt.get("png").data), "Buffers don't match");
-                });
+            return fetchImage(imagesLookupByExt.get("png").id, "png").then((img) => {
+                assert(img.equals(imagesLookupByExt.get("png").data), "Buffers don't match");
+            });
         });
 
         it("should return JPEG image data if it exists", () => {
-            return fetchImage(imagesLookupByExt.get("jpeg").id, "jpeg")
-                .then((img) => {
-                    assert(img.equals(imagesLookupByExt.get("jpeg").data), "Buffers don't match");
-                });
+            return fetchImage(imagesLookupByExt.get("jpeg").id, "jpeg").then((img) => {
+                assert(img.equals(imagesLookupByExt.get("jpeg").data), "Buffers don't match");
+            });
         });
 
         it("should return GIF image data if it exists", () => {
-            return fetchImage(imagesLookupByExt.get("gif").id, "gif")
-                .then((img) => {
-                    assert(img.equals(imagesLookupByExt.get("gif").data), "Buffers don't match");
-                });
+            return fetchImage(imagesLookupByExt.get("gif").id, "gif").then((img) => {
+                assert(img.equals(imagesLookupByExt.get("gif").data), "Buffers don't match");
+            });
         });
 
         it("should return BMP image data if it exists", () => {
-            return fetchImage(imagesLookupByExt.get("bmp").id, "bmp")
-                .then((img) => {
-                    assert(img.equals(imagesLookupByExt.get("bmp").data), "Buffers don't match");
-                });
+            return fetchImage(imagesLookupByExt.get("bmp").id, "bmp").then((img) => {
+                assert(img.equals(imagesLookupByExt.get("bmp").data), "Buffers don't match");
+            });
         });
 
         it("should return placeholder image indicating that image does not exist if image does not exist", () => {
-            return fetchImage("something", "png")
-                .then((img) => {
-                    assert(img.equals(placeholderImage), "Buffers don't match");
-                });
+            return fetchImage("something", "png").then((img) => {
+                assert(img.equals(placeholderImage), "Buffers don't match");
+            });
         });
 
         it("should return placeholder image if 'removed.png' is accessed", () => {
-            return fetchImage("removed", "png")
-                .then((img) => {
-                    assert(img.equals(placeholderImage), "Buffers don't match");
-                });
+            return fetchImage("removed", "png").then((img) => {
+                assert(img.equals(placeholderImage), "Buffers don't match");
+            });
         });
 
         it("should return placeholder image indicating that image does not exist if no filename was passed in", () => {
-            return fetchImage(undefined, "png")
-                .then((img) => {
-                    assert(img.equals(placeholderImage), "Buffers don't match");
-                });
+            return fetchImage(undefined, "png").then((img) => {
+                assert(img.equals(placeholderImage), "Buffers don't match");
+            });
         });
 
         it("should return 500 status code if database encountered an error when searching for image", () => {
-            const databaseOpsStub = stub(databaseOps, "findImage").callsArgWith(1, new Error("Error finding image"), null);
+            const databaseOpsStub = stub(databaseOps, "findImage").callsArgWith(
+                1,
+                new Error("Error finding image"),
+                null
+            );
             return fetchImage(imagesLookupByExt.get("png").id, "png")
                 .then((res) => {
                     assert.equal(res.statusCode, 500);
@@ -104,57 +107,64 @@ describe("integ", () => {
         });
 
         it("should return placeholder image if incorrect extension for image is provided", () => {
-            return fetchImage(imagesLookupByExt.get("png").id, "jpeg")
-                .then((img) => {
-                    assert(img.equals(placeholderImage), "Buffers don't match");
-                });
+            return fetchImage(imagesLookupByExt.get("png").id, "jpeg").then((img) => {
+                assert(img.equals(placeholderImage), "Buffers don't match");
+            });
         });
 
         before(async () => {
             await mongoTestClient.initConnection();
             return new Promise(async (resolve) => {
-                databaseOps.addUser({
-                    username: "test-user",
-                    password: "test",
-                    email: "test@test.com"
-                }, () => {
-                    addImagesForUser([
-                        {
-                            fileName: "PNGtest.png",
-                            mimeType: "image/png",
-                        },
-                        {
-                            fileName: "JPEGtest.jpg",
-                            mimeType: "image/jpeg",
-                        },
-                        {
-                            fileName: "BMPtest.bmp",
-                            mimeType: "image/bmp",
-                        },
-                        {
-                            fileName: "GIFtest.gif",
-                            mimeType: "image/gif",
-                        },
-                    ], 'test-user')
-                        .then((imgs) => {
-                            imgs.forEach(imgResult => {
+                databaseOps.addUser(
+                    {
+                        username: "test-user",
+                        password: "test",
+                        email: "test@test.com",
+                    },
+                    () => {
+                        addImagesForUser(
+                            [
+                                {
+                                    fileName: "PNGtest.png",
+                                    mimeType: "image/png",
+                                },
+                                {
+                                    fileName: "JPEGtest.jpg",
+                                    mimeType: "image/jpeg",
+                                },
+                                {
+                                    fileName: "BMPtest.bmp",
+                                    mimeType: "image/bmp",
+                                },
+                                {
+                                    fileName: "GIFtest.gif",
+                                    mimeType: "image/gif",
+                                },
+                            ],
+                            "test-user"
+                        ).then((imgs) => {
+                            imgs.forEach((imgResult) => {
                                 imagesLookupByExt.set(getImageExt(imgResult.mimetype), imgResult);
                             });
                             resolve();
                         });
-                });
+                    }
+                );
             });
         });
 
         beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: "test",
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
+            databaseOps.addUser(
+                {
+                    username: TEST_USER,
+                    password: "test",
+                    email: "test@test.com",
+                },
+                () => {
+                    agent = getServerAgent();
+                    done();
+                }
+            );
         });
 
         afterEach(() => {

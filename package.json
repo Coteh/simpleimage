@@ -7,6 +7,7 @@
   "author": "James Cote (Coteh)",
   "main": "app.js",
   "scripts": {
+    "prepare": "husky install",
     "build:client": "webpack",
     "heroku-postbuild": "webpack -p",
     "start": "node app.js",
@@ -14,6 +15,7 @@
     "start:dev": "nodemon",
     "test": "NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --recursive --exit $TEST_FILE",
     "test-ci": "NODE_ENV=test nyc --reporter=lcovonly mocha test --reporter mocha-junit-reporter --recursive --exit",
+    "format": "prettier --write .",
     "watch:client": "webpack -w"
   },
   "dependencies": {
@@ -51,13 +53,21 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "husky": "^7.0.2",
     "mocha": "^7.1.2",
     "mocha-junit-reporter": "^1.23.3",
     "mongodb-memory-server": "^6.7.0",
     "nodemon": "^1.15.1",
     "nyc": "^15.0.1",
+    "prettier": "2.4.1",
+    "pretty-quick": "^3.1.2",
     "proxyquire": "^2.0.1",
     "session-file-store": "^1.2.0",
     "sinon": "^9.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }

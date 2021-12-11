@@ -3,17 +3,21 @@ const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { assert } = require("chai");
 const { stub } = require("sinon");
-const { getServerAgent, addUser, MongoMemoryTestClient, assertUserLoggedIn, assertUserNotLoggedIn } = require("./integ_test_utils");
+const {
+    getServerAgent,
+    addUser,
+    MongoMemoryTestClient,
+    assertUserLoggedIn,
+    assertUserNotLoggedIn,
+} = require("./integ_test_utils");
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
 
 const performUserLogin = (agent, username, password) => {
-    return agent.post("/login")
-            .type("form")
-            .send({
-                username,
-                password,
-            });
+    return agent.post("/login").type("form").send({
+        username,
+        password,
+    });
 };
 
 describe("integ", () => {
@@ -29,7 +33,7 @@ describe("integ", () => {
                 .then(() => {
                     return performUserLogin(agent, TEST_USER, TEST_PASSWORD);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 200);
                     assert.equal(res.body.username, TEST_USER);
                     return assertUserLoggedIn(agent);
@@ -44,7 +48,7 @@ describe("integ", () => {
                 .then(() => {
                     return performUserLogin(agent, "wrong-user", "some-password");
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 401);
                     assert.equal(res.body.errorID, "userPassComboNotFound");
                     return assertUserNotLoggedIn(agent);
@@ -59,7 +63,7 @@ describe("integ", () => {
                 .then(() => {
                     return performUserLogin(agent, "some-user", "wrong-password");
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 401);
                     assert.equal(res.body.errorID, "userPassComboNotFound");
                     return assertUserNotLoggedIn(agent);
@@ -71,7 +75,7 @@ describe("integ", () => {
                 .then(() => {
                     return performUserLogin(agent, "nonexistent-user", "password");
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 401);
                     assert.equal(res.body.errorID, "userPassComboNotFound");
                     return assertUserNotLoggedIn(agent);
@@ -83,7 +87,7 @@ describe("integ", () => {
                 .then(() => {
                     return performUserLogin(agent, undefined, TEST_PASSWORD);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 422);
                     return assertUserNotLoggedIn(agent);
                 });
@@ -94,7 +98,7 @@ describe("integ", () => {
                 .then(() => {
                     return performUserLogin(agent, TEST_USER, undefined);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 422);
                     return assertUserNotLoggedIn(agent);
                 });
@@ -102,12 +106,15 @@ describe("integ", () => {
 
         it("should fail if database error occurs during login", () => {
             // Stub databaseOps.loginUser to call first argument with an error
-            const loginUserStub = stub(databaseOps, "loginUser").callsArgWith(1, new Error("Database error"));
+            const loginUserStub = stub(databaseOps, "loginUser").callsArgWith(
+                1,
+                new Error("Database error")
+            );
             return assertUserNotLoggedIn(agent)
                 .then(() => {
                     return performUserLogin(agent, TEST_USER, TEST_PASSWORD);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 500);
                     assert.equal(res.body.errorID, "loginUserDatabaseError");
                     assert.equal(loginUserStub.callCount, 1);
@@ -123,14 +130,17 @@ describe("integ", () => {
         });
 
         beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: TEST_PASSWORD,
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
+            databaseOps.addUser(
+                {
+                    username: TEST_USER,
+                    password: TEST_PASSWORD,
+                    email: "test@test.com",
+                },
+                () => {
+                    agent = getServerAgent();
+                    done();
+                }
+            );
         });
 
         afterEach(() => {
