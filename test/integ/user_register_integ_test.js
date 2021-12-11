@@ -3,19 +3,24 @@ const actionHistory = require("../../lib/action-history");
 const usernameUtil = require("../../lib/util/username");
 const { assert } = require("chai");
 const { stub } = require("sinon");
-const { getServerAgent, addUser, assertUserDoesNotExist, assertUserExists, MongoMemoryTestClient } = require("./integ_test_utils");
+const {
+    getServerAgent,
+    addUser,
+    assertUserDoesNotExist,
+    assertUserExists,
+    MongoMemoryTestClient,
+} = require("./integ_test_utils");
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
 
 const registerUser = async (agent, username, password, passwordConfirm, email) => {
-    return await agent.post("/register")
-        .send({
-            username,
-            password,
-            passwordConfirm,
-            email,
-        });
-    };
+    return await agent.post("/register").send({
+        username,
+        password,
+        passwordConfirm,
+        email,
+    });
+};
 
 describe("integ", () => {
     describe("user register", () => {
@@ -31,7 +36,7 @@ describe("integ", () => {
                 .then(() => {
                     return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 200);
                     assert.equal(res.body.status, "success");
                     return assertUserExists(TEST_USER);
@@ -41,9 +46,15 @@ describe("integ", () => {
         it("should not be able to register user if password confirmation is incorrect", () => {
             return assertUserDoesNotExist(TEST_USER)
                 .then(() => {
-                    return registerUser(agent, TEST_USER, TEST_PASSWORD, "wrong-password", TEST_EMAIL);
+                    return registerUser(
+                        agent,
+                        TEST_USER,
+                        TEST_PASSWORD,
+                        "wrong-password",
+                        TEST_EMAIL
+                    );
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 400);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "passwordMismatch");
@@ -61,15 +72,21 @@ describe("integ", () => {
                         resolve();
                     });
                 });
-            }
+            };
             return addUser(TEST_USER, TEST_PASSWORD, TEST_EMAIL)
                 .then(() => {
                     return assertUserEmail(TEST_EMAIL);
                 })
                 .then(() => {
-                    return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, "not.test.user@example.com");
+                    return registerUser(
+                        agent,
+                        TEST_USER,
+                        TEST_PASSWORD,
+                        TEST_PASSWORD,
+                        "not.test.user@example.com"
+                    );
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 400);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "usernameTaken");
@@ -82,7 +99,7 @@ describe("integ", () => {
                 .then(() => {
                     return registerUser(agent, "", TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 422);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "usernameEmpty");
@@ -95,7 +112,7 @@ describe("integ", () => {
                 .then(() => {
                     return registerUser(agent, TEST_USER, "", TEST_PASSWORD, TEST_EMAIL);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 422);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "passwordEmpty");
@@ -108,7 +125,7 @@ describe("integ", () => {
                 .then(() => {
                     return registerUser(agent, TEST_USER, TEST_PASSWORD, "", TEST_EMAIL);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 422);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "passwordConfirmEmpty");
@@ -121,7 +138,7 @@ describe("integ", () => {
                 .then(() => {
                     return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, "");
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 422);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "emailEmpty");
@@ -132,9 +149,15 @@ describe("integ", () => {
         it("should not be able to register user if email is invalid", () => {
             return assertUserDoesNotExist(TEST_USER)
                 .then(() => {
-                    return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, "invalidemail");
+                    return registerUser(
+                        agent,
+                        TEST_USER,
+                        TEST_PASSWORD,
+                        TEST_PASSWORD,
+                        "invalidemail"
+                    );
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 400);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "emailInvalid");
@@ -143,12 +166,19 @@ describe("integ", () => {
         });
 
         it("should not be able to register user if username is too long", () => {
-            const longUsername = "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallylongusername";
+            const longUsername =
+                "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallylongusername";
             return assertUserDoesNotExist(longUsername)
                 .then(() => {
-                    return registerUser(agent, longUsername, TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
+                    return registerUser(
+                        agent,
+                        longUsername,
+                        TEST_PASSWORD,
+                        TEST_PASSWORD,
+                        TEST_EMAIL
+                    );
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 400);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "usernameTooLong");
@@ -161,7 +191,7 @@ describe("integ", () => {
                 .then(() => {
                     return registerUser(agent, TEST_USER, "badpassword", "badpassword", TEST_EMAIL);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 400);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "weakPassword");
@@ -174,7 +204,7 @@ describe("integ", () => {
                 .then(() => {
                     return registerUser(agent, undefined, TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 422);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "usernameEmpty");
@@ -187,7 +217,7 @@ describe("integ", () => {
                 .then(() => {
                     return registerUser(agent, TEST_USER, undefined, TEST_PASSWORD, TEST_EMAIL);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 422);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "passwordEmpty");
@@ -200,7 +230,7 @@ describe("integ", () => {
                 .then(() => {
                     return registerUser(agent, TEST_USER, TEST_PASSWORD, undefined, TEST_EMAIL);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 422);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "passwordConfirmEmpty");
@@ -213,7 +243,7 @@ describe("integ", () => {
                 .then(() => {
                     return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, undefined);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 422);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "emailEmpty");
@@ -222,12 +252,15 @@ describe("integ", () => {
         });
 
         it("should fail if database cannot add user", () => {
-            const addUserStub = stub(databaseOps, "addUser").callsArgWith(1, new Error("Database error"));
+            const addUserStub = stub(databaseOps, "addUser").callsArgWith(
+                1,
+                new Error("Database error")
+            );
             return assertUserDoesNotExist(TEST_USER)
                 .then(() => {
                     return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 500);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "databaseError");
@@ -240,12 +273,16 @@ describe("integ", () => {
         });
 
         it("should still succeed if writing to action history fails", () => {
-            const actionHistoryStub = stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
+            const actionHistoryStub = stub(actionHistory, "writeActionHistory").callsArgWith(
+                1,
+                new Error("Could not write action history entry"),
+                null
+            );
             return assertUserDoesNotExist(TEST_USER)
                 .then(() => {
                     return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.status, 200);
                     assert.equal(res.body.status, "success");
                     assert.isTrue(actionHistoryStub.calledOnce);
@@ -253,7 +290,7 @@ describe("integ", () => {
                 })
                 .finally(() => {
                     actionHistoryStub.restore();
-                })
+                });
         });
 
         before(() => {

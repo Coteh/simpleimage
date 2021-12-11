@@ -19,36 +19,37 @@ describe("integ", () => {
         const TEST_USER = "test-user";
 
         function checkUsername(username) {
-            return agent.get("/check_username")
-                .query({
-                    username,
-                });
+            return agent.get("/check_username").query({
+                username,
+            });
         }
 
         it("should report that a username is taken if it already exists", () => {
-            return checkUsername(TEST_USER)
-                .then(res => {
-                    assert.equal(res.statusCode, 200);
-                    assert.isTrue(res.body.exists);
-                });
+            return checkUsername(TEST_USER).then((res) => {
+                assert.equal(res.statusCode, 200);
+                assert.isTrue(res.body.exists);
+            });
         });
 
         it("should report that a username is available if it's free", () => {
-            return checkUsername("bob")
-                .then(res => {
-                    assert.equal(res.statusCode, 200);
-                    assert.isFalse(res.body.exists);
-                });
+            return checkUsername("bob").then((res) => {
+                assert.equal(res.statusCode, 200);
+                assert.isFalse(res.body.exists);
+            });
         });
 
         it("should return an error if database error occurs when processing the request", () => {
-            const findUserStub = stub(databaseOps, "findUser").callsArgWith(1, new Error("Error finding user"), null);
+            const findUserStub = stub(databaseOps, "findUser").callsArgWith(
+                1,
+                new Error("Error finding user"),
+                null
+            );
             return checkUsername(TEST_USER)
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.statusCode, 500);
                     assert.equal(res.body.errorID, "errorCheckingUser");
                 })
-                .finally(err => {
+                .finally((err) => {
                     findUserStub.restore();
                 });
         });
@@ -57,22 +58,21 @@ describe("integ", () => {
         // I believe this will require updating configuration for express-rate-limit in route.js
 
         it("should return an error if there was no user supplied to the request", () => {
-            return checkUsername(undefined)
-                .then(res => {
-                    assert.equal(res.statusCode, 400);
-                    assert.equal(res.body.errorID, "noUsernameToCheck");
-                });
+            return checkUsername(undefined).then((res) => {
+                assert.equal(res.statusCode, 400);
+                assert.equal(res.body.errorID, "noUsernameToCheck");
+            });
         });
 
         it("should return an error if number of characters for username is over the limit", () => {
             const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH || 24;
             process.env.MAX_USERNAME_LENGTH = 24;
             return checkUsername("qwertyuiopasdfghjklzxcvbnm")
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.statusCode, 400);
-                    assert.equal(res.body.errorID, "usernameTooLong")
+                    assert.equal(res.body.errorID, "usernameTooLong");
                 })
-                .finally(() => process.env.MAX_USERNAME_LENGTH = oldMaxUsernameLength);
+                .finally(() => (process.env.MAX_USERNAME_LENGTH = oldMaxUsernameLength));
         });
 
         it("should return an error if unknown username verification error occurred", () => {
@@ -81,7 +81,7 @@ describe("integ", () => {
                 error: "",
             });
             return checkUsername(TEST_USER)
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "usernameUnknownError");
                 })
@@ -91,22 +91,24 @@ describe("integ", () => {
         });
 
         it("should be safe against MongoDB attack", () => {
-            return agent.get("/check_username")
+            return agent
+                .get("/check_username")
                 .query({
                     "username[$gt]": "",
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "invalidUsernameToCheck");
                 });
         });
 
         it("should only process the first username passed to it, if multiple were passed in", () => {
-            return agent.get("/check_username")
+            return agent
+                .get("/check_username")
                 .query({
-                    "username": [TEST_USER, "someone_else"],
+                    username: [TEST_USER, "someone_else"],
                 })
-                .then(res => {
+                .then((res) => {
                     assert.equal(res.statusCode, 200);
                     assert.isTrue(res.body.exists);
                 });
@@ -117,14 +119,17 @@ describe("integ", () => {
         });
 
         beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: "test",
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
+            databaseOps.addUser(
+                {
+                    username: TEST_USER,
+                    password: "test",
+                    email: "test@test.com",
+                },
+                () => {
+                    agent = getServerAgent();
+                    done();
+                }
+            );
         });
 
         afterEach(() => {

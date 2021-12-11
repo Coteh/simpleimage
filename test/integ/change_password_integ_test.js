@@ -7,7 +7,7 @@ const actionHistory = require("../../lib/action-history");
 const server = require("../../lib/server");
 const bcrypt = require("bcrypt");
 const { assert } = chai;
-const { getServerAgent, assertUserLogin, MongoMemoryTestClient } = require('./integ_test_utils');
+const { getServerAgent, assertUserLogin, MongoMemoryTestClient } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
@@ -24,34 +24,31 @@ describe("integ", () => {
         function checkPassword(username, password) {
             return new Promise((resolve, reject) => {
                 usersCollection = mongoTestClient.db.collection("users");
-                usersCollection.find({ username })
-                    .toArray((err, users) => {
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
-                        if (users.length === 0) {
-                            reject(new Error("No user found"));
-                            return;
-                        }
-                        const user = users[0];
-                        if (bcrypt.compareSync(auth.preHashPassword(password), user.password)) {
-                            resolve();
-                        } else {
-                            reject(new Error("Passwords don't match"));
-                        }
-                    });
+                usersCollection.find({ username }).toArray((err, users) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    if (users.length === 0) {
+                        reject(new Error("No user found"));
+                        return;
+                    }
+                    const user = users[0];
+                    if (bcrypt.compareSync(auth.preHashPassword(password), user.password)) {
+                        resolve();
+                    } else {
+                        reject(new Error("Passwords don't match"));
+                    }
+                });
             });
         }
 
         function changePassword(oldPassword, newPassword, newPasswordConfirm) {
-            return agent.post("/change_password?type=json")
-                .type("form")
-                .send({
-                    "oldPassword": oldPassword,
-                    "newPassword": newPassword,
-                    "newPasswordConfirm": newPasswordConfirm
-                });
+            return agent.post("/change_password?type=json").type("form").send({
+                oldPassword: oldPassword,
+                newPassword: newPassword,
+                newPasswordConfirm: newPasswordConfirm,
+            });
         }
 
         it("should change user password", () => {
@@ -65,26 +62,26 @@ describe("integ", () => {
                     assert.equal(res.statusCode, 200);
                     assert.equal(res.body.message, "Password changed.");
                     return checkPassword(TEST_USER, newPassword);
-                })
+                });
         });
 
         it("should not change user password if they provided the wrong old password", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
-                    return changePassword("dsfsd", "Qwerty123!", "Qwerty123!")
+                    return changePassword("dsfsd", "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
                     assert.equal(res.body.errorID, "oldPasswordIncorrect");
                     return checkPassword(TEST_USER, TEST_PASSWORD);
-                })
+                });
         });
 
         it("should not change user password if the aren't signed in (ie. are guest)", () => {
             return checkPassword(TEST_USER, TEST_PASSWORD)
                 .then(() => {
-                    return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!")
+                    return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
                     assert.equal(res.statusCode, 400);
@@ -116,7 +113,7 @@ describe("integ", () => {
                     assert.equal(res.statusCode, 422);
                     assert.equal(res.body.errorID, "missingNewPassword");
                     return checkPassword(TEST_USER, TEST_PASSWORD);
-                })
+                });
         });
 
         it("should not change user password if new password confirmation is not provided", () => {
@@ -145,7 +142,7 @@ describe("integ", () => {
                 });
         });
 
-        it('should not change user password if new password is the same as the old password', () => {
+        it("should not change user password if new password is the same as the old password", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
@@ -201,7 +198,9 @@ describe("integ", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
-                    stub = sinon.stub(databaseOps, "changeUserPassword").rejects(new Error("Error changing password"));
+                    stub = sinon
+                        .stub(databaseOps, "changeUserPassword")
+                        .rejects(new Error("Error changing password"));
                     return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
@@ -219,7 +218,9 @@ describe("integ", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
-                    stub = sinon.stub(databaseOps, "findUser").callsArgWith(1, new Error("Error finding user"), null);
+                    stub = sinon
+                        .stub(databaseOps, "findUser")
+                        .callsArgWith(1, new Error("Error finding user"), null);
                     return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
@@ -256,7 +257,9 @@ describe("integ", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
-                    stub = sinon.stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
+                    stub = sinon
+                        .stub(actionHistory, "writeActionHistory")
+                        .callsArgWith(1, new Error("Could not write action history entry"), null);
                     return changePassword(TEST_PASSWORD, newPassword, newPassword);
                 })
                 .then((res) => {
@@ -275,14 +278,17 @@ describe("integ", () => {
         });
 
         beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: TEST_PASSWORD,
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
+            databaseOps.addUser(
+                {
+                    username: TEST_USER,
+                    password: TEST_PASSWORD,
+                    email: "test@test.com",
+                },
+                () => {
+                    agent = getServerAgent();
+                    done();
+                }
+            );
         });
 
         afterEach(async function () {

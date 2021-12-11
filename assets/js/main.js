@@ -2,7 +2,7 @@ require("./sentry");
 
 window.isNotificationOpen = false;
 
-window.clearOverlay = function() {
+window.clearOverlay = function () {
     var overlayContainer = document.getElementById("overlay-container");
     if (overlayContainer == null) {
         console.error("Cannot clear overlay. No overlay container exists on this page.");
@@ -16,10 +16,12 @@ window.clearOverlay = function() {
     clearNotification();
 };
 
-window.clearNotification = function() {
+window.clearNotification = function () {
     var notificationOverlayContainer = document.getElementById("notification-overlay-container");
     if (notificationOverlayContainer == null) {
-        console.error("Cannot clear notification overlay. No notification overlay container exists on this page.");
+        console.error(
+            "Cannot clear notification overlay. No notification overlay container exists on this page."
+        );
         return;
     }
     notificationOverlayContainer.innerHTML = "";
@@ -28,13 +30,13 @@ window.clearNotification = function() {
     window.isNotificationOpen = false;
 };
 
-window.constructCloseButton = function(html, onClose) {
+window.constructCloseButton = function (html, onClose) {
     var closeButton = document.createElement("span");
     closeButton.className = "collecticons collecticons-circle-xmark head-icon close-button";
-    
+
     var closeText = document.createElement("span");
     closeText.innerText = " Close";
-    
+
     var closeElement = this.document.createElement("div");
     closeElement.className = "pointer-element container-close-button";
     closeElement.appendChild(closeButton);
@@ -44,7 +46,7 @@ window.constructCloseButton = function(html, onClose) {
     html.insertBefore(closeElement, html.firstChild);
 };
 
-window.showOverlay = function(html, options) {
+window.showOverlay = function (html, options) {
     var overlayContainer = document.getElementById("overlay-container");
     var overlayBackdrop = document.getElementById("overlay-backdrop");
     overlayContainer.innerHTML = html;
@@ -61,7 +63,7 @@ window.showOverlay = function(html, options) {
     }
 };
 
-window.showNotification = function(message, options) {
+window.showNotification = function (message, options) {
     if (options && options.clear) {
         clearNotification();
     }
@@ -85,7 +87,7 @@ window.showNotification = function(message, options) {
     }
 };
 
-var onOverlayLoaded = function(progressEvent, callback) {
+var onOverlayLoaded = function (progressEvent, callback) {
     var err;
     if (this.status !== 200) {
         showOverlay("<div>An error occurred. Please try again later.</div>", {
@@ -94,27 +96,26 @@ var onOverlayLoaded = function(progressEvent, callback) {
         });
     } else {
         showOverlay(this.responseText, {
-            close: true
+            close: true,
         });
     }
     callback(err);
 };
 
-window.openLogin = function() {
+window.openLogin = function () {
     var req = new XMLHttpRequest();
-    req.onload = function(progressEvent) {
+    req.onload = function (progressEvent) {
         onOverlayLoaded.call(this, progressEvent, onLoginLoaded);
     };
     req.open("get", "/login");
     req.send();
 };
 
-window.openRegister = function(callback) {
+window.openRegister = function (callback) {
     var req = new XMLHttpRequest();
     req.onload = function (progressEvent) {
         onOverlayLoaded.call(this, progressEvent, onRegisterLoaded);
-        if(callback && typeof callback === "function")
-            callback();
+        if (callback && typeof callback === "function") callback();
     };
     req.open("get", "/register");
     req.send();
@@ -122,15 +123,19 @@ window.openRegister = function(callback) {
 
 /*--------------------------------------------*/
 
-const onUsernameChecked = function(username, field) {
+const onUsernameChecked = function (username, field) {
     let jsonObj;
     if (this.status === 400) {
         try {
             jsonObj = JSON.parse(this.responseText);
         } catch (err) {
-            return console.error("[onUsernameChecked]", "Error occurred when parsing response", err);
+            return console.error(
+                "[onUsernameChecked]",
+                "Error occurred when parsing response",
+                err
+            );
         }
-        field.classList.add('input-field-error');
+        field.classList.add("input-field-error");
         const label = field.nextElementSibling;
         if (label) {
             switch (jsonObj.errorID) {
@@ -156,9 +161,9 @@ const onUsernameChecked = function(username, field) {
     if (label) {
         label.innerText = `${username} is ${!exists ? "" : "not "}available`;
     }
-}
+};
 
-var onLoginSubmitted = function(form) {
+var onLoginSubmitted = function (form) {
     var jsonObj;
     if (this.status !== 200) {
         try {
@@ -171,7 +176,7 @@ var onLoginSubmitted = function(form) {
         // Show error message on notification overlay
         showNotification(jsonObj.message, {
             error: true,
-            clear: true
+            clear: true,
         });
 
         // Clear out error style from all input fields.
@@ -188,14 +193,14 @@ var onLoginSubmitted = function(form) {
             var fieldObj = jsonObj.additionalInfo.field || jsonObj.additionalInfo.fields;
             var fieldElems;
             if (typeof fieldObj === "object") {
-                fieldElems = fieldObj.reduce(function(obj, field) {
+                fieldElems = fieldObj.reduce(function (obj, field) {
                     obj.push(form.elements[field]);
                     return obj;
-                },[]);
+                }, []);
             } else {
-                fieldElems = [ form.elements[fieldObj] ];
+                fieldElems = [form.elements[fieldObj]];
             }
-            fieldElems.forEach(function(fieldElem) {
+            fieldElems.forEach(function (fieldElem) {
                 if (fieldElem) {
                     fieldElem.classList.add("input-field-error");
                 }
@@ -206,12 +211,12 @@ var onLoginSubmitted = function(form) {
     }
 };
 
-window.submitLogin = function(e) {
+window.submitLogin = function (e) {
     var form = e.target;
     var action = form.action;
     var req = new XMLHttpRequest();
 
-    req.onload = function() {
+    req.onload = function () {
         onLoginSubmitted.bind(this)(form);
     };
     req.open("post", action);
@@ -254,14 +259,14 @@ function onLoginLoaded(err) {
     $("input[name='username']").focus();
     setScalableWidth($("#overlay-container").get(0), 300);
     setScalableHeight($("#overlay-container").get(0), 450);
-    $("#register-via-login-button").click(function(e) {
+    $("#register-via-login-button").click(function (e) {
         const username = $("#input-login-username").val();
         clearOverlay(e);
-        openRegister(()=>{
+        openRegister(() => {
             if (username) $("#input-register-username").val(username);
         });
     });
-    $("form[id='login-form'] .submit-button").click(function() {
+    $("form[id='login-form'] .submit-button").click(function () {
         $("form[id='login-form']").submit();
     });
     $("form[id='login-form'] input").on("keydown", function (e) {
@@ -291,7 +296,7 @@ function onRegisterLoaded(err) {
     $("form[id='register-form'] .submit-button").click(function (e) {
         $("form[id='register-form']").submit();
     });
-    $("form[id='register-form'] input").on("keydown", function(e) {
+    $("form[id='register-form'] input").on("keydown", function (e) {
         if (e.which === 13) {
             $("form[id='register-form']").submit();
         }
@@ -320,8 +325,8 @@ function activateMenu(elem, activate) {
 
 /*--------------------------------------------*/
 
-$(function() {
-    $(window).scroll(function() {
+$(function () {
+    $(window).scroll(function () {
         checkForPageScroll();
     });
     //Sometimes, window scroll event does not fire on page load...

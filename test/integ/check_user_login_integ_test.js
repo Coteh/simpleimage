@@ -33,11 +33,10 @@ describe("integ", () => {
         });
 
         it("should fail if user is not logged in", () => {
-            return checkUserLogin()
-                .then((res) => {
-                    assert.equal(res.statusCode, 400);
-                    assert.equal(res.body.errorID, "notSignedIn");
-                });
+            return checkUserLogin().then((res) => {
+                assert.equal(res.statusCode, 400);
+                assert.equal(res.body.errorID, "notSignedIn");
+            });
         });
 
         it("should fail if logged in user does not exist in database", () => {
@@ -46,7 +45,8 @@ describe("integ", () => {
                     usersCollection = mongoTestClient.db.collection("users");
                     await usersCollection.deleteOne({ username: TEST_USER });
                     return checkUserLogin();
-                }).then((res) => {
+                })
+                .then((res) => {
                     assert.equal(res.statusCode, 404);
                     assert.equal(res.body.errorID, "sessionUserNotFound");
                 });
@@ -57,14 +57,17 @@ describe("integ", () => {
         });
 
         beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: TEST_PASSWORD,
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
+            databaseOps.addUser(
+                {
+                    username: TEST_USER,
+                    password: TEST_PASSWORD,
+                    email: "test@test.com",
+                },
+                () => {
+                    agent = getServerAgent();
+                    done();
+                }
+            );
         });
 
         afterEach(() => {

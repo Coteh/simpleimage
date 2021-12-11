@@ -2,12 +2,18 @@ const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { assert } = require("chai");
-const { getServerAgent, assertUserLogin, MongoMemoryTestClient, assertUserLoggedIn, assertUserNotLoggedIn } = require("./integ_test_utils");
+const {
+    getServerAgent,
+    assertUserLogin,
+    MongoMemoryTestClient,
+    assertUserLoggedIn,
+    assertUserNotLoggedIn,
+} = require("./integ_test_utils");
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
 
 const performUserLogout = async (agent, referrer) => {
-    const logout = agent.post("/logout")
+    const logout = agent.post("/logout");
     if (referrer) {
         logout.set("Referer", referrer);
     }
@@ -44,7 +50,10 @@ describe("integ", () => {
                     return performUserLogout(agent, "/images/123456");
                 })
                 .then((res) => {
-                    assert.equal(res.redirects[0], `http://127.0.0.1:${agent.app.address().port}/images/123456`);
+                    assert.equal(
+                        res.redirects[0],
+                        `http://127.0.0.1:${agent.app.address().port}/images/123456`
+                    );
                 });
         });
 
@@ -69,18 +78,17 @@ describe("integ", () => {
         });
 
         it("should still succeed if user was not logged in", () => {
-            return performUserLogout(agent)
-                .then((res) => {
-                    assert.equal(res.status, 200);
-                });
+            return performUserLogout(agent).then((res) => {
+                assert.equal(res.status, 200);
+            });
         });
 
         it("should still succeed if user does not exist", () => {
-            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
-                then(() => {
-                    usersCollection = mongoTestClient.db.collection("users");
-                    return usersCollection.deleteOne({ username: TEST_USER });
-                })
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD);
+            then(() => {
+                usersCollection = mongoTestClient.db.collection("users");
+                return usersCollection.deleteOne({ username: TEST_USER });
+            })
                 .then((res) => {
                     assert.strictEqual(res.deletedCount, 1);
                     return performUserLogout(agent, "/");
@@ -95,14 +103,17 @@ describe("integ", () => {
         });
 
         beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: TEST_PASSWORD,
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
+            databaseOps.addUser(
+                {
+                    username: TEST_USER,
+                    password: TEST_PASSWORD,
+                    email: "test@test.com",
+                },
+                () => {
+                    agent = getServerAgent();
+                    done();
+                }
+            );
         });
 
         afterEach(() => {

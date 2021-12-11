@@ -8,7 +8,12 @@ const server = require("../../lib/server");
 const { promisify } = require("util");
 const { stub } = require("sinon");
 
-const { getServerAgent, addImagesForUser, getImageExt, MongoMemoryTestClient } = require("./integ_test_utils");
+const {
+    getServerAgent,
+    addImagesForUser,
+    getImageExt,
+    MongoMemoryTestClient,
+} = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 chai.should();
@@ -23,7 +28,8 @@ describe("integ", () => {
         function performUserImageRequest(user) {
             return new Promise((resolve, reject) => {
                 let agent = getServerAgent();
-                agent.get(`/users/${user}/images`)
+                agent
+                    .get(`/users/${user}/images`)
                     .send()
                     .then((res) => {
                         resolve(res);
@@ -63,7 +69,10 @@ describe("integ", () => {
 
             resImages.forEach((img) => {
                 const image = imagesLookup.get(img.id);
-                assert.strictEqual(img.imageURL, `/images/${image.id}.${getImageExt(image.mimetype)}`);
+                assert.strictEqual(
+                    img.imageURL,
+                    `/images/${image.id}.${getImageExt(image.mimetype)}`
+                );
             });
         });
 
@@ -83,40 +92,44 @@ describe("integ", () => {
 
         it("should return empty image array if user has not uploaded any images", () => {
             return new Promise((resolve) => {
-                databaseOps.addUser({
-                    username: "user_with_no_images",
-                    password: "test",
-                    email: "test@test.com"
-                }, resolve);
+                databaseOps.addUser(
+                    {
+                        username: "user_with_no_images",
+                        password: "test",
+                        email: "test@test.com",
+                    },
+                    resolve
+                );
             })
-            .then(() => {
-                return performUserImageRequest("user_with_no_images");
-            })
-            .then((res) => {
-                assert.equal(res.statusCode, 200);
-                assert.strictEqual(res.body.data.length, 0);
-            });
+                .then(() => {
+                    return performUserImageRequest("user_with_no_images");
+                })
+                .then((res) => {
+                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.body.data.length, 0);
+                });
         });
 
         it("should return no images if user does not exist", () => {
-            return performUserImageRequest("does_not_exist")
-                .then((res) => {
-                    assert.equal(res.statusCode, 404);
-                    assert.isUndefined(res.body.data);
-                });
+            return performUserImageRequest("does_not_exist").then((res) => {
+                assert.equal(res.statusCode, 404);
+                assert.isUndefined(res.body.data);
+            });
         });
 
         it("should return an error if user parameter not specified", () => {
-            return performUserImageRequest()
-                .then((res) => {
-                    assert.equal(res.statusCode, 404);
-                    assert.isUndefined(res.body.data);
-                });
+            return performUserImageRequest().then((res) => {
+                assert.equal(res.statusCode, 404);
+                assert.isUndefined(res.body.data);
+            });
         });
 
         it("should fail if database error occurred with retrieving user info", () => {
             // Stub databaseOps.findUser using sinon that calls a callback with an error
-            const findUserStub = stub(databaseOps, "findUser").callsArgWith(1, new Error("Database error occurred"));
+            const findUserStub = stub(databaseOps, "findUser").callsArgWith(
+                1,
+                new Error("Database error occurred")
+            );
             return performUserImageRequest("test-user")
                 .then((res) => {
                     assert.equal(res.statusCode, 500);
@@ -132,7 +145,10 @@ describe("integ", () => {
 
         it("should fail if database error occurred with retrieving image info", () => {
             // Stub databaseOps.findImagesForUser using sinon that calls a callback with an error
-            const findImagesForUserStub = stub(databaseOps, "findImagesForUser").callsArgWith(1, new Error("Database error occurred"));
+            const findImagesForUserStub = stub(databaseOps, "findImagesForUser").callsArgWith(
+                1,
+                new Error("Database error occurred")
+            );
             return performUserImageRequest("test-user")
                 .then((res) => {
                     assert.equal(res.statusCode, 500);
@@ -149,32 +165,37 @@ describe("integ", () => {
         before(async function () {
             await mongoTestClient.initConnection();
             return new Promise(async (resolve) => {
-                databaseOps.addUser({
-                    username: "test-user",
-                    password: "test",
-                    email: "test@test.com"
-                }, () => {
-                    addImagesForUser([
-                        {
-                            fileName: "Black_tea_pot_cropped.jpg",
-                            mimeType: "image/jpeg",
-                        },
-                        {
-                            fileName: "Ingranaggio.png",
-                            mimeType: "image/png",
-                        },
-                        {
-                            fileName: "1525676723.png",
-                            mimeType: "image/png",
-                        }
-                    ], 'test-user')
-                        .then((imgs) => {
-                            imgs.forEach(imgResult => {
+                databaseOps.addUser(
+                    {
+                        username: "test-user",
+                        password: "test",
+                        email: "test@test.com",
+                    },
+                    () => {
+                        addImagesForUser(
+                            [
+                                {
+                                    fileName: "Black_tea_pot_cropped.jpg",
+                                    mimeType: "image/jpeg",
+                                },
+                                {
+                                    fileName: "Ingranaggio.png",
+                                    mimeType: "image/png",
+                                },
+                                {
+                                    fileName: "1525676723.png",
+                                    mimeType: "image/png",
+                                },
+                            ],
+                            "test-user"
+                        ).then((imgs) => {
+                            imgs.forEach((imgResult) => {
                                 imagesLookup.set(imgResult.id, imgResult);
                             });
                             resolve();
                         });
-                });
+                    }
+                );
             });
         });
 
@@ -183,7 +204,7 @@ describe("integ", () => {
             usersCollection.deleteMany({
                 username: {
                     $not: new RegExp("test-user"),
-                }
+                },
             });
         });
 

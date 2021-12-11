@@ -4,7 +4,14 @@ const actionHistory = require("../../lib/action-history");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
 const { assert } = require("chai");
-const { getServerAgent, addUser, assertUserLogin, addImagesForUser, assertBuffers, MongoMemoryTestClient } = require('./integ_test_utils');
+const {
+    getServerAgent,
+    addUser,
+    assertUserLogin,
+    addImagesForUser,
+    assertBuffers,
+    MongoMemoryTestClient,
+} = require("./integ_test_utils");
 const fs = require("fs");
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
@@ -22,7 +29,8 @@ describe("integ", () => {
 
         const deleteImage = (imageID) => {
             return new Promise((resolve, reject) => {
-                agent.delete(`/images/${imageID}`)
+                agent
+                    .delete(`/images/${imageID}`)
                     .send()
                     .then((res) => {
                         resolve(res);
@@ -36,7 +44,8 @@ describe("integ", () => {
         // TODO make this a util
         function fetchImage(imageID, ext) {
             return new Promise((resolve, reject) => {
-                agent.get(`/images/${imageID}.${ext}`)
+                agent
+                    .get(`/images/${imageID}.${ext}`)
                     .then((res) => {
                         if (res.statusCode !== 200) {
                             resolve({
@@ -83,7 +92,7 @@ describe("integ", () => {
                     return assertUserLogin(agent, altUsername, altUserPass);
                 })
                 .then(() => {
-                    return fetchImage(testImage.id, "jpg")
+                    return fetchImage(testImage.id, "jpg");
                 })
                 .then((res) => {
                     assertBuffers(res, testImage.data);
@@ -146,7 +155,11 @@ describe("integ", () => {
         });
 
         it("should fail deleting image if database error occurs when deleting image", () => {
-            const databaseOpsStub = stub(databaseOps, "deleteImage").callsArgWith(1, new Error("Error finding image"), null);
+            const databaseOpsStub = stub(databaseOps, "deleteImage").callsArgWith(
+                1,
+                new Error("Error finding image"),
+                null
+            );
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(() => {
                     return fetchImage(testImage.id, "jpg");
@@ -199,7 +212,11 @@ describe("integ", () => {
         });
 
         it("should still succeed if writing to action history fails", () => {
-            const actionHistoryStub = stub(actionHistory, "writeActionHistory").callsArgWith(1, new Error("Could not write action history entry"), null);
+            const actionHistoryStub = stub(actionHistory, "writeActionHistory").callsArgWith(
+                1,
+                new Error("Could not write action history entry"),
+                null
+            );
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(() => {
                     return fetchImage(testImage.id, "jpg");
@@ -232,12 +249,15 @@ describe("integ", () => {
         beforeEach(() => {
             return addUser(TEST_USER, TEST_PASSWORD, "test@test.com")
                 .then(() => {
-                    return addImagesForUser([
-                        {
-                            fileName: "Black_tea_pot_cropped.jpg",
-                            mimeType: "image/jpeg",
-                        },
-                    ], TEST_USER);
+                    return addImagesForUser(
+                        [
+                            {
+                                fileName: "Black_tea_pot_cropped.jpg",
+                                mimeType: "image/jpeg",
+                            },
+                        ],
+                        TEST_USER
+                    );
                 })
                 .then((imgs) => {
                     assert.equal(imgs.length, 1);
