@@ -78,7 +78,7 @@ describe("integ", () => {
         });
 
         it("should not be able to register user if username is empty", () => {
-            return assertUserDoesNotExist(TEST_USER)
+            return assertUserDoesNotExist("")
                 .then(() => {
                     return registerUser(agent, "", TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
                 })
@@ -86,7 +86,7 @@ describe("integ", () => {
                     assert.equal(res.status, 422);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "usernameEmpty");
-                    return assertUserDoesNotExist(TEST_USER);
+                    return assertUserDoesNotExist("");
                 });
         });
 
@@ -143,15 +143,16 @@ describe("integ", () => {
         });
 
         it("should not be able to register user if username is too long", () => {
-            return assertUserDoesNotExist(TEST_USER)
+            const longUsername = "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallylongusername";
+            return assertUserDoesNotExist(longUsername)
                 .then(() => {
-                    return registerUser(agent, "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallylongusername", TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
+                    return registerUser(agent, longUsername, TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
                 })
                 .then(res => {
                     assert.equal(res.status, 400);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "usernameTooLong");
-                    return assertUserDoesNotExist(TEST_USER);
+                    return assertUserDoesNotExist(longUsername);
                 });
         });
 
@@ -169,7 +170,7 @@ describe("integ", () => {
         });
 
         it("should not be able to register user if username is undefined", () => {
-            return assertUserDoesNotExist(TEST_USER)
+            return assertUserDoesNotExist(undefined)
                 .then(() => {
                     return registerUser(agent, undefined, TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
                 })
@@ -177,7 +178,7 @@ describe("integ", () => {
                     assert.equal(res.status, 422);
                     assert.equal(res.body.status, "error");
                     assert.equal(res.body.errorID, "usernameEmpty");
-                    return assertUserDoesNotExist(TEST_USER);
+                    return assertUserDoesNotExist(undefined);
                 });
         });
 

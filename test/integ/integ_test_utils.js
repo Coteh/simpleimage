@@ -115,7 +115,10 @@ module.exports.assertUserLogin = (agent, username, password) => {
 module.exports.assertUserExists = (username) => {
     return new Promise((resolve) => {
         databaseOps.findUser(username, (err, result) => {
-            assert.isTrue(!err && result.length > 0, `User ${username} does not exist, should exist`);
+            if (err) {
+                assert.fail("Error was thrown when verifying user");
+            }
+            assert.isTrue(result.length > 0, `User ${username} does not exist, should exist`);
             assert.strictEqual(result[0].username, username);
             resolve();
         });
@@ -125,7 +128,10 @@ module.exports.assertUserExists = (username) => {
 module.exports.assertUserDoesNotExist = (username) => {
     return new Promise((resolve) => {
         databaseOps.findUser(username, (err, result) => {
-            assert.isTrue(err || result.length === 0, `User ${username} exists, should not exist`);
+            if (err) {
+                assert.fail("Error was thrown when verifying user");
+            }
+            assert.isTrue(result.length === 0, `User ${username} exists, should not exist`);
             resolve();
         });
     });
