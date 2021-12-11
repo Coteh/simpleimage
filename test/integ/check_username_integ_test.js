@@ -4,22 +4,16 @@ const { stub } = require("sinon");
 const databaseOps = require("../../lib/database-ops");
 const usernameUtil = require("../../lib/util/username");
 const server = require("../../lib/server");
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const { MongoClient } = require("mongodb");
 const { assert } = chai;
+const { getServerAgent, MongoMemoryTestClient } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
 // TODO:#119 shut down mongo mem server and remove --exit hopefully
 
-function getServerAgent() {
-    return chai.request.agent(server.app);
-}
-
 describe("integ", () => {
     describe("check username", () => {
-        var mongod = null;
-        var db = null;
+        let mongoTestClient = new MongoMemoryTestClient();
         var agent = null;
         var usersCollection = null;
         const TEST_USER = "test-user";
@@ -31,40 +25,11 @@ describe("integ", () => {
                 });
         }
 
-        before(async function () {
-            mongod = new MongoMemoryServer();
-            await mongod.getUri();
-            await mongod.getPort();
-            await mongod.getDbPath();
-            await mongod.getDbName();
-            const testDBURL = mongod.getInstanceInfo().uri;
-            db = await MongoClient.connect(testDBURL);
-            return databaseOps.startDatabaseClient(function (err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-            }, {
-                dbURL: testDBURL
-            });
-        });
-        beforeEach((done) => {
-            databaseOps.addUser({
-                username: TEST_USER,
-                password: "test",
-                email: "test@test.com"
-            }, () => {
-                agent = getServerAgent();
-                done();
-            });
-        });
-
         it("should report that a username is taken if it already exists", () => {
             return checkUsername(TEST_USER)
                 .then(res => {
                     assert.equal(res.statusCode, 200);
-                    const message = res.body.message;
-                    assert.isTrue(message.exists);
+                    assert.isTrue(res.body.exists);
                 });
         });
 
@@ -72,8 +37,7 @@ describe("integ", () => {
             return checkUsername("bob")
                 .then(res => {
                     assert.equal(res.statusCode, 200);
-                    const message = res.body.message;
-                    assert.isFalse(message.exists);
+                    assert.isFalse(res.body.exists);
                 });
         });
 
@@ -101,7 +65,7 @@ describe("integ", () => {
         });
 
         it("should return an error if number of characters for username is over the limit", () => {
-            const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH;
+            const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH || 24;
             process.env.MAX_USERNAME_LENGTH = 24;
             return checkUsername("qwertyuiopasdfghjklzxcvbnm")
                 .then(res => {
@@ -144,19 +108,33 @@ describe("integ", () => {
                 })
                 .then(res => {
                     assert.equal(res.statusCode, 200);
-                    const message = res.body.message;
-                    assert.isTrue(message.exists);
+                    assert.isTrue(res.body.exists);
                 });
         });
 
+        before(() => {
+            return mongoTestClient.initConnection();
+        });
+
+        beforeEach((done) => {
+            databaseOps.addUser({
+                username: TEST_USER,
+                password: "test",
+                email: "test@test.com"
+            }, () => {
+                agent = getServerAgent();
+                done();
+            });
+        });
+
         afterEach(() => {
-            usersCollection = db.collection("users");
+            usersCollection = mongoTestClient.db.collection("users");
             usersCollection.deleteMany({});
             agent.close();
         });
+
         after(() => {
-            mongod.stop();
-            databaseOps.closeDatabaseClient();
+            return mongoTestClient.deinitConnection();
         });
     });
 });

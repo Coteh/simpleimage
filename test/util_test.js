@@ -89,21 +89,6 @@ describe("util", function() {
                 assert.equal(filteredArr.length === 0, true);
             });
         });
-        describe("createJSONResponseObject", function () {
-            it("should create an object containing passed in status and message", function() {
-                var status = "success";
-                var message = "This was a success.";
-                var obj = util.createJSONResponseObject(status, message);
-                assert.deepStrictEqual(obj, {
-                    status,
-                    message
-                });
-            });
-            it("should not contain a message property if undefined passed as message", function() {
-                var obj = util.createJSONResponseObject("success", undefined);
-                assert.strictEqual(obj.message, undefined);
-            });
-        });
         describe("escapeOutput", function () {
             it("should escape text with HTML special characters", function () {
                 assert.strictEqual(util.escapeOutput("<>&\"'"), "&lt;&gt;&amp;&quot;&apos;");
@@ -223,7 +208,7 @@ describe("util", function() {
                 assert.strictEqual(result.error, null);
             });
             it("should reject a username that is too long", function () {
-                const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH;
+                const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH || 24;
                 process.env.MAX_USERNAME_LENGTH = 24;
                 const result = usernameUtil.isValidUsername("thisisaveryveryveryveryveryveryverylongusername");
                 assert.strictEqual(result.valid, false);

@@ -30,3 +30,14 @@ window.setScalableHeight = function (elem, height, units) {
     elem.style.height = height.toString() + units;
     elem.style.top = "calc((100vh - " + height.toString() + units + ") / 2)";
 };
+
+window.handleResponseFailure = (status) => {
+    const message = status === 404 
+        ? "The server could not be reached. Please try again later." 
+        : "Unknown error. Please try again later.";
+    showNotification(message, {
+        error: true,
+        clear: true,
+        clearAfterMs: 10000,
+    });
+};

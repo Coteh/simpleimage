@@ -11,7 +11,8 @@
         crossorigin="anonymous"></script>
     <script src="assets/js/home.bundle.js"></script>
     <script type="text/javascript">
-        var isLoginRequired = '<%= process.env.LOGIN_TO_UPLOAD %>';
+        // TODO add dedicated config object so that the environment variable can be mapped nicely to a boolean
+        var isLoginRequired = '<%= process.env.LOGIN_TO_UPLOAD === "true" %>';
     </script>
     
     <%- include("headers") %>
@@ -31,7 +32,7 @@
                 <div id="upload-preview">
                 </div>
                 <div class="button" id="select-button">
-                    <form action="/upload?type=json" id="upload" method="POST" enctype="multipart/form-data">
+                    <form action="/upload" id="upload" method="POST" enctype="multipart/form-data">
                         <input type="file" accept=".gif, .png, .jpg, .jpeg, .bmp" id="select-me" value="">
                     </form>
                     <span class="collecticons collecticons-picture head-icon"></span>
