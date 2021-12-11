@@ -47,7 +47,7 @@
             <% if (user === undefined) { %>
                 <span class="info"><a class="action-link login" onclick="openLogin()">Log in</a> or <a class="action-link register" onclick="openRegister()">register</a> to post a comment.</span><br/><br/>
             <% } else { %>
-                <form id="comment" action="/comment?type=json&response=html" method="POST">
+                <form id="comment" action="/comment" method="POST">
                     <input type="hidden" name="imageID" value="<%= id %>">
                     <textarea class="comment-box" name="comment" placeholder="Add a comment"></textarea><br/>
                     <span class="button submit-button">Submit</span>

@@ -88,17 +88,12 @@ window.showNotification = function(message, options) {
 var onOverlayLoaded = function(progressEvent, callback) {
     var err;
     if (this.status !== 200) {
-        err = {
-            message: this.responseText || "An error occurred"
-        }
-        //TODO
-        showOverlay("<div>" + err.message + "</div>", {
+        showOverlay("<div>An error occurred. Please try again later.</div>", {
             error: true,
-            close: true
+            close: true,
         });
     } else {
-        var jsonObj = JSON.parse(this.responseText);
-        showOverlay(jsonObj.html, {
+        showOverlay(this.responseText, {
             close: true
         });
     }
@@ -110,7 +105,7 @@ window.openLogin = function() {
     req.onload = function(progressEvent) {
         onOverlayLoaded.call(this, progressEvent, onLoginLoaded);
     };
-    req.open("get", "/login?responseType=json");
+    req.open("get", "/login");
     req.send();
 };
 
@@ -121,7 +116,7 @@ window.openRegister = function(callback) {
         if(callback && typeof callback === "function")
             callback();
     };
-    req.open("get", "/register?responseType=json");
+    req.open("get", "/register");
     req.send();
 };
 
@@ -155,8 +150,7 @@ const onUsernameChecked = function(username, field) {
     } catch (err) {
         return console.error("[onUsernameChecked]", "Error occurred when parsing response", err);
     }
-    const message = jsonObj.message;
-    const exists = message.exists;
+    const exists = jsonObj.exists;
     field.classList.add(`input-field-${exists ? "error" : "success"}`);
     const label = field.nextElementSibling;
     if (label) {

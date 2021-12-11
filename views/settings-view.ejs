@@ -36,7 +36,7 @@
             var req = new XMLHttpRequest();
 
             req.onload = onPasswordResetSubmitted;
-            req.open("post", "/change_password?type=json");
+            req.open("post", "/change_password");
             req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             req.send(form.serialize());
         }
@@ -70,7 +70,7 @@
             </div>
             <div class="settings-view">
                 <span>Change Password</span><br/>
-                <form action="/change_password?type=html" method="POST" id="change-password-form" class="input-form">
+                <form action="/change_password" method="POST" id="change-password-form" class="input-form">
                     <span>Old Password</span>
                     <input type="password" name="oldPassword"></input><br />
                     <span>New Password</span>
