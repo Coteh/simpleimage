@@ -12,8 +12,8 @@
         crossorigin="anonymous"></script>
     <script src="/assets/js/image.bundle.js"></script>
     <script>
-        requestComments("<%= id %>");
         $(document).ready(function() {
+            requestComments("<%= id %>");
             convertTimeElementsToLocalTime(document.getElementById("image-container"));
         });
     </script>

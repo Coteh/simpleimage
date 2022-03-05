@@ -33,7 +33,7 @@ var onUserCommentsLoaded = function (callback) {
                     <img alt="Image" style="width:100px" src="${comment.imageURL}">
                 </a><br>
                 <span class="time">${timeUTCToLocal(comment.postedDate)}</span><br>
-                ${comment.comment}
+                <p>${comment.comment}</p>
             </div>
         `
         );

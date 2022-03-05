@@ -472,7 +472,7 @@ describe("integ", () => {
                     done();
                 }
             );
-            // TODO add a config to simpleimage so that environment variables don't need to be manipulated for tests
+            // TODO add a global config object to simpleimage so that environment variables don't need to be manipulated for tests
             delete process.env.LOGIN_TO_UPLOAD;
             delete process.env.EVALUATION_MODE;
             delete process.env.EXPIRE_AFTER_SECONDS;

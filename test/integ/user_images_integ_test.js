@@ -42,9 +42,6 @@ describe("integ", () => {
             });
         }
 
-        // TODO add a frontend integ test (with Cypress or another tool) that asserts user images displayed on the page
-        // match expected image buffer
-
         it("should return image ID of each image belonging to user", async () => {
             const res = await performUserImageRequest("test-user");
             assert.equal(res.statusCode, 200);
