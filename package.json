@@ -13,7 +13,6 @@
     "start": "node app.js",
     "start:debug": "nodemon --inspect=0.0.0.0 .",
     "start:dev": "nodemon",
-    "start:test": "NODE_ENV=test node app.js",
     "test": "NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --recursive --exit $TEST_FILE",
     "test-ci": "NODE_ENV=test nyc --reporter=lcovonly mocha test --reporter mocha-junit-reporter --recursive --exit",
     "test-ui": "cypress",

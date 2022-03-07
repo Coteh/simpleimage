@@ -1,4 +1,3 @@
-const { promisify } = require("util");
 const mongoist = require("mongoist");
 const auth = require("../../../lib/auth");
 
