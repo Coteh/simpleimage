@@ -7,12 +7,15 @@ describe("simpleimage homepage", () => {
     const password = "demo";
 
     const assertImageUpload = (fileContent, fileName, mimeType) => {
-        // TODO fix test flakes that sometimes happen where nothing was selected for upload
         cy.get('input[type="file"]').attachFile({
             fileContent,
             fileName,
             mimeType,
         });
+
+        // TODO remove this delay and listen for "input" event instead - tried adding it and it only seemed to fire after the test when selecting file manually
+        // also will need to wrap the whole thing in a Cypress.Promise https://docs.cypress.io/api/utilities/promise#Usage
+        cy.wait(1000);
 
         cy.intercept("POST", "/upload").as("uploadReq");
 

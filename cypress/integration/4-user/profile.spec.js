@@ -224,7 +224,12 @@ describe("simeplimage user profile", () => {
     });
 
     it("shows spinner when images are loading", () => {
-        cy.intercept("GET", `/users/${username}/images`).as("userImages");
+        cy.intercept("GET", `/users/${username}/images`, (req) => {
+            req.continue((res) => {
+                res.setDelay(1000);
+                res.send();
+            });
+        }).as("userImages");
         cy.reload();
         cy.get("#images-container .spinner").should("be.visible");
         cy.wait("@userImages");
@@ -232,7 +237,12 @@ describe("simeplimage user profile", () => {
     });
 
     it("shows spinner when comments are loading", () => {
-        cy.intercept("GET", `/users/${username}/comments`).as("userComments");
+        cy.intercept("GET", `/users/${username}/comments`, (req) => {
+            req.continue((res) => {
+                res.setDelay(1000);
+                res.send();
+            });
+        }).as("userComments");
         cy.reload();
         cy.get("#comments-container .spinner").should("be.visible");
         cy.wait("@userComments");

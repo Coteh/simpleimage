@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("simpleimage homepage - login", () => {
+describe("simpleimage homepage - register", () => {
     const username = "BrandNewUser";
     const password = "BrandNewPassword1!";
     const email = "email@example.com";
