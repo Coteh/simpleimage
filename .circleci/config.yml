@@ -1,8 +1,9 @@
 version: 2.1
 orbs:
     codecov: codecov/codecov@1.0.5
+    # cypress: cypress-io/cypress@1
 jobs:
-  build-and-test:
+  run-integ-tests:
     docker:
       - image: coteh/si-test-deps:0.0.2
     steps:
@@ -28,7 +29,9 @@ jobs:
           path: ./coverage
       - store_test_results:
           path: ./junit
+  # run-cypress-tests: TODO add Cypress to CircleCI pipeline
 workflows:
     build-and-test:
       jobs:
-        - build-and-test
+        - run-integ-tests
+        # - run-cypress-tests
