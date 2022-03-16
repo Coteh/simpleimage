@@ -24,6 +24,8 @@ describe("simpleimage homepage - register", () => {
     });
 
     it("allows user to register successfully", () => {
+        cy.get(".nav-item").contains(username).should("not.exist");
+        
         cy.get("#input-register-username").should("be.visible").type(username);
         cy.get("input[name='password']").should("be.visible").type(password);
         cy.get("input[name='passwordConfirm']").should("be.visible").type(password);
@@ -334,6 +336,8 @@ describe("simpleimage homepage - register", () => {
                 message: errText,
             },
         }).as("registerRequest");
+
+        cy.get(".nav-item").contains(username).should("not.exist");
 
         cy.get("#input-register-username").should("be.visible").type(username);
         cy.get("input[name='password']").should("be.visible").type(password);

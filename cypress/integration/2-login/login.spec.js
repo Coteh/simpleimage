@@ -215,8 +215,6 @@ describe("simpleimage homepage - login", () => {
         cy.get(".login-view").should("not.exist");
     });
     it("hides login view when X in Close button is clicked", () => {
-        cy.intercept("GET", "/register").as("registerPage");
-
         cy.get(".login-view").should("exist");
 
         cy.get(".close-button").click();
@@ -224,8 +222,6 @@ describe("simpleimage homepage - login", () => {
         cy.get(".login-view").should("not.exist");
     });
     it('hides login view when "Close" text in Close button is clicked', () => {
-        cy.intercept("GET", "/register").as("registerPage");
-
         cy.get(".login-view").should("exist");
 
         cy.contains("Close").click();

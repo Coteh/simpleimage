@@ -13,6 +13,7 @@ describe("simeplimage user profile", () => {
         cy.deleteImagesFromUser(username);
         cy.deleteImagesFromUser(altUsername);
         cy.deleteCommentsFromUser(username);
+        cy.deleteCommentsFromUser(altUsername);
         cy.deleteUser(username);
         cy.deleteUser(altUsername);
         cy.addUser(username, password, "test@example.com");
@@ -267,7 +268,6 @@ describe("simeplimage user profile", () => {
 
             cy.getCommentsForImage(imageID).then((comments) => {
                 assert.strictEqual(comments.length, 1);
-                const mostRecentComment = comments[comments.length - 1];
                 cy.get("#comments > .comment:first-child").within(() => {
                     cy.get("a").should("have.attr", "href", `/images/${imageID}`);
                     cy.get(".time").should("contain.text", new Date(commentDate).toString());

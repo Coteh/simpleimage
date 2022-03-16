@@ -142,7 +142,7 @@ describe("simpleimage homepage", () => {
         cy.get(".register-view").should("exist");
     });
 
-    it.skip("opens login page when file select button is clicked when user is not logged in and LOGIN_TO_UPLOAD is enabled", () => {
+    it.skip("opens login page when file select button is clicked and user is not logged in and LOGIN_TO_UPLOAD is enabled", () => {
         cy.get("#select-button").click();
 
         assert.fail("TODO set LOGIN_TO_UPLOAD for this test only - then implement the test");
@@ -163,13 +163,13 @@ describe("simpleimage homepage", () => {
     it("displays login page when Login button is clicked in mobile nav", () => {
         cy.intercept("GET", "/login").as("loginPage");
 
-        cy.get(".login-view").should("not.exist");
-
         cy.viewport("iphone-x");
 
         cy.get("#mobile-menu-button").should("be.visible").click();
 
         cy.get("#mobile-menu").should("be.visible");
+
+        cy.get(".login-view").should("not.exist");
 
         cy.get("#mobile-menu > .nav-button").contains("Login").click();
 
@@ -181,13 +181,13 @@ describe("simpleimage homepage", () => {
     it("displays register page when Register button is clicked in mobile nav", () => {
         cy.intercept("GET", "/register").as("registerPage");
 
-        cy.get(".register-view").should("not.exist");
-
         cy.viewport("iphone-x");
 
         cy.get("#mobile-menu-button").should("be.visible").click();
 
         cy.get("#mobile-menu").should("be.visible");
+        
+        cy.get(".register-view").should("not.exist");
 
         cy.get("#mobile-menu > .nav-button").contains("Register").click();
 

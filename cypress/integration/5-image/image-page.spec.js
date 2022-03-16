@@ -272,7 +272,6 @@ describe("simpleimage image page", () => {
 
         cy.getCommentsForImage(imageID).then((comments) => {
             assert.strictEqual(comments.length, 1);
-            const mostRecentComment = comments[comments.length - 1];
             cy.get("#comments > .comment:first-child").within(() => {
                 cy.get("a").should("contain.text", username);
                 cy.get(".time").should("contain.text", new Date(commentDate).toString());
@@ -440,8 +439,6 @@ describe("simpleimage image page", () => {
             cy.getImagesForUser(deletableUsername).should("have.length", 1);
 
             cy.get("#delete").should("be.visible").click();
-
-            cy.logout();
 
             cy.get("#delete-confirm-yesno > span:first-child").click();
 
