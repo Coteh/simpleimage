@@ -72,12 +72,10 @@ module.exports = (on, config) => {
             return null;
         },
         async addImagesToUser({ username, images }) {
-            await mongoHelper.addImagesToUser(username, images);
-            return null;
+            return await mongoHelper.addImagesToUser(username, images);
         },
         async addCommentsToUser({ username, comments }) {
-            await mongoHelper.addCommentsToUser(username, comments);
-            return null;
+            return await mongoHelper.addCommentsToUser(username, comments);
         },
         async addGuestImages(images) {
             return await mongoHelper.addGuestImages(images);

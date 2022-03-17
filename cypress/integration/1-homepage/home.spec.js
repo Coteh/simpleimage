@@ -13,10 +13,6 @@ describe("simpleimage homepage", () => {
             mimeType,
         });
 
-        // TODO remove this delay and listen for "input" event instead - tried adding it and it only seemed to fire after the test when selecting file manually
-        // also will need to wrap the whole thing in a Cypress.Promise https://docs.cypress.io/api/utilities/promise#Usage
-        cy.wait(1000);
-
         cy.intercept("POST", "/upload").as("uploadReq");
 
         cy.get("#upload-button").should("exist").click();
@@ -43,9 +39,10 @@ describe("simpleimage homepage", () => {
         cy.deleteUser(username);
         cy.deleteImagesFromUser(username);
         cy.addUser(username, password);
+        // Workaround for file change event not triggered after page refresh
+        // clear the browser cache before reload
+        cy.clearBrowserCache();
         cy.visit("/");
-        // TODO fix issue with second test with upload attaching file too early
-        cy.wait(1000);
     });
 
     it("uploads an image when upload button is clicked", () => {
@@ -69,6 +66,9 @@ describe("simpleimage homepage", () => {
 
     it("uploads an image as a registered user", () => {
         cy.login(username, password);
+        // Workaround for file change event not triggered after page refresh
+        // clear the browser cache before reload
+        cy.clearBrowserCache();
         cy.reload();
         cy.fixture("image.jpg", "binary")
             .then(Cypress.Blob.binaryStringToBlob)
@@ -186,7 +186,7 @@ describe("simpleimage homepage", () => {
         cy.get("#mobile-menu-button").should("be.visible").click();
 
         cy.get("#mobile-menu").should("be.visible");
-        
+
         cy.get(".register-view").should("not.exist");
 
         cy.get("#mobile-menu > .nav-button").contains("Register").click();

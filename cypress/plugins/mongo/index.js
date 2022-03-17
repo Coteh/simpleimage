@@ -79,7 +79,7 @@ async function deleteCommentsFromImage(imageID) {
 
 async function addImagesToUser(username, images) {
     const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-    await Promise.all(
+    return await Promise.all(
         images.map((image) => {
             return db["image-entries"].insert({
                 id: new Array(6)
@@ -98,7 +98,7 @@ async function addImagesToUser(username, images) {
 }
 
 async function addCommentsToUser(username, comments) {
-    await Promise.all(
+    return await Promise.all(
         comments.map((comment) => {
             return db.comments.insert({
                 username,
@@ -111,23 +111,7 @@ async function addCommentsToUser(username, comments) {
 }
 
 async function addGuestImages(images) {
-    const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-    return await Promise.all(
-        images.map((image) => {
-            return db["image-entries"].insert({
-                id: new Array(6)
-                    .fill(0)
-                    .map((_) => chars.charAt(Math.floor(Math.random() * chars.length)))
-                    .join(""),
-                data: Buffer.from(image.data),
-                mimetype: image.mimetype,
-                encoding: "7bit",
-                username: null,
-                uploadeddate: new Date(image.uploadeddate_str),
-                temp: false,
-            });
-        })
-    );
+    return addImagesToUser(null, images);
 }
 
 module.exports = {
