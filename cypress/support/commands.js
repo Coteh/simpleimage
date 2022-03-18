@@ -86,6 +86,10 @@ Cypress.Commands.add("compareImageUsingUrl", (imageID, url) => {
     cy.task("compareImageUsingUrl", { imageID, url });
 });
 
+Cypress.Commands.add("comparePNGImagesUsingFilepath", (imageID, filepath) => {
+    cy.task("comparePNGImagesUsingFilepath", { imageID, filepath });
+});
+
 Cypress.Commands.add("login", (username, password) => {
     cy.request({
         method: "POST",

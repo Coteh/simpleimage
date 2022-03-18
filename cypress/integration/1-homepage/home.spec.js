@@ -6,7 +6,11 @@ describe("simpleimage homepage", () => {
     const username = "NewDemo";
     const password = "demo";
 
-    const assertImageUpload = (fileContent, fileName, mimeType) => {
+    const performImageUpload = (fileContent, fileName, mimeType) => {
+        // Wait a second for all page elements to load and for the document ready handler to clear out selected filename from cache
+        // TODO listen for document ready handler to fire instead
+        cy.wait(1000);
+
         cy.get('input[type="file"]').attachFile({
             fileContent,
             fileName,
@@ -16,7 +20,9 @@ describe("simpleimage homepage", () => {
         cy.intercept("POST", "/upload").as("uploadReq");
 
         cy.get("#upload-button").should("exist").click();
+    };
 
+    const assertImageUploadSucceeded = (fileName, ext) => {
         cy.wait("@uploadReq").its("response.statusCode").should("be.oneOf", [200]);
 
         cy.location("pathname", {
@@ -25,13 +31,30 @@ describe("simpleimage homepage", () => {
 
         cy.get(".image-view")
             .invoke("attr", "src")
-            .should("include", ".jpeg")
+            .should("include", ext)
             .then((src) => {
                 cy.request(`/images/${src}`).its("status").should("eq", 200);
-                const imageID = src.split(".jpeg")[0];
-                cy.compareImageUsingUrl(imageID, `${Cypress.env("baseUrl")}/images/${src}`);
+                const imageID = src.split(ext)[0];
+                cy.comparePNGImagesUsingFilepath(imageID, `cypress/fixtures/${fileName}`).should(
+                    "eq",
+                    true
+                );
                 cy.wrap(imageID);
             });
+    };
+
+    const assertImageUploadFailed = (statusCode, expectedMsg) => {
+        cy.wait("@uploadReq").its("response.statusCode").should("be.oneOf", [statusCode]);
+
+        // TODO assert using an error code or some other form of error ID instead
+        cy.get("#notification-overlay-container")
+            .should("be.visible")
+            .should("satisfy", (el) => {
+                return Array.from(el[0].classList).includes("error");
+            })
+            .should("contain.text", expectedMsg);
+
+        cy.url().should("eq", `${Cypress.env("baseUrl")}/`);
     };
 
     beforeEach(() => {
@@ -39,82 +62,88 @@ describe("simpleimage homepage", () => {
         cy.deleteUser(username);
         cy.deleteImagesFromUser(username);
         cy.addUser(username, password);
-        // Workaround for file change event not triggered after page refresh
-        // clear the browser cache before reload
-        cy.clearBrowserCache();
         cy.visit("/");
     });
 
     it("uploads an image when upload button is clicked", () => {
-        cy.fixture("image.jpg", "binary")
+        cy.fixture("Ingranaggio.png", "binary")
             .then(Cypress.Blob.binaryStringToBlob)
             .then((fileContent) => {
-                assertImageUpload(fileContent, "image.jpg", "image/jpeg");
-            });
+                performImageUpload(fileContent, "Ingranaggio.png", "image/png");
+            })
+            .then(() => assertImageUploadSucceeded("Ingranaggio.png", ".png"));
     });
 
     it("uploads an image as a guest", () => {
-        cy.fixture("image.jpg", "binary")
+        cy.fixture("Ingranaggio.png", "binary")
             .then(Cypress.Blob.binaryStringToBlob)
             .then((fileContent) => {
-                assertImageUpload(fileContent, "image.jpg", "image/jpeg");
+                performImageUpload(fileContent, "Ingranaggio.png", "image/png");
             })
+            .then(() => assertImageUploadSucceeded("Ingranaggio.png", ".png"))
             .then((imageID) => {
                 cy.getImage(imageID).then((image) => assert.isNull(image.username));
             });
     });
 
     it("uploads an image as a registered user", () => {
+        cy.getImagesForUser(username).its("length").should("eq", 0);
         cy.login(username, password);
-        // Workaround for file change event not triggered after page refresh
-        // clear the browser cache before reload
-        cy.clearBrowserCache();
         cy.reload();
-        cy.fixture("image.jpg", "binary")
+        cy.fixture("Ingranaggio.png", "binary")
             .then(Cypress.Blob.binaryStringToBlob)
             .then((fileContent) => {
-                assertImageUpload(fileContent, "image.jpg", "image/jpeg");
+                performImageUpload(fileContent, "Ingranaggio.png", "image/png");
             })
+            .then(() => assertImageUploadSucceeded("Ingranaggio.png", ".png"))
             .then((imageID) => {
+                cy.getImagesForUser(username).its("length").should("eq", 1);
                 cy.getImage(imageID).then((image) => assert.strictEqual(image.username, username));
             });
     });
 
     it("should not upload an image if user is logged in and their account was deleted before upload initiated", () => {
+        cy.getImagesForUser(username).its("length").should("eq", 0);
         cy.login(username, password);
         cy.reload();
         cy.deleteUser(username);
-        cy.fixture("image.jpg", "binary")
+        cy.fixture("Ingranaggio.png", "binary")
             .then(Cypress.Blob.binaryStringToBlob)
             .then((fileContent) => {
-                cy.get('input[type="file"]').attachFile({
-                    fileContent: fileContent,
-                    fileName: "image.jpg",
-                    mimeType: "image/jpeg",
-                });
+                performImageUpload(fileContent, "Ingranaggio.png", "image/png");
+            })
+            // TODO assert on error ID instead of error message
+            .then(() =>
+                assertImageUploadFailed(
+                    404,
+                    "There was an error uploading an image under this user. User could not be found. Ensure that user hasn't been deleted and try again."
+                )
+            )
+            .then(() => {
+                cy.getImagesForUser(username).its("length").should("eq", 0);
+            });
+    });
 
-                cy.intercept("POST", "/upload").as("uploadReq");
-
-                cy.get("#upload-button").should("exist").click();
-
-                cy.wait("@uploadReq").its("response.statusCode").should("be.oneOf", [404]);
-
-                // TODO assert using an error code or some other form of error ID instead
-                cy.get("#notification-overlay-container")
-                    .should("be.visible")
-                    .should("satisfy", (el) => {
-                        return Array.from(el[0].classList).includes("error");
-                    })
-                    .should(
-                        "contain.text",
-                        "There was an error uploading an image under this user. User could not be found. Ensure that user hasn't been deleted and try again."
-                    );
-
-                cy.url().should("eq", `${Cypress.env("baseUrl")}/`);
-
-                cy.getImagesForUser(username).then((images) => {
-                    assert.lengthOf(images, 0);
-                });
+    it("should handle server error when uploading image", () => {
+        cy.intercept("/upload", {
+            statusCode: 500,
+            body: {
+                status: "error",
+                message: "Could not upload image due to server error",
+            },
+        });
+        cy.getImagesForUser(username).its("length").should("eq", 0);
+        cy.login(username, password);
+        cy.reload();
+        cy.fixture("Ingranaggio.png", "binary")
+            .then(Cypress.Blob.binaryStringToBlob)
+            .then((fileContent) => {
+                performImageUpload(fileContent, "Ingranaggio.png", "image/png");
+            })
+            // TODO assert on error ID instead of error message
+            .then(() => assertImageUploadFailed(500, "Could not upload image due to server error"))
+            .then(() => {
+                cy.getImagesForUser(username).its("length").should("eq", 0);
             });
     });
 

@@ -110,7 +110,7 @@ async function addCommentsToUser(username, comments) {
     );
 }
 
-async function addGuestImages(images) {
+function addGuestImages(images) {
     return addImagesToUser(null, images);
 }
 

@@ -13,17 +13,7 @@
 // the project's config changing)
 
 const mongoHelper = require("./mongo");
-const fetch = require("cross-fetch");
-
-// https://stackoverflow.com/a/12101012
-const arrayBufferToBuffer = (arrBuffer) => {
-    const buffer = Buffer.alloc(arrBuffer.byteLength);
-    const view = new Uint8Array(arrBuffer);
-    for (let i = 0; i < buffer.length; i++) {
-        buffer[i] = view[i];
-    }
-    return buffer;
-};
+const imageHelper = require("./image");
 
 /**
  * @type {Cypress.PluginConfig}
@@ -81,14 +71,10 @@ module.exports = (on, config) => {
             return await mongoHelper.addGuestImages(images);
         },
         async compareImageUsingUrl({ imageID, url }) {
-            // first grabs image from db by imageID and saves as buffer
-            const imageFromMongo = await mongoHelper.getImage(imageID);
-            const mongoBuffer = imageFromMongo.data.buffer;
-            // then grabs image from supplied url and save it as buffer
-            const imageFromUrl = await fetch(url);
-            const urlBuffer = arrayBufferToBuffer(await imageFromUrl.arrayBuffer());
-            // compare buffers for pixel perfect match
-            return urlBuffer.equals(mongoBuffer);
+            return await imageHelper.compareImageUsingUrl(imageID, url);
+        },
+        async comparePNGImagesUsingFilepath({ imageID, filepath }) {
+            return await imageHelper.comparePNGImagesUsingFilepath(imageID, filepath);
         },
     });
     // `config` is the resolved Cypress config
