@@ -35,6 +35,8 @@ describe("simpleimage image page", () => {
     });
     beforeEach(() => {
         cy.deleteCommentsFromImage(imageID);
+        cy.deleteUser(username);
+        cy.addUser(username, password, "test@example.com");
         cy.addCommentsToUser(username, [
             {
                 image_id: imageID,
@@ -242,6 +244,50 @@ describe("simpleimage image page", () => {
                 return Array.from(el[0].classList).includes("error");
             })
             .should("contain.text", "Cannot perform action. Not signed in.");
+
+        cy.get("textarea[name='comment']").should("have.value", commentText);
+
+        cy.getCommentsForImage(imageID).then((comments) => {
+            assert.strictEqual(comments.length, 1);
+            const mostRecentComment = comments[comments.length - 1];
+            cy.get("#comments > .comment:first-child").within(() => {
+                cy.get("a").should("contain.text", mostRecentComment.username);
+                cy.get(".time").should(
+                    "contain.text",
+                    new Date(mostRecentComment.posted_date).toString()
+                );
+                cy.get("p").should("contain.text", mostRecentComment.comment);
+            });
+        });
+    });
+    it("should handle user being deleted before comment can be posted", () => {
+        const commentText = "This is a brand new comment";
+
+        cy.login(username, password);
+        cy.reload();
+
+        cy.getCommentsForImage(imageID).its("length").should("eq", 1);
+
+        cy.get("textarea[name='comment']").type(commentText);
+
+        cy.deleteUser(username);
+
+        cy.intercept("POST", "/comment").as("comment");
+
+        cy.contains("Submit").should("be.visible").click();
+
+        cy.wait("@comment").its("response.statusCode").should("eq", 404);
+
+        // TODO assert using an error code or some other form of error ID instead
+        cy.get("#notification-overlay-container")
+            .should("be.visible")
+            .should("satisfy", (el) => {
+                return Array.from(el[0].classList).includes("error");
+            })
+            .should(
+                "contain.text",
+                "There was an error posting comment. User could not be found. Ensure that user hasn't been deleted and try again."
+            );
 
         cy.get("textarea[name='comment']").should("have.value", commentText);
 
