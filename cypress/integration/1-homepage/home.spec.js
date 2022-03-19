@@ -224,8 +224,6 @@ describe("simpleimage homepage", () => {
         cy.fixture("image.jpg", "binary")
             .then(Cypress.Blob.binaryStringToBlob)
             .then(async (fileContent) => {
-                const fixtureBase64Str = await Cypress.Blob.blobToBase64String(fileContent);
-
                 cy.get('input[type="file"]').should("exist").attachFile({
                     fileContent: fileContent,
                     fileName: "image.jpg",
@@ -237,8 +235,11 @@ describe("simpleimage homepage", () => {
                 })
                     .should("be.visible")
                     .invoke("attr", "src")
-                    .then((src) => {
-                        assert.strictEqual(src.split(",")[1], fixtureBase64Str);
+                    .then(async (src) => {
+                        assert.strictEqual(
+                            src.split(",")[1],
+                            await Cypress.Blob.blobToBase64String(fileContent)
+                        );
                     });
             });
     });
