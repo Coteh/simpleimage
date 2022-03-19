@@ -47,12 +47,7 @@ describe("simpleimage homepage - login", () => {
             .should("be.at.least", 400)
             .should("be.lessThan", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "username");
+        cy.assertErrorMessageContains("username");
 
         cy.get(".nav-item").contains(username).should("not.exist");
     });
@@ -82,12 +77,7 @@ describe("simpleimage homepage - login", () => {
             .should("be.at.least", 400)
             .should("be.lessThan", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "password");
+        cy.assertErrorMessageContains("password");
 
         cy.get(".nav-item").contains(username).should("not.exist");
     });
@@ -118,15 +108,7 @@ describe("simpleimage homepage - login", () => {
             .should("be.at.least", 400)
             .should("be.lessThan", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Username")
-            .should("contain.text", "password")
-            .should("contain.text", "combination")
-            .should("contain.text", "not found");
+        cy.assertErrorMessageContainsMulti(["Username", "password", "combination", "not found"]);
 
         cy.get(".nav-item").contains(username).should("not.exist");
     });
@@ -161,15 +143,7 @@ describe("simpleimage homepage - login", () => {
             .should("be.at.least", 400)
             .should("be.lessThan", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Username")
-            .should("contain.text", "password")
-            .should("contain.text", "combination")
-            .should("contain.text", "not found");
+        cy.assertErrorMessageContainsMulti(["Username", "password", "combination", "not found"]);
 
         cy.get(".nav-item").contains(username).should("not.exist");
     });
@@ -247,12 +221,7 @@ describe("simpleimage homepage - login", () => {
 
         cy.wait("@loginRequest").its("response.statusCode").should("eq", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", errText);
+        cy.assertErrorMessageContains(errText);
 
         cy.get(".nav-item").contains(username).should("not.exist");
     });

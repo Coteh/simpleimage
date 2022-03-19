@@ -22,12 +22,7 @@ describe("change password", () => {
         cy.wait("@changePassword").its("response.statusCode").should("eq", 200);
 
         // TODO assert using an success code or some other form of success ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return !Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Password changed");
+        cy.assertSuccessMessageContains("Password changed");
 
         cy.logout();
         cy.login(username, newPassword).its("status").should("eq", 200);
@@ -42,12 +37,7 @@ describe("change password", () => {
         cy.wait("@changePassword").its("response.statusCode").should("eq", 422);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Could not change password. Missing old password.");
+        cy.assertErrorMessageContains("Could not change password. Missing old password.");
 
         cy.logout();
         cy.login(username, newPassword).its("status").should("eq", 401);
@@ -64,12 +54,7 @@ describe("change password", () => {
         cy.wait("@changePassword").its("response.statusCode").should("eq", 400);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Could not change password. Old password is not correct.");
+        cy.assertErrorMessageContains("Could not change password. Old password is not correct.");
 
         cy.logout();
         cy.login(username, newPassword).its("status").should("eq", 401);
@@ -85,12 +70,7 @@ describe("change password", () => {
         cy.wait("@changePassword").its("response.statusCode").should("eq", 422);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Could not change password. Missing new password.");
+        cy.assertErrorMessageContains("Could not change password. Missing new password.");
 
         cy.logout();
         cy.login(username, newPassword).its("status").should("eq", 401);
@@ -106,15 +86,9 @@ describe("change password", () => {
         cy.wait("@changePassword").its("response.statusCode").should("eq", 422);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should(
-                "contain.text",
-                "Could not change password. Missing new password confirmation."
-            );
+        cy.assertErrorMessageContains(
+            "Could not change password. Missing new password confirmation."
+        );
 
         cy.logout();
         cy.login(username, newPassword).its("status").should("eq", 401);
@@ -131,12 +105,7 @@ describe("change password", () => {
         cy.wait("@changePassword").its("response.statusCode").should("eq", 400);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Could not change password. Passwords don't match.");
+        cy.assertErrorMessageContains("Could not change password. Passwords don't match.");
 
         cy.logout();
         cy.login(username, newPassword).its("status").should("eq", 401);
@@ -159,12 +128,7 @@ describe("change password", () => {
         cy.wait("@changePassword").its("response.statusCode").should("eq", 500);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Change password failed due to server error");
+        cy.assertErrorMessageContains("Change password failed due to server error");
 
         cy.logout();
         cy.login(username, newPassword).its("status").should("eq", 401);
@@ -184,15 +148,9 @@ describe("change password", () => {
         cy.wait("@changePassword").its("response.statusCode").should("eq", 404);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should(
-                "contain.text",
-                "There was an error changing password for this user. User could not be found. Ensure that user hasn't been deleted and try again."
-            );
+        cy.assertErrorMessageContains(
+            "There was an error changing password for this user. User could not be found. Ensure that user hasn't been deleted and try again."
+        );
 
         cy.logout();
         cy.login(username, newPassword).its("status").should("eq", 401);

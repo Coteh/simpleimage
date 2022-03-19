@@ -25,7 +25,7 @@ describe("simpleimage homepage - register", () => {
 
     it("allows user to register successfully", () => {
         cy.get(".nav-item").contains(username).should("not.exist");
-        
+
         cy.get("#input-register-username").should("be.visible").type(username);
         cy.get("input[name='password']").should("be.visible").type(password);
         cy.get("input[name='passwordConfirm']").should("be.visible").type(password);
@@ -108,12 +108,7 @@ describe("simpleimage homepage - register", () => {
             .should("be.at.least", 400)
             .should("be.lessThan", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "don't match");
+        cy.assertErrorMessageContains("don't match");
 
         cy.get("input[name='password']").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
@@ -135,15 +130,12 @@ describe("simpleimage homepage - register", () => {
             .should("be.at.least", 400)
             .should("be.lessThan", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "at least 10 characters long")
-            .should("contain.text", "at least one uppercase letter")
-            .should("contain.text", "at least one number")
-            .should("contain.text", "at least one special character");
+        cy.assertErrorMessageContainsMulti([
+            "at least 10 characters long",
+            "at least one uppercase letter",
+            "at least one number",
+            "at least one special character",
+        ]);
 
         cy.get("input[name='password']").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
@@ -164,13 +156,8 @@ describe("simpleimage homepage - register", () => {
             .should("be.at.least", 400)
             .should("be.lessThan", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            // TODO don't rely on the text of the error, come up with some other way to capture the error
-            .should("contain.text", "Invalid email");
+        // TODO don't rely on the text of the error, come up with some other way to capture the error
+        cy.assertErrorMessageContains("Invalid email");
 
         cy.get("input[name='email']").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
@@ -187,7 +174,7 @@ describe("simpleimage homepage - register", () => {
                 assert(!text.includes("available"));
                 assert(!text.includes("not available"));
             });
-        cy.get("#input-register-username").should("be.visible").type(username).focus().blur();
+        cy.get("#input-register-username").should("be.visible").focus().type(username).blur();
         cy.wait("@checkUsername").then(({ response }) => {
             assert.oneOf(response.statusCode, [200]);
             assert.strictEqual(response.body.status, "success");
@@ -219,7 +206,7 @@ describe("simpleimage homepage - register", () => {
                 assert(!text.includes("available"));
                 assert(!text.includes("not available"));
             });
-        cy.get("#input-register-username").should("be.visible").type(username).focus().blur();
+        cy.get("#input-register-username").should("be.visible").focus().type(username).blur();
         cy.wait("@checkUsername").then(({ response }) => {
             assert.oneOf(response.statusCode, [200]);
             assert.strictEqual(response.body.status, "success");
@@ -246,19 +233,14 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='email']").should("be.visible").type(email);
         cy.get(".submit-button").click();
 
-        cy.get(".nav-item").contains(username).should("not.exist");
-
         cy.wait("@registerRequest")
             .its("response.statusCode")
             .should("be.at.least", 400)
             .should("be.lessThan", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Username already exists");
+        cy.get(".nav-item").contains(username).should("not.exist");
+
+        cy.assertErrorMessageContains("Username already exists");
 
         cy.get("#input-register-username").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
@@ -277,7 +259,7 @@ describe("simpleimage homepage - register", () => {
                 assert(!text.includes("not available"));
                 assert(!text.includes("too long"));
             });
-        cy.get("#input-register-username").should("be.visible").type(longUsername).focus().blur();
+        cy.get("#input-register-username").should("be.visible").focus().type(longUsername).blur();
         cy.wait("@checkUsername").then(({ response }) => {
             assert.oneOf(response.statusCode, [400]);
             assert.strictEqual(response.body.status, "error");
@@ -307,20 +289,14 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='email']").should("be.visible").type(email);
         cy.get(".submit-button").click();
 
-        cy.get(".nav-item").contains(longUsername).should("not.exist");
-
         cy.wait("@registerRequest")
             .its("response.statusCode")
             .should("be.at.least", 400)
             .should("be.lessThan", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Username")
-            .should("contain.text", "too many characters");
+        cy.get(".nav-item").contains(longUsername).should("not.exist");
+
+        cy.assertErrorMessageContainsMulti(["Username", "too many characters"]);
 
         cy.get("#input-register-username").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
@@ -347,12 +323,7 @@ describe("simpleimage homepage - register", () => {
 
         cy.wait("@registerRequest").its("response.statusCode").should("eq", 500);
 
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", errText);
+        cy.assertErrorMessageContains(errText);
 
         cy.get(".nav-item").contains(username).should("not.exist");
     });

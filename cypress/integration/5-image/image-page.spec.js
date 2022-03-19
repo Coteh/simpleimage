@@ -29,7 +29,6 @@ describe("simpleimage image page", () => {
                 cy.getImagesForUser(username).then((imagesRes) => {
                     assert.isAtLeast(imagesRes.length, 1);
                     imageID = imagesRes[0].id;
-                    cy.visit(`/images/${imageID}`);
                 });
             });
     });
@@ -152,12 +151,7 @@ describe("simpleimage image page", () => {
         cy.get("@comment").should("be.null");
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Please add text to your comment");
+        cy.assertErrorMessageContains("Please add text to your comment");
 
         cy.get("textarea[name='comment']").should("have.value", "");
 
@@ -197,12 +191,7 @@ describe("simpleimage image page", () => {
         cy.wait("@comment").its("response.statusCode").should("eq", 500);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Could not post comment due to an error");
+        cy.assertErrorMessageContains("Could not post comment due to an error");
 
         cy.get("textarea[name='comment']").should("have.value", commentText);
 
@@ -238,12 +227,7 @@ describe("simpleimage image page", () => {
         cy.wait("@comment").its("response.statusCode").should("eq", 401);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", "Cannot perform action. Not signed in.");
+        cy.assertErrorMessageContains("Cannot perform action. Not signed in.");
 
         cy.get("textarea[name='comment']").should("have.value", commentText);
 
@@ -279,15 +263,9 @@ describe("simpleimage image page", () => {
         cy.wait("@comment").its("response.statusCode").should("eq", 404);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should(
-                "contain.text",
-                "There was an error posting comment. User could not be found. Ensure that user hasn't been deleted and try again."
-            );
+        cy.assertErrorMessageContains(
+            "There was an error posting comment. User could not be found. Ensure that user hasn't been deleted and try again."
+        );
 
         cy.get("textarea[name='comment']").should("have.value", commentText);
 

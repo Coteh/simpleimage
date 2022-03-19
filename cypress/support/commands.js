@@ -26,6 +26,48 @@
 
 import "cypress-file-upload";
 
+Cypress.Commands.add("assertErrorMessageContains", (message) => {
+    cy.get("#notification-overlay-container")
+        .should("be.visible")
+        .should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("error");
+        })
+        .should("contain.text", message);
+});
+
+Cypress.Commands.add("assertErrorMessageContainsMulti", (messages) => {
+    const chain = cy
+        .get("#notification-overlay-container")
+        .should("be.visible")
+        .should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("error");
+        });
+    messages.forEach((message) => {
+        chain.should("contain.text", message);
+    });
+});
+
+Cypress.Commands.add("assertSuccessMessageContains", (message) => {
+    cy.get("#notification-overlay-container")
+        .should("be.visible")
+        .should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("error");
+        })
+        .should("contain.text", message);
+});
+
+Cypress.Commands.add("assertSuccessMessageContainsMulti", (messages) => {
+    const chain = cy
+        .get("#notification-overlay-container")
+        .should("be.visible")
+        .should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("error");
+        });
+    messages.forEach((message) => {
+        chain.should("contain.text", message);
+    });
+});
+
 Cypress.Commands.add("deleteUser", (username) => {
     cy.task("deleteUser", username);
 });

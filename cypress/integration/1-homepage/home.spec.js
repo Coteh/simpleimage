@@ -47,12 +47,7 @@ describe("simpleimage homepage", () => {
         cy.wait("@uploadReq").its("response.statusCode").should("be.oneOf", [statusCode]);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.get("#notification-overlay-container")
-            .should("be.visible")
-            .should("satisfy", (el) => {
-                return Array.from(el[0].classList).includes("error");
-            })
-            .should("contain.text", expectedMsg);
+        cy.assertErrorMessageContains(expectedMsg);
 
         cy.url().should("eq", `${Cypress.env("baseUrl")}/`);
     };
