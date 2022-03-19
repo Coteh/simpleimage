@@ -223,7 +223,7 @@ describe("simpleimage homepage", () => {
     it("shows preview image when file is selected", () => {
         cy.fixture("image.jpg", "binary")
             .then(Cypress.Blob.binaryStringToBlob)
-            .then(async (fileContent) => {
+            .then((fileContent) => {
                 cy.get('input[type="file"]').should("exist").attachFile({
                     fileContent: fileContent,
                     fileName: "image.jpg",
