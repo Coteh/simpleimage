@@ -91,12 +91,7 @@ describe("simeplimage user profile", () => {
                 .then((result) => {
                     for (let i = 0; i < result.length; i++) {
                         assert.equal(result[i].src.split("/")[4].split(".")[0], images[i].id);
-                        cy.request({
-                            url: result[i].src,
-                            encoding: "base64",
-                        }).then((resp) => {
-                            assert.equal(resp.body, images[i].data);
-                        });
+                        cy.compareImageUsingUrl(images[i].id, result[i].src).should("eq", true);
                     }
                 });
         });
@@ -128,14 +123,7 @@ describe("simeplimage user profile", () => {
                 .get(".comment > a > img")
                 .then((res) => {
                     assert.equal(res[0].src.split("/")[4].split(".")[0], comments[0].image_id);
-                    cy.getImage(comments[0].image_id).then((imageEntry) => {
-                        cy.request({
-                            url: res[0].src,
-                            encoding: "base64",
-                        }).then((resp) => {
-                            assert.equal(resp.body, imageEntry.data);
-                        });
-                    });
+                    cy.compareImageUsingUrl(comments[0].image_id, res[0].src).should("eq", true);
                 });
         });
 

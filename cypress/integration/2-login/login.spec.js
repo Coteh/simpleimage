@@ -110,26 +110,14 @@ describe("simpleimage homepage - login", () => {
 
         cy.assertErrorMessageContainsMulti(["Username", "password", "combination", "not found"]);
 
-        cy.get(".nav-item").contains(username).should("not.exist");
-    });
-    it("should display an error style around both username and password fields if username is incorrect", () => {
-        cy.get(".nav-item").contains(username).should("not.exist");
-
-        cy.get("#input-login-username").should("be.visible").type("wrong");
-        cy.get("input[type='password']").should("be.visible").type("demo");
-        cy.get(".submit-button").should("be.visible").click();
-
-        cy.wait("@loginRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
-
         cy.get("#input-login-username").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
         });
         cy.get("input[type='password']").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
         });
+
+        cy.get(".nav-item").contains(username).should("not.exist");
     });
     it("displays username/password error if password is incorrect", () => {
         cy.get(".nav-item").contains(username).should("not.exist");
@@ -145,26 +133,14 @@ describe("simpleimage homepage - login", () => {
 
         cy.assertErrorMessageContainsMulti(["Username", "password", "combination", "not found"]);
 
-        cy.get(".nav-item").contains(username).should("not.exist");
-    });
-    it("should display an error style around both username and password fields if password is incorrect", () => {
-        cy.get(".nav-item").contains(username).should("not.exist");
-
-        cy.get("#input-login-username").should("be.visible").type("NewDemo");
-        cy.get("input[type='password']").should("be.visible").type("wrong");
-        cy.get(".submit-button").should("be.visible").click();
-
-        cy.wait("@loginRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
-
         cy.get("#input-login-username").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
         });
         cy.get("input[type='password']").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
         });
+
+        cy.get(".nav-item").contains(username).should("not.exist");
     });
     it("displays register view when Register button is clicked", () => {
         cy.intercept("GET", "/register").as("registerPage");
