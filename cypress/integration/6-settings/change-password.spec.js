@@ -40,7 +40,6 @@ describe("change password", () => {
         cy.assertErrorMessageContains("Could not change password. Missing old password.");
 
         cy.logout();
-        cy.login(username, newPassword).its("status").should("eq", 401);
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change user's password if current password is wrong", () => {
@@ -57,7 +56,6 @@ describe("change password", () => {
         cy.assertErrorMessageContains("Could not change password. Old password is not correct.");
 
         cy.logout();
-        cy.login(username, newPassword).its("status").should("eq", 401);
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change user's password if new password is not provided", () => {
@@ -73,7 +71,6 @@ describe("change password", () => {
         cy.assertErrorMessageContains("Could not change password. Missing new password.");
 
         cy.logout();
-        cy.login(username, newPassword).its("status").should("eq", 401);
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change user's password if new password confirmation is not provided", () => {
@@ -91,7 +88,6 @@ describe("change password", () => {
         );
 
         cy.logout();
-        cy.login(username, newPassword).its("status").should("eq", 401);
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change user's password if new password and its confirmation do not match", () => {
@@ -108,7 +104,6 @@ describe("change password", () => {
         cy.assertErrorMessageContains("Could not change password. Passwords don't match.");
 
         cy.logout();
-        cy.login(username, newPassword).its("status").should("eq", 401);
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change user's password if there was a server error", () => {
@@ -131,7 +126,6 @@ describe("change password", () => {
         cy.assertErrorMessageContains("Change password failed due to server error");
 
         cy.logout();
-        cy.login(username, newPassword).its("status").should("eq", 401);
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change password if user has been deleted", () => {
@@ -153,6 +147,7 @@ describe("change password", () => {
         );
 
         cy.logout();
+        cy.login(username, password).its("status").should("eq", 401);
         cy.login(username, newPassword).its("status").should("eq", 401);
     });
 });

@@ -26,7 +26,7 @@ async function compareImageUsingUrl(imageID, url) {
 async function comparePNGImagesUsingFilepath(imageID, filepath) {
     // first grabs image from db by imageID and converts buffer to PNG data using pngjs
     const pngImageFromMongo = PNG.sync.read((await mongoHelper.getImage(imageID)).data.buffer);
-    // then grabs image from supplied filepath and saves it as PNG buffer using pngjs
+    // then grabs image from supplied filepath and saves it as PNG data using pngjs
     const pngImage = PNG.sync.read(fs.readFileSync(filepath));
     // then compares the images using pixelmatch with a 10% threshold to accommodate for any lossy compression
     const res = pixelmatch(

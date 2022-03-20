@@ -7,7 +7,7 @@ describe("settings main page", () => {
         cy.deleteUser(username);
         cy.addUser(username, password, "test@example.com");
     });
-    it("should show settings if user is logged in", () => {
+    it("should show settings page if user is logged in", () => {
         cy.login(username, password);
         cy.visit("/settings");
         cy.contains("User Settings").should("be.visible");

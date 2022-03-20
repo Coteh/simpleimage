@@ -56,7 +56,7 @@ describe("simpleimage homepage", () => {
         cy.logout();
         cy.deleteUser(username);
         cy.deleteImagesFromUser(username);
-        cy.addUser(username, password);
+        cy.addUser(username, password, "test@example.com");
         cy.visit("/");
     });
 

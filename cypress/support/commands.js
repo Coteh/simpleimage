@@ -154,7 +154,7 @@ Cypress.Commands.add("logout", () => {
 
 Cypress.Commands.add("clearBrowserCache", () => {
     // Call Chrome's API for clearing browser cache when running this test,
-    // so we can ensure that the request made for username existence will not return a 304 cached response, which will not contain any response data
+    // certain requests such as username existence will not provide any data to Cypress when returned as a cached response
     // due to how cy.intercept manages the browser request
     // https://stackoverflow.com/a/67858001
     Cypress.automation("remote:debugger:protocol", {
