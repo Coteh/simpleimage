@@ -8,7 +8,7 @@ const renderImageComment = (comment) => `
     <div class="comment">
         <a href="/users/${comment.username}">${comment.username}</a><br>
         <span class="time">${timeUTCToLocal(comment.postedDate)}</span><br>
-        ${comment.comment}
+        <p>${comment.comment}</p>
     </div>
 `;
 
@@ -142,6 +142,15 @@ window.confirmDeleteImage = function (imageID) {
 
 var submitComment = function () {
     var form = $("form[id='comment']");
+    const commentText = form.children("textarea[name='comment']").val();
+    if (commentText === "") {
+        return showNotification("Please add text to your comment.", {
+            error: true,
+            clear: true,
+            clearAfterMs: 10000,
+        });
+    }
+
     var action = form.get(0).action;
     var req = new XMLHttpRequest();
 

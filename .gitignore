@@ -84,3 +84,7 @@ test-results.xml
 
 # SSL
 ssl/
+
+# Cypress output
+cypress/videos
+cypress/screenshots

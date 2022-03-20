@@ -84,6 +84,7 @@ const uploadFile = function (file) {
 
 $(document).ready(function () {
     fileSelect = document.getElementById("select-me");
+    fileSelect.value = "";
     uploadPreview = $("#upload-preview").get(0);
 
     fileSelect.addEventListener("change", onFileSelected);

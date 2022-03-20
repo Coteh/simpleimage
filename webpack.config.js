@@ -72,7 +72,7 @@ module.exports = {
             : null,
         new DefinePlugin({
             SI_VERSION: JSON.stringify(process.env.npm_package_version),
-            NODE_ENV: JSON.stringify(process.env.NODE_ENV) || "development",
+            NODE_ENV: JSON.stringify(process.env.NODE_ENV || "development"),
             SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN),
         }),
     ].filter((plugin) => !!plugin),
