@@ -70,7 +70,7 @@
     "pretty-quick": "^3.1.2",
     "proxyquire": "^2.0.1",
     "session-file-store": "^1.2.0",
-    "sinon": "^9.0.2"
+    "sinon": "^13.0.1"
   },
   "husky": {
     "hooks": {
