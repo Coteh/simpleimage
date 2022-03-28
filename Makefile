@@ -26,8 +26,6 @@ deploy-dev-debug:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.debug.yml up -d
 ddd: deploy-dev-debug
 
-# to test a specific file, pass it like the example below:
-# 	make deploy-test TEST_FILE=./test/integ/image_delete_integ_test.js
 deploy-test:
 	docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
 dt: deploy-test

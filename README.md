@@ -3,7 +3,7 @@
 [![CircleCI](https://circleci.com/gh/Coteh/simpleimage.svg?style=shield)](https://circleci.com/gh/Coteh/simpleimage)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/Coteh/simpleimage)
 
-A simple image hosting web application that I created and implemented using Node.js and Express, with MongoDB as the database and Redis as the session store for production.
+A simple image hosting web application that I created and implemented using Node.js and Express, with MongoDB as the database and Redis as the session store.
 
 ![Screenshot](screenshots/screenshot.png "App Screenshot")
 
@@ -69,51 +69,66 @@ npm run start:dev
 # Navigate to http://localhost:3010 on your browser
 ~~~
 
-### Serving with Docker (in development)
+### Serving with Docker
+
+View [Makefile](Makefile) to see what each `make` command does.
+
+#### Development
 
 ~~~sh
 # Build Docker images
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
-# or, run
-make build-dev
+make build-dev              # make bd
 
 # Run Docker containers in Docker Compose environment
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
-# or, run
-make deploy-dev
+make deploy-dev             # make dd
+# or, run the following if you want to use the Node.js debugger as well (port 9229)
+make deploy-dev-debug       # make ddd
 
 # Navigate to http://localhost:8080 on your browser
 ~~~
 
-### Serving with Docker (in production)
+#### Production
 
 ~~~sh
 # Build Docker images
-docker-compose build
-# or, run
-make build-prod
+make build-prod             # make bp
 
 # Run Docker containers in Docker Compose environment
-docker-compose up
-# or, run
-make deploy-prod
+make deploy-prod            # make dp
 ~~~
 
-### Run Tests
+#### Unit/Integration Tests
 
 ~~~sh
 # Build Docker images for test
-docker-compose -f docker-compose.yml -f docker-compose.test.yml build
-# or, run
-make build-test
+make build-test             # make bt
 
 # Run Docker containers for test in Docker Compose environment
-docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
-# or, run
-make deploy-test
+make deploy-test            # make dt
+
+# to test a specific file, pass it like the example below:
+make deploy-test TEST_FILE=./test/integ/image_delete_integ_test.js
 ~~~
 
-### Use HTTPS in dev
+#### Cypress E2E Tests
+
+```sh
+# Build Docker images for E2E testing (E2E tests use production environment)
+make build-prod             # make bp
+
+# Run Docker containers for E2E testing in Docker Compose environment
+make deploy-test-server     # make dts
+
+# Install dev dependencies (includes Cypress)
+npm install
+
+# Run Cypress
+npm run test-ui run
+# Run Cypress with UI interface (for local testing)
+npm run test-ui open
+```
+
+#### Use HTTPS in dev
 
 Using [mkcert](https://github.com/FiloSottile/mkcert):
 
@@ -129,9 +144,13 @@ mkcert localhost 127.0.0.1 ::1
 To run development environment using dev HTTPS certs:
 
 ```sh
-make dds
-# or,
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.https.yml up
+make deploy-dev-https       # make dds
+```
+
+#### Clean Docker images and volumes
+
+```sh
+make clean
 ```
 
 ## Known Limitations
