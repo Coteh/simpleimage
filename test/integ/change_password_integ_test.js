@@ -44,7 +44,7 @@ describe("integ", () => {
         }
 
         function changePassword(oldPassword, newPassword, newPasswordConfirm) {
-            return agent.post("/change_password?type=json").type("form").send({
+            return agent.post("/settings/change_password?type=json").type("form").send({
                 oldPassword: oldPassword,
                 newPassword: newPassword,
                 newPasswordConfirm: newPasswordConfirm,
@@ -84,8 +84,8 @@ describe("integ", () => {
                     return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
-                    assert.equal(res.statusCode, 400);
-                    assert.equal(res.body.errorID, "notSignedIn");
+                    assert.equal(res.statusCode, 401);
+                    assert.equal(res.body.errorID, "notLoggedIn");
                     return checkPassword(TEST_USER, TEST_PASSWORD);
                 });
         });
@@ -198,9 +198,7 @@ describe("integ", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
-                    stub = sinon
-                        .stub(databaseOps, "changeUserPassword")
-                        .rejects(new Error("Error changing password"));
+                    stub = sinon.stub(databaseOps, "changeUserPassword").rejects(new Error("Error changing password"));
                     return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
@@ -218,9 +216,7 @@ describe("integ", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(async () => {
                     await checkPassword(TEST_USER, TEST_PASSWORD);
-                    stub = sinon
-                        .stub(databaseOps, "findUser")
-                        .callsArgWith(1, new Error("Error finding user"), null);
+                    stub = sinon.stub(databaseOps, "findUser").callsArgWith(1, new Error("Error finding user"), null);
                     return changePassword(TEST_PASSWORD, "Qwerty123!", "Qwerty123!");
                 })
                 .then((res) => {
