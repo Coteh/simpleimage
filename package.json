@@ -14,6 +14,7 @@
     "start:debug": "nodemon --inspect=0.0.0.0 .",
     "start:dev": "nodemon",
     "test": "NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --recursive --exit $TEST_FILE",
+    "test:debug": "NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --recursive --inspect-brk=0.0.0.0 --exit $TEST_FILE",
     "test-ci": "NODE_ENV=test nyc --reporter=lcovonly mocha test --reporter mocha-junit-reporter --recursive --exit",
     "test-ui": "cypress",
     "format": "prettier --write .",
