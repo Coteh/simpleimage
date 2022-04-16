@@ -61,7 +61,7 @@
     "mocha": "^7.1.2",
     "mocha-junit-reporter": "^1.23.3",
     "mongodb-memory-server": "^6.7.0",
-    "mongoist": "^2.5.3",
+    "mongoist": "^2.5.4",
     "nodemon": "^2.0.15",
     "nyc": "^15.0.1",
     "pixelmatch": "^5.2.1",
