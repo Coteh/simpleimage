@@ -35,10 +35,7 @@ describe("simpleimage homepage", () => {
             .then((src) => {
                 cy.request(`/images/${src}`).its("status").should("eq", 200);
                 const imageID = src.split(ext)[0];
-                cy.comparePNGImagesUsingFilepath(imageID, `cypress/fixtures/${fileName}`).should(
-                    "eq",
-                    true
-                );
+                cy.comparePNGImagesUsingFilepath(imageID, `cypress/fixtures/${fileName}`).should("eq", true);
                 cy.wrap(imageID);
             });
     };
@@ -236,10 +233,7 @@ describe("simpleimage homepage", () => {
                     .should("be.visible")
                     .invoke("attr", "src")
                     .then(async (src) => {
-                        assert.strictEqual(
-                            src.split(",")[1],
-                            await Cypress.Blob.blobToBase64String(fileContent)
-                        );
+                        assert.strictEqual(src.split(",")[1], await Cypress.Blob.blobToBase64String(fileContent));
                     });
             });
     });

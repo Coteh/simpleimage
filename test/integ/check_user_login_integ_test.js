@@ -34,8 +34,8 @@ describe("integ", () => {
 
         it("should fail if user is not logged in", () => {
             return checkUserLogin().then((res) => {
-                assert.equal(res.statusCode, 400);
-                assert.equal(res.body.errorID, "notSignedIn");
+                assert.equal(res.statusCode, 401);
+                assert.equal(res.body.errorID, "notLoggedIn");
             });
         });
 

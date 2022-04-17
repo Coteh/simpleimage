@@ -36,9 +36,7 @@ describe("settings main page", () => {
             failOnStatusCode: false,
         });
 
-        cy.contains("User cannot be found. Ensure user hasn't been deleted and try again.").should(
-            "be.visible"
-        );
+        cy.contains("sessionUserNotFound").should("be.visible");
     });
     it("should direct user to homepage if user logs out (using desktop nav)", () => {
         cy.login(username, password);

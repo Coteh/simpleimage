@@ -105,8 +105,10 @@ make build-test             # make bt
 
 # Run Docker containers for test in Docker Compose environment
 make deploy-test            # make dt
+# or, run the following if you want to use the Node.js debugger as well (port 9229 - will wait for debugger to be attached before starting)
+make deploy-test-debug       # make dtd
 
-# to test a specific file, pass it like the example below:
+# to test a specific file, pass it like the example below: (can also be passed into deploy-test-debug)
 make deploy-test TEST_FILE=./test/integ/image_delete_integ_test.js
 ~~~
 

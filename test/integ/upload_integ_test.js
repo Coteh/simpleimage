@@ -6,12 +6,7 @@ const server = require("../../lib/server");
 const { assert } = chai;
 const { stub } = require("sinon");
 const fs = require("fs");
-const {
-    getServerAgent,
-    assertUserLogin,
-    assertBuffers,
-    MongoMemoryTestClient,
-} = require("./integ_test_utils");
+const { getServerAgent, assertUserLogin, assertBuffers, MongoMemoryTestClient } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 
@@ -428,11 +423,7 @@ describe("integ", () => {
         });
 
         it("should fail if database failed when writing image", () => {
-            const addImageStub = stub(databaseOps, "addImage").callsArgWith(
-                1,
-                new Error("Error adding image"),
-                null
-            );
+            const addImageStub = stub(databaseOps, "addImage").callsArgWith(1, new Error("Error adding image"), null);
             imagesCollection = mongoTestClient.db.collection("image-entries");
             return imagesCollection
                 .find()

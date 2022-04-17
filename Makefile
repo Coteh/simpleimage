@@ -30,6 +30,10 @@ deploy-test:
 	docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
 dt: deploy-test
 
+deploy-test-debug:
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml -f docker-compose.test.debug.yml up --abort-on-container-exit
+dtd: deploy-test-debug
+
 deploy-test-server:
 	docker-compose -f docker-compose.yml -f docker-compose.test.yml -f docker-compose.test.e2e.yml up -d
 dts: deploy-test-server

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const databaseOps = require("./lib/database-ops");
 const server = require("./lib/server");
 const logger = require("./lib/logger").logger;
