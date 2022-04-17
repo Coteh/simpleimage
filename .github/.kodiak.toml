@@ -7,7 +7,6 @@ version = 1
 versions = ["minor", "patch"]
 usernames = ["dependabot"]
 [merge]
-require_automerge_label = false
 method = "squash"
 [merge.message]
 include_coauthors = true
