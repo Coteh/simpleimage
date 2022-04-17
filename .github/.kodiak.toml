@@ -6,3 +6,5 @@ version = 1
 # do not automerge "major" version upgrades.
 versions = ["minor", "patch"]
 usernames = ["dependabot"]
+[merge]
+method = "squash"
