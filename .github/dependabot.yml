@@ -2,6 +2,9 @@ version: 2
 updates:
 - package-ecosystem: npm
   directory: "/"
+  labels:
+      - "dependencies"
+      - "automerge"
   schedule:
     interval: daily
     time: "10:00"

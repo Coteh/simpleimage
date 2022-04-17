@@ -2,25 +2,25 @@ var assert = require("assert");
 var proxyquire = require("proxyquire");
 
 var databaseOpsStub = {
-    writeActionHistoryEntry: function(actionEntry, callback) {
+    writeActionHistoryEntry: function (actionEntry, callback) {
         var testObj = {
             type: actionEntry.type,
             item: actionEntry.item,
             username: actionEntry.username,
             ip_address: actionEntry.ipAddress,
             info: actionEntry.info,
-            action_date: new Date(0)
+            action_date: new Date(0),
         };
 
         callback(null, testObj);
-    }
+    },
 };
 
 var actionHistory = proxyquire("../lib/action-history", { "./database-ops": databaseOpsStub });
 
-describe("action history", function() {
-    describe("writeActionHistoryEntry", function() {
-        it("should write an action history entry with all the required information", function(done) {
+describe("action history", function () {
+    describe("writeActionHistoryEntry", function () {
+        it("should write an action history entry with all the required information", function (done) {
             var testData = {
                 type: "UPLOAD_IMAGE",
                 item: "ImageID",
@@ -28,8 +28,8 @@ describe("action history", function() {
                 ipAddress: "127.0.0.1",
                 info: {
                     request_url: "upload",
-                    author: "si_user"
-                }
+                    author: "si_user",
+                },
             };
             actionHistory.writeActionHistory(testData, function (err, result) {
                 assert.ifError(err);
@@ -43,7 +43,7 @@ describe("action history", function() {
             });
         });
 
-        it("should produce an error if required information for an action history is not provided", function(done) {
+        it("should produce an error if required information for an action history is not provided", function (done) {
             // type is missing here, which is a required field
             var testData = {
                 item: "ImageID",
@@ -51,18 +51,21 @@ describe("action history", function() {
                 ipAddress: "127.0.0.1",
                 info: {
                     request_url: "upload",
-                    author: "si_user"
-                }
+                    author: "si_user",
+                },
             };
             actionHistory.writeActionHistory(testData, function (err, result) {
                 assert.ok(err);
                 assert.equal(result, null);
-                assert.equal(err.message, "Provided action history entry is missing the following required fields: type");
+                assert.equal(
+                    err.message,
+                    "Provided action history entry is missing the following required fields: type"
+                );
                 done();
             });
         });
 
-        it("should provide an error if undefined or null is passed as action entry", function(done) {
+        it("should provide an error if undefined or null is passed as action entry", function (done) {
             actionHistory.writeActionHistory(undefined, function (err, result) {
                 assert.ok(err);
                 assert.equal(result, null);
@@ -76,7 +79,7 @@ describe("action history", function() {
             });
         });
 
-        it("should not produce an error if undefined is passed as callback argument", function() {
+        it("should not produce an error if undefined is passed as callback argument", function () {
             var testData = {
                 type: "UPLOAD_IMAGE",
                 item: "ImageID",
@@ -84,8 +87,8 @@ describe("action history", function() {
                 ipAddress: "127.0.0.1",
                 info: {
                     request_url: "upload",
-                    author: "si_user"
-                }
+                    author: "si_user",
+                },
             };
             // Testing all paths of writeActionHistory
             // where callback is called

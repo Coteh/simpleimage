@@ -4,7 +4,8 @@ form input {
     margin: 10px 10px 10px 10px;
 }
 
-.register-view, .login-view {
+.register-view,
+.login-view {
     color: black;
 }
 
@@ -22,6 +23,25 @@ form input {
 .input-form .input-field-error {
     border-radius: 8px;
     border: 2px solid red;
+}
+
+.input-form .input-field-success {
+    border-radius: 8px;
+    border: 2px solid limegreen;
+}
+
+.input-form > table td {
+    position: relative;
+}
+
+.input-form > table td:last-child > span {
+    position: absolute;
+    left: 10px;
+    bottom: -10px;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    font-size: 0.8em;
+    pointer-events: none;
 }
 
 /* CONTAINERS */

@@ -29,3 +29,14 @@ body {
 #images-container {
     height: 100%;
 }
+
+#images-placeholder {
+    display: flex;
+    height: 60px;
+}
+
+#images-placeholder > div {
+    height: 50px;
+    width: 50px;
+    margin: auto;
+}

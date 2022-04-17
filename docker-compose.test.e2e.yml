@@ -1,0 +1,9 @@
+version: "3.2"
+services:
+    si_app:
+        build:
+            args:
+                - NODE_ENV=production
+        command: bash -c "npm run build:client && IS_E2E=true npm run start"
+        environment:
+            - NODE_ENV=production

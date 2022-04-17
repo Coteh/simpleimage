@@ -6,10 +6,14 @@ body {
     background-color: #1d1f20;
     overflow: hidden;
     height: auto;
-    font-family: 'Roboto', serif;
+    font-family: "Roboto", serif;
 }
 
-h1,h2,h3,h4,h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
     font-weight: lighter;
 }
 
@@ -26,7 +30,7 @@ input[type="file"] {
     max-height: 200px;
     position: relative;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.5s ease;
 }
 
 #contents {
@@ -82,9 +86,24 @@ input[type="file"] {
     display: inline-block;
 
     background: rgb(200, 200, 200); /* Old browsers */
-    background: -moz-linear-gradient(top, rgb(200, 200, 200) 0%, rgb(150, 150, 150) 40%, rgb(125, 125, 125) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgb(200, 200, 200) 0%,rgb(150, 150, 150) 40%,rgb(125, 125, 125) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgb(200, 200, 200) 0%,rgb(150, 150, 150) 40%,rgb(125, 125, 125) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: -moz-linear-gradient(
+        top,
+        rgb(200, 200, 200) 0%,
+        rgb(150, 150, 150) 40%,
+        rgb(125, 125, 125) 100%
+    ); /* FF3.6-15 */
+    background: -webkit-linear-gradient(
+        top,
+        rgb(200, 200, 200) 0%,
+        rgb(150, 150, 150) 40%,
+        rgb(125, 125, 125) 100%
+    ); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(
+        to bottom,
+        rgb(200, 200, 200) 0%,
+        rgb(150, 150, 150) 40%,
+        rgb(125, 125, 125) 100%
+    ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 #select-button {
@@ -92,9 +111,24 @@ input[type="file"] {
     width: 20px;
     height: 20px;
     background: yellow; /* Old browsers */
-    background: -moz-linear-gradient(top, yellow 0%, rgb(199, 199, 0) 40%, rgb(100, 100, 0) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, yellow 0%,rgb(199, 199, 0) 40%,rgb(100, 100, 0) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, yellow 0%,rgb(199, 199, 0) 40%,rgb(100, 100, 0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: -moz-linear-gradient(
+        top,
+        yellow 0%,
+        rgb(199, 199, 0) 40%,
+        rgb(100, 100, 0) 100%
+    ); /* FF3.6-15 */
+    background: -webkit-linear-gradient(
+        top,
+        yellow 0%,
+        rgb(199, 199, 0) 40%,
+        rgb(100, 100, 0) 100%
+    ); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(
+        to bottom,
+        yellow 0%,
+        rgb(199, 199, 0) 40%,
+        rgb(100, 100, 0) 100%
+    ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 #upload-button {
@@ -102,9 +136,24 @@ input[type="file"] {
     width: 20px;
     height: 20px;
     background: rgb(0, 150, 0); /* Old browsers */
-    background: -moz-linear-gradient(top, rgb(0, 150, 0) 0%, rgb(0, 125, 0) 40%, rgb(0, 80, 0) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgb(0, 150, 0) 0%,rgb(0, 125, 0) 40%,rgb(0, 80, 0) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgb(0, 150, 0) 0%,rgb(0, 125, 0) 40%,rgb(0, 80, 0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: -moz-linear-gradient(
+        top,
+        rgb(0, 150, 0) 0%,
+        rgb(0, 125, 0) 40%,
+        rgb(0, 80, 0) 100%
+    ); /* FF3.6-15 */
+    background: -webkit-linear-gradient(
+        top,
+        rgb(0, 150, 0) 0%,
+        rgb(0, 125, 0) 40%,
+        rgb(0, 80, 0) 100%
+    ); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(
+        to bottom,
+        rgb(0, 150, 0) 0%,
+        rgb(0, 125, 0) 40%,
+        rgb(0, 80, 0) 100%
+    ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 .info {
@@ -237,7 +286,8 @@ input[type="file"] {
     width: 100%;
 }
 
-#mobile-menu a, #mobile-menu span {
+#mobile-menu a,
+#mobile-menu span {
     margin: 0;
 }
 
@@ -252,7 +302,8 @@ input[type="file"] {
 }
 
 @media (min-width: 769px) {
-    #top-nav #mobile-menu-button, #mobile-menu {
+    #top-nav #mobile-menu-button,
+    #mobile-menu {
         display: none;
     }
 
@@ -290,23 +341,23 @@ input[type="file"] {
 }
 
 @media (max-width: 768px) {
-    #top-nav #user-menu, #top-nav #guest-menu {
+    #top-nav #user-menu,
+    #top-nav #guest-menu {
         display: none;
     }
 
     #mobile-menu {
         visibility: hidden;
-        opacity: 0.0;
+        opacity: 0;
     }
 
     #mobile-menu.nav-active {
         visibility: visible;
-        opacity: 1.0;
+        opacity: 1;
     }
 }
 
 #top-nav .nav-item.nav-drawer.nav-active {
-    
 }
 
 .nav-item.nav-menu .nav-menu-item {
@@ -336,11 +387,11 @@ input[type="file"] {
 
 /* https://stackoverflow.com/a/4407335/9292680 */
 .noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
