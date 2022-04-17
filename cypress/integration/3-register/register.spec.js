@@ -42,10 +42,7 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='email']").should("be.visible").type(email);
         cy.get(".submit-button").click();
 
-        cy.wait("@registerRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
+        cy.wait("@registerRequest").its("response.statusCode").should("be.at.least", 400).should("be.lessThan", 500);
 
         cy.get("#input-register-username").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
@@ -57,10 +54,7 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='email']").should("be.visible").type(email);
         cy.get(".submit-button").click();
 
-        cy.wait("@registerRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
+        cy.wait("@registerRequest").its("response.statusCode").should("be.at.least", 400).should("be.lessThan", 500);
 
         cy.get("input[name='password']").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
@@ -72,10 +66,7 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='email']").should("be.visible").type(email);
         cy.get(".submit-button").click();
 
-        cy.wait("@registerRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
+        cy.wait("@registerRequest").its("response.statusCode").should("be.at.least", 400).should("be.lessThan", 500);
 
         cy.get("input[name='passwordConfirm']").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
@@ -87,10 +78,7 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='passwordConfirm']").should("be.visible").type(password);
         cy.get(".submit-button").click();
 
-        cy.wait("@registerRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
+        cy.wait("@registerRequest").its("response.statusCode").should("be.at.least", 400).should("be.lessThan", 500);
 
         cy.get("input[name='email']").should("satisfy", (el) => {
             return Array.from(el[0].classList).includes("input-field-error");
@@ -103,10 +91,7 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='email']").should("be.visible").type(email);
         cy.get(".submit-button").click();
 
-        cy.wait("@registerRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
+        cy.wait("@registerRequest").its("response.statusCode").should("be.at.least", 400).should("be.lessThan", 500);
 
         cy.assertErrorMessageContains("don't match");
 
@@ -125,10 +110,7 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='email']").should("be.visible").type(email);
         cy.get(".submit-button").click();
 
-        cy.wait("@registerRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
+        cy.wait("@registerRequest").its("response.statusCode").should("be.at.least", 400).should("be.lessThan", 500);
 
         cy.assertErrorMessageContainsMulti([
             "at least 10 characters long",
@@ -151,10 +133,7 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='email']").should("be.visible").type("invalidemail");
         cy.get(".submit-button").click();
 
-        cy.wait("@registerRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
+        cy.wait("@registerRequest").its("response.statusCode").should("be.at.least", 400).should("be.lessThan", 500);
 
         // TODO don't rely on the text of the error, come up with some other way to capture the error
         cy.assertErrorMessageContains("Invalid email");
@@ -165,7 +144,7 @@ describe("simpleimage homepage - register", () => {
     });
     it("displays username is available if username is available", () => {
         cy.clearBrowserCache();
-        cy.intercept("GET", `/check_username?username=${username}`).as("checkUsername");
+        cy.intercept("GET", `/check/username?username=${username}`).as("checkUsername");
         cy.get("#input-register-username")
             .siblings()
             .then((siblings) => {
@@ -196,7 +175,7 @@ describe("simpleimage homepage - register", () => {
     });
     it("displays username is not available if username is not available", () => {
         cy.clearBrowserCache();
-        cy.intercept("GET", `/check_username?username=${username}`).as("checkUsername");
+        cy.intercept("GET", `/check/username?username=${username}`).as("checkUsername");
         cy.addUser(username, password, email);
         cy.get("#input-register-username")
             .siblings()
@@ -233,10 +212,7 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='email']").should("be.visible").type(email);
         cy.get(".submit-button").click();
 
-        cy.wait("@registerRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
+        cy.wait("@registerRequest").its("response.statusCode").should("be.at.least", 400).should("be.lessThan", 500);
 
         cy.get(".nav-item").contains(username).should("not.exist");
 
@@ -248,7 +224,7 @@ describe("simpleimage homepage - register", () => {
     });
     it("displays username is too long error if username is too long", () => {
         const longUsername = "reallyreallyreallyreallyreallyreallyreallyreallylongusername";
-        cy.intercept("GET", `/check_username?username=${longUsername}`).as("checkUsername");
+        cy.intercept("GET", `/check/username?username=${longUsername}`).as("checkUsername");
 
         cy.get("#input-register-username")
             .siblings()
@@ -289,10 +265,7 @@ describe("simpleimage homepage - register", () => {
         cy.get("input[name='email']").should("be.visible").type(email);
         cy.get(".submit-button").click();
 
-        cy.wait("@registerRequest")
-            .its("response.statusCode")
-            .should("be.at.least", 400)
-            .should("be.lessThan", 500);
+        cy.wait("@registerRequest").its("response.statusCode").should("be.at.least", 400).should("be.lessThan", 500);
 
         cy.get(".nav-item").contains(longUsername).should("not.exist");
 

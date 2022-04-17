@@ -18,8 +18,10 @@ describe("integ", () => {
         var usersCollection = null;
         const TEST_USER = "test-user";
 
+        const checkUsernameEndpoint = "/check/username";
+
         function checkUsername(username) {
-            return agent.get("/check_username").query({
+            return agent.get(checkUsernameEndpoint).query({
                 username,
             });
         }
@@ -39,11 +41,7 @@ describe("integ", () => {
         });
 
         it("should return an error if database error occurs when processing the request", () => {
-            const findUserStub = stub(databaseOps, "findUser").callsArgWith(
-                1,
-                new Error("Error finding user"),
-                null
-            );
+            const findUserStub = stub(databaseOps, "findUser").callsArgWith(1, new Error("Error finding user"), null);
             return checkUsername(TEST_USER)
                 .then((res) => {
                     assert.equal(res.statusCode, 500);
@@ -92,7 +90,7 @@ describe("integ", () => {
 
         it("should be safe against MongoDB attack", () => {
             return agent
-                .get("/check_username")
+                .get(checkUsernameEndpoint)
                 .query({
                     "username[$gt]": "",
                 })
@@ -104,7 +102,7 @@ describe("integ", () => {
 
         it("should only process the first username passed to it, if multiple were passed in", () => {
             return agent
-                .get("/check_username")
+                .get(checkUsernameEndpoint)
                 .query({
                     username: [TEST_USER, "someone_else"],
                 })

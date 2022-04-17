@@ -12,7 +12,7 @@ describe("change password", () => {
         cy.visit(`/settings`);
     });
     it("should change user's password", () => {
-        cy.intercept("POST", "/change_password").as("changePassword");
+        cy.intercept("POST", "/settings/change_password").as("changePassword");
 
         cy.get("input[name='oldPassword']").type(password);
         cy.get("input[name='newPassword']").type(newPassword);
@@ -28,7 +28,7 @@ describe("change password", () => {
         cy.login(username, newPassword).its("status").should("eq", 200);
     });
     it("should not change user's password if current password not provided", () => {
-        cy.intercept("POST", "/change_password").as("changePassword");
+        cy.intercept("POST", "/settings/change_password").as("changePassword");
 
         cy.get("input[name='newPassword']").type(newPassword);
         cy.get("input[name='newPasswordConfirm']").type(newPassword);
@@ -43,7 +43,7 @@ describe("change password", () => {
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change user's password if current password is wrong", () => {
-        cy.intercept("POST", "/change_password").as("changePassword");
+        cy.intercept("POST", "/settings/change_password").as("changePassword");
 
         cy.get("input[name='oldPassword']").type("wrong");
         cy.get("input[name='newPassword']").type(newPassword);
@@ -59,7 +59,7 @@ describe("change password", () => {
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change user's password if new password is not provided", () => {
-        cy.intercept("POST", "/change_password").as("changePassword");
+        cy.intercept("POST", "/settings/change_password").as("changePassword");
 
         cy.get("input[name='oldPassword']").type(password);
         cy.get("input[name='newPasswordConfirm']").type(newPassword);
@@ -74,7 +74,7 @@ describe("change password", () => {
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change user's password if new password confirmation is not provided", () => {
-        cy.intercept("POST", "/change_password").as("changePassword");
+        cy.intercept("POST", "/settings/change_password").as("changePassword");
 
         cy.get("input[name='oldPassword']").type(password);
         cy.get("input[name='newPassword']").type(newPassword);
@@ -83,15 +83,13 @@ describe("change password", () => {
         cy.wait("@changePassword").its("response.statusCode").should("eq", 422);
 
         // TODO assert using an error code or some other form of error ID instead
-        cy.assertErrorMessageContains(
-            "Could not change password. Missing new password confirmation."
-        );
+        cy.assertErrorMessageContains("Could not change password. Missing new password confirmation.");
 
         cy.logout();
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change user's password if new password and its confirmation do not match", () => {
-        cy.intercept("POST", "/change_password").as("changePassword");
+        cy.intercept("POST", "/settings/change_password").as("changePassword");
 
         cy.get("input[name='oldPassword']").type(password);
         cy.get("input[name='newPassword']").type(newPassword);
@@ -107,7 +105,7 @@ describe("change password", () => {
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change user's password if there was a server error", () => {
-        cy.intercept("POST", "/change_password", {
+        cy.intercept("POST", "/settings/change_password", {
             statusCode: 500,
             body: {
                 status: "error",
@@ -129,7 +127,7 @@ describe("change password", () => {
         cy.login(username, password).its("status").should("eq", 200);
     });
     it("should not change password if user has been deleted", () => {
-        cy.intercept("POST", "/change_password").as("changePassword");
+        cy.intercept("POST", "/settings/change_password").as("changePassword");
 
         cy.get("input[name='oldPassword']").type(password);
         cy.get("input[name='newPassword']").type(newPassword);
@@ -141,10 +139,7 @@ describe("change password", () => {
 
         cy.wait("@changePassword").its("response.statusCode").should("eq", 404);
 
-        // TODO assert using an error code or some other form of error ID instead
-        cy.assertErrorMessageContains(
-            "There was an error changing password for this user. User could not be found. Ensure that user hasn't been deleted and try again."
-        );
+        cy.get("@changePassword").its("response.body.errorID").should("eq", "sessionUserNotFound");
 
         cy.logout();
         cy.login(username, password).its("status").should("eq", 401);

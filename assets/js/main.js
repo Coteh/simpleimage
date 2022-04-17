@@ -19,9 +19,7 @@ window.clearOverlay = function () {
 window.clearNotification = function () {
     var notificationOverlayContainer = document.getElementById("notification-overlay-container");
     if (notificationOverlayContainer == null) {
-        console.error(
-            "Cannot clear notification overlay. No notification overlay container exists on this page."
-        );
+        console.error("Cannot clear notification overlay. No notification overlay container exists on this page.");
         return;
     }
     notificationOverlayContainer.innerHTML = "";
@@ -129,11 +127,7 @@ const onUsernameChecked = function (username, field) {
         try {
             jsonObj = JSON.parse(this.responseText);
         } catch (err) {
-            return console.error(
-                "[onUsernameChecked]",
-                "Error occurred when parsing response",
-                err
-            );
+            return console.error("[onUsernameChecked]", "Error occurred when parsing response", err);
         }
         field.classList.add("input-field-error");
         const label = field.nextElementSibling;
@@ -243,7 +237,7 @@ window.performUsernameCheck = (e) => {
     req.onload = function () {
         onUsernameChecked.bind(this)(username, field);
     };
-    req.open("get", `/check_username?username=${username}`);
+    req.open("get", `/check/username?username=${username}`);
     req.send();
 };
 

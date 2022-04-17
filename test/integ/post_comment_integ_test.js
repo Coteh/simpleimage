@@ -111,6 +111,30 @@ describe("integ", () => {
                 });
         });
 
+        it("should not be able to post an empty comment", () => {
+            return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
+                .then(() => {
+                    return getImageComments(agent, testImage.id);
+                })
+                .then((res) => {
+                    assert.isEmpty(res.body.data);
+                })
+                .then(() => {
+                    return postComment(agent, testImage.id, "");
+                })
+                .then((res) => {
+                    assert.equal(res.statusCode, 422);
+                    assert.equal(res.body.status, "error");
+                    assert.equal(res.body.errorID, "missingComment");
+                })
+                .then(() => {
+                    return getImageComments(agent, testImage.id);
+                })
+                .then((res) => {
+                    assert.isEmpty(res.body.data);
+                });
+        });
+
         it("should not be able to post a comment on a deleted image", () => {
             return assertUserLogin(agent, TEST_USER, TEST_PASSWORD)
                 .then(() => {
@@ -144,10 +168,7 @@ describe("integ", () => {
                 .then((res) => {
                     assert.equal(res.statusCode, 200);
                     const comment = res.body.comment;
-                    assert.equal(
-                        comment.comment,
-                        "&lt;script&gt;alert(&apos;hello&apos;)&lt;/script&gt;"
-                    );
+                    assert.equal(comment.comment, "&lt;script&gt;alert(&apos;hello&apos;)&lt;/script&gt;");
                 });
         });
 

@@ -70,10 +70,7 @@ describe("simpleimage image page", () => {
         cy.reload();
         cy.wait("@comments");
         cy.get("#comments-container .comment > p").should("contain.text", commentText);
-        cy.get("#comments-container .comment > .time").should(
-            "contain.text",
-            commentDate.toString()
-        );
+        cy.get("#comments-container .comment > .time").should("contain.text", commentDate.toString());
         cy.get("#comments-container .comment > a").should("contain.text", username);
     });
     it("should handle comment load failure", () => {
@@ -98,10 +95,7 @@ describe("simpleimage image page", () => {
         cy.reload();
         cy.wait("@comments");
         // TODO check by error id instead
-        cy.get("#comments-container").should(
-            "contain.text",
-            `Could not load comments. Please try again later.`
-        );
+        cy.get("#comments-container").should("contain.text", `Could not load comments. Please try again later.`);
     });
     it("should allow user to post a comment", () => {
         const commentText = "This is a brand new comment";
@@ -126,10 +120,7 @@ describe("simpleimage image page", () => {
             const mostRecentComment = comments[comments.length - 1];
             cy.get("#comments > .comment:first-child").within(() => {
                 cy.get("a").should("contain.text", username);
-                cy.get(".time").should(
-                    "contain.text",
-                    new Date(mostRecentComment.posted_date).toString()
-                );
+                cy.get(".time").should("contain.text", new Date(mostRecentComment.posted_date).toString());
                 cy.get("p").should("contain.text", commentText);
             });
         });
@@ -160,10 +151,7 @@ describe("simpleimage image page", () => {
             const mostRecentComment = comments[comments.length - 1];
             cy.get("#comments > .comment:first-child").within(() => {
                 cy.get("a").should("contain.text", mostRecentComment.username);
-                cy.get(".time").should(
-                    "contain.text",
-                    new Date(mostRecentComment.posted_date).toString()
-                );
+                cy.get(".time").should("contain.text", new Date(mostRecentComment.posted_date).toString());
                 cy.get("p").should("contain.text", mostRecentComment.comment);
             });
         });
@@ -200,10 +188,7 @@ describe("simpleimage image page", () => {
             const mostRecentComment = comments[comments.length - 1];
             cy.get("#comments > .comment:first-child").within(() => {
                 cy.get("a").should("contain.text", mostRecentComment.username);
-                cy.get(".time").should(
-                    "contain.text",
-                    new Date(mostRecentComment.posted_date).toString()
-                );
+                cy.get(".time").should("contain.text", new Date(mostRecentComment.posted_date).toString());
                 cy.get("p").should("contain.text", mostRecentComment.comment);
             });
         });
@@ -226,8 +211,7 @@ describe("simpleimage image page", () => {
 
         cy.wait("@comment").its("response.statusCode").should("eq", 401);
 
-        // TODO assert using an error code or some other form of error ID instead
-        cy.assertErrorMessageContains("Cannot perform action. Not signed in.");
+        cy.get("@comment").its("response.body.errorID").should("eq", "notLoggedIn");
 
         cy.get("textarea[name='comment']").should("have.value", commentText);
 
@@ -236,10 +220,7 @@ describe("simpleimage image page", () => {
             const mostRecentComment = comments[comments.length - 1];
             cy.get("#comments > .comment:first-child").within(() => {
                 cy.get("a").should("contain.text", mostRecentComment.username);
-                cy.get(".time").should(
-                    "contain.text",
-                    new Date(mostRecentComment.posted_date).toString()
-                );
+                cy.get(".time").should("contain.text", new Date(mostRecentComment.posted_date).toString());
                 cy.get("p").should("contain.text", mostRecentComment.comment);
             });
         });
@@ -262,10 +243,7 @@ describe("simpleimage image page", () => {
 
         cy.wait("@comment").its("response.statusCode").should("eq", 404);
 
-        // TODO assert using an error code or some other form of error ID instead
-        cy.assertErrorMessageContains(
-            "There was an error posting comment. User could not be found. Ensure that user hasn't been deleted and try again."
-        );
+        cy.get("@comment").its("response.body.errorID").should("eq", "sessionUserNotFound");
 
         cy.get("textarea[name='comment']").should("have.value", commentText);
 
@@ -274,10 +252,7 @@ describe("simpleimage image page", () => {
             const mostRecentComment = comments[comments.length - 1];
             cy.get("#comments > .comment:first-child").within(() => {
                 cy.get("a").should("contain.text", mostRecentComment.username);
-                cy.get(".time").should(
-                    "contain.text",
-                    new Date(mostRecentComment.posted_date).toString()
-                );
+                cy.get(".time").should("contain.text", new Date(mostRecentComment.posted_date).toString());
                 cy.get("p").should("contain.text", mostRecentComment.comment);
             });
         });
@@ -512,10 +487,7 @@ describe("simpleimage image page", () => {
 
             cy.wait("@imageDelete").its("response.statusCode").should("eq", 404);
 
-            // TODO assert using an error code or some other form of error ID instead
-            cy.contains(
-                "There was an error deleting image. User could not be found. Ensure that user hasn't been deleted and try again."
-            ).should("be.visible");
+            cy.get("@imageDelete").its("response.body.errorID").should("eq", "sessionUserNotFound");
 
             cy.get("@index").should("be.null");
 
