@@ -4,6 +4,6 @@ services:
         build:
             args:
                 - NODE_ENV=production
-        command: bash -c "IS_E2E=true npm run start"
+        command: bash -c "npm run build:client && IS_E2E=true npm run start"
         environment:
             - NODE_ENV=production

@@ -272,6 +272,6 @@ describe("simeplimage user profile", () => {
             failOnStatusCode: false,
         });
 
-        cy.contains(`Could not find user ${invalidUser}.`).should("be.visible");
+        cy.contains(`Could not find user "${invalidUser}".`).should("be.visible");
     });
 });
