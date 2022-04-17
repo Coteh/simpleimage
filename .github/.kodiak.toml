@@ -5,6 +5,6 @@ version = 1
 # only auto merge "minor" and "patch" version upgrades.
 # do not automerge "major" version upgrades.
 versions = ["minor", "patch"]
-usernames = ["dependabot"]
+usernames = ["dependabot", "snyk-bot"]
 [merge]
 method = "squash"
