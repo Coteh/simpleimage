@@ -8,3 +8,5 @@ versions = ["minor", "patch"]
 usernames = ["dependabot"]
 [merge]
 method = "squash"
+[merge.message]
+include_coauthors = true
