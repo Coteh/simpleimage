@@ -52,7 +52,8 @@ form input {
     transition: opacity 0.25s ease;
     border-radius: 8px;
     left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
 }
 
 #overlay-container.open {
@@ -67,7 +68,6 @@ form input {
 #notification-overlay-container.open {
     position: fixed;
     top: 10vh;
-    left: calc((100vw - 30vw) / 2);
     width: 30vw;
     max-width: 30vw;
     z-index: 301;
@@ -84,9 +84,9 @@ form input {
         for mobile devices */
     #overlay-container.open,
     #notification-overlay-container.open {
-        left: 0 !important;
         width: 100% !important;
         max-width: initial;
+        box-sizing: border-box;
     }
 }
 
