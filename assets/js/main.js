@@ -251,8 +251,6 @@ function onLoginLoaded(err) {
         return false;
     });
     $("input[name='username']").focus();
-    setScalableWidth($("#overlay-container").get(0), 300);
-    setScalableHeight($("#overlay-container").get(0), 450);
     $("#register-via-login-button").click(function (e) {
         const username = $("#input-login-username").val();
         clearOverlay(e);
@@ -285,8 +283,6 @@ function onRegisterLoaded(err) {
         performUsernameCheck(e);
         return false;
     });
-    setScalableWidth($("#overlay-container").get(0), 420);
-    setScalableHeight($("#overlay-container").get(0), 400);
     $("form[id='register-form'] .submit-button").click(function (e) {
         $("form[id='register-form']").submit();
     });
