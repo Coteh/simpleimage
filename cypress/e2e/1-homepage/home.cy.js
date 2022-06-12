@@ -6,20 +6,25 @@ describe("simpleimage homepage", () => {
     const username = "NewDemo";
     const password = "demo";
 
-    const performImageUpload = (fileContent, fileName, mimeType) => {
+    const performImageUpload = (fileName, mimeType) => {
         // Wait a second for all page elements to load and for the document ready handler to clear out selected filename from cache
         // TODO listen for document ready handler to fire instead
         cy.wait(1000);
 
-        cy.get('input[type="file"]').attachFile({
-            fileContent,
-            fileName,
-            mimeType,
-        });
+        cy.get('input[type="file"]').selectFile(
+            {
+                contents: `cypress/fixtures/${fileName}`,
+                fileName,
+                mimeType,
+            },
+            {
+                force: true,
+            }
+        );
 
         cy.intercept("POST", "/upload").as("uploadReq");
 
-        cy.get("#upload-button").should("exist").click();
+        return cy.get("#upload-button").should("exist").click();
     };
 
     const assertImageUploadSucceeded = (fileName, ext) => {
@@ -58,20 +63,13 @@ describe("simpleimage homepage", () => {
     });
 
     it("uploads an image when upload button is clicked", () => {
-        cy.fixture("Ingranaggio.png", "binary")
-            .then(Cypress.Blob.binaryStringToBlob)
-            .then((fileContent) => {
-                performImageUpload(fileContent, "Ingranaggio.png", "image/png");
-            })
-            .then(() => assertImageUploadSucceeded("Ingranaggio.png", ".png"));
+        performImageUpload("Ingranaggio.png", "image/png").then(() =>
+            assertImageUploadSucceeded("Ingranaggio.png", ".png")
+        );
     });
 
     it("uploads an image as a guest", () => {
-        cy.fixture("Ingranaggio.png", "binary")
-            .then(Cypress.Blob.binaryStringToBlob)
-            .then((fileContent) => {
-                performImageUpload(fileContent, "Ingranaggio.png", "image/png");
-            })
+        performImageUpload("Ingranaggio.png", "image/png")
             .then(() => assertImageUploadSucceeded("Ingranaggio.png", ".png"))
             .then((imageID) => {
                 cy.getImage(imageID).then((image) => assert.isNull(image.username));
@@ -82,11 +80,7 @@ describe("simpleimage homepage", () => {
         cy.getImagesForUser(username).its("length").should("eq", 0);
         cy.login(username, password);
         cy.reload();
-        cy.fixture("Ingranaggio.png", "binary")
-            .then(Cypress.Blob.binaryStringToBlob)
-            .then((fileContent) => {
-                performImageUpload(fileContent, "Ingranaggio.png", "image/png");
-            })
+        performImageUpload("Ingranaggio.png", "image/png")
             .then(() => assertImageUploadSucceeded("Ingranaggio.png", ".png"))
             .then((imageID) => {
                 cy.getImagesForUser(username).its("length").should("eq", 1);
@@ -99,11 +93,7 @@ describe("simpleimage homepage", () => {
         cy.login(username, password);
         cy.reload();
         cy.deleteUser(username);
-        cy.fixture("Ingranaggio.png", "binary")
-            .then(Cypress.Blob.binaryStringToBlob)
-            .then((fileContent) => {
-                performImageUpload(fileContent, "Ingranaggio.png", "image/png");
-            })
+        performImageUpload("Ingranaggio.png", "image/png")
             // TODO assert on error ID instead of error message
             .then(() =>
                 assertImageUploadFailed(
@@ -127,11 +117,7 @@ describe("simpleimage homepage", () => {
         cy.getImagesForUser(username).its("length").should("eq", 0);
         cy.login(username, password);
         cy.reload();
-        cy.fixture("Ingranaggio.png", "binary")
-            .then(Cypress.Blob.binaryStringToBlob)
-            .then((fileContent) => {
-                performImageUpload(fileContent, "Ingranaggio.png", "image/png");
-            })
+        performImageUpload("Ingranaggio.png", "image/png")
             // TODO assert on error ID instead of error message
             .then(() => assertImageUploadFailed(500, "Could not upload image due to server error"))
             .then(() => {
@@ -221,11 +207,16 @@ describe("simpleimage homepage", () => {
         cy.fixture("image.jpg", "binary")
             .then(Cypress.Blob.binaryStringToBlob)
             .then((fileContent) => {
-                cy.get('input[type="file"]').should("exist").attachFile({
-                    fileContent: fileContent,
-                    fileName: "image.jpg",
-                    mimeType: "image/jpeg",
-                });
+                cy.get('input[type="file"]').should("exist").selectFile(
+                    {
+                        contents: "cypress/fixtures/image.jpg",
+                        fileName: "image.jpg",
+                        mimeType: "image/jpeg",
+                    },
+                    {
+                        force: true,
+                    }
+                );
 
                 cy.get(".image-preview", {
                     timeout: 10000,
@@ -240,18 +231,19 @@ describe("simpleimage homepage", () => {
 
     // TODO prevent unsupported image types from being selected if user were to override the accepted types in input field
     it.skip("does not allow unsupported image type from being selected", () => {
-        cy.fixture("invalid_attachment.pdf", "binary")
-            .then(Cypress.Blob.binaryStringToBlob)
-            .then((fileContent) => {
-                cy.get('input[type="file"]').should("exist").attachFile({
-                    fileContent: fileContent,
-                    fileName: "invalid_attachment.pdf",
-                    mimeType: "application/pdf",
-                });
+        cy.get('input[type="file"]').should("exist").selectFile(
+            {
+                contents: "cypress/fixtures/invalid_attachment.pdf",
+                fileName: "invalid_attachment.pdf",
+                mimeType: "application/pdf",
+            },
+            {
+                force: true,
+            }
+        );
 
-                cy.get('input[type="file"]').then((file) => {
-                    assert.isEmpty(file[0].files);
-                });
-            });
+        cy.get('input[type="file"]').then((file) => {
+            assert.isEmpty(file[0].files);
+        });
     });
 });

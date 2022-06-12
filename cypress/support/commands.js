@@ -24,8 +24,6 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-import "cypress-file-upload";
-
 Cypress.Commands.add("assertErrorMessageContains", (message) => {
     cy.get("#notification-overlay-container")
         .should("be.visible")

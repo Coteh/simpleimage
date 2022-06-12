@@ -5,7 +5,7 @@ const auth = require("../../lib/auth");
 const databaseOps = require("../../lib/database-ops");
 const actionHistory = require("../../lib/action-history");
 const server = require("../../lib/server");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { assert } = chai;
 const { getServerAgent, assertUserLogin, MongoMemoryTestClient } = require("./integ_test_utils");
 

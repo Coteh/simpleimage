@@ -20,7 +20,7 @@ jobs:
             - "node_modules"
       - run:
           name: Run tests
-          command: npm run test-ci
+          command: npm run test:ci
           environment:
               MOCHA_FILE: ./junit/simpleimage/test-results.xml
       - codecov/upload:
