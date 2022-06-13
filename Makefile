@@ -42,8 +42,9 @@ stop:
 	docker-compose stop
 
 rm:
-	docker-compose rm
+	docker-compose rm -f
 
 clean:
 	docker ps -a | grep coteh/simpleimage | cut -d' ' -f1 | xargs docker rm
+	docker images | grep coteh/simpleimage | awk '{print $$3}' | xargs docker rmi
 	docker volume rm simpleimage_node_modules

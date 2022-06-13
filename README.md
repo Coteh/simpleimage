@@ -124,10 +124,10 @@ make deploy-test-server     # make dts
 # Install dev dependencies (includes Cypress)
 npm install
 
-# Run Cypress
-npm run test-ui run
+# Run Cypress for E2E testing
+npm run test:e2e
 # Run Cypress with UI interface (for local testing)
-npm run test-ui open
+npm run test:cypress
 ```
 
 #### Use HTTPS in dev

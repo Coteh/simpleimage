@@ -1,7 +1,7 @@
 const assert = require("assert");
 const auth = require("../lib/auth");
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const errMsgs = require("../lib/error-msgs");
 const sinon = require("sinon");
 
