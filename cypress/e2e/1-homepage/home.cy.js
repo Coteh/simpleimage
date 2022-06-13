@@ -18,6 +18,7 @@ describe("simpleimage homepage", () => {
                 mimeType,
             },
             {
+                // needed because the image input element is hidden, skips input element verification which fails for hidden input elements
                 force: true,
             }
         );
@@ -214,6 +215,7 @@ describe("simpleimage homepage", () => {
                         mimeType: "image/jpeg",
                     },
                     {
+                        // needed because the image input element is hidden, skips input element verification which fails for hidden input elements
                         force: true,
                     }
                 );
@@ -238,6 +240,7 @@ describe("simpleimage homepage", () => {
                 mimeType: "application/pdf",
             },
             {
+                // needed because the image input element is hidden, skips input element verification which fails for hidden input elements
                 force: true,
             }
         );
