@@ -1,6 +1,6 @@
 {
   "name": "simpleimage",
-  "version": "1.5.0",
+  "version": "1.5.2",
   "private": true,
   "description": "Simple image uploading service",
   "license": "MIT",
