@@ -30,7 +30,7 @@
     "connect-redis": "^3.3.2",
     "copy-webpack-plugin": "^6.4.1",
     "csurf": "^1.11.0",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "ejs": "^3.1.7",
     "ejs-lint": "^1.2.1",
     "exif": "^0.6.0",
