@@ -28,7 +28,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "connect-redis": "^3.3.2",
-    "copy-webpack-plugin": "^6.4.1",
+    "copy-webpack-plugin": "^11.0.0",
     "csurf": "^1.11.0",
     "dotenv": "^16.0.0",
     "ejs": "^3.1.7",
