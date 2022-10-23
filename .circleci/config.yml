@@ -20,7 +20,7 @@ jobs:
             - "node_modules"
       - run:
           name: Create large image test asset
-          command: ./generate_large_image.sh
+          command: ./test/scripts/generate_large_image.sh
       - run:
           name: Run tests
           command: npm run test:ci
