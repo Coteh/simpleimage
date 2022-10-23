@@ -89,3 +89,6 @@ ssl/
 # Cypress output
 cypress/videos
 cypress/screenshots
+
+# Test assets
+test/assets/images/big_image_test.png
