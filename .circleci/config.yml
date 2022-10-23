@@ -26,6 +26,7 @@ jobs:
           command: npm run test:ci
           environment:
               MOCHA_FILE: ./junit/simpleimage/test-results.xml
+              FILE_SIZE_LIMIT: "5000000"
       - codecov/upload:
           file: ./coverage/lcov.info
       - store_artifacts:
