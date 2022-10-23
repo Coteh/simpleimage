@@ -28,6 +28,7 @@ describe("integ", () => {
         const gifImage = fs.readFileSync("./test/assets/images/GIFtest.gif");
         const bmpImage = fs.readFileSync("./test/assets/images/BMPtest.bmp");
         const pdfImage = fs.readFileSync("./test/assets/images/PDFtest.pdf");
+        const bigImage = fs.readFileSync("./test/assets/images/big_image_test.png");
 
         const uploadImage = (agent, buffer, filename) => {
             return agent.post("/upload").attach("image", buffer, filename);
@@ -444,6 +445,27 @@ describe("integ", () => {
                 })
                 .finally(() => {
                     addImageStub.restore();
+                });
+        });
+
+        it("should fail if image to upload is too big and file size limit is specified (prereq: set FILE_SIZE_LIMIT environment variable)", () => {
+            imagesCollection = mongoTestClient.db.collection("image-entries");
+            return imagesCollection
+                .find()
+                .toArray()
+                .then((docs) => {
+                    assert.equal(docs.length, 0);
+                })
+                .then(() => {
+                    return uploadImage(agent, bigImage, "big_image_test.png");
+                })
+                .then((res) => {
+                    assert.equal(res.statusCode, 413);
+                    assert.equal(res.body.errorID, "imageTooLarge");
+                    return imagesCollection.find().toArray();
+                })
+                .then((docs) => {
+                    assert.equal(docs.length, 0);
                 });
         });
 

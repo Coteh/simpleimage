@@ -11,6 +11,7 @@ services:
         command: bash -c "npm test $TEST_FILE"
         environment:
             - NODE_ENV=test
+            - FILE_SIZE_LIMIT=5000000
 
 volumes:
     node_modules:

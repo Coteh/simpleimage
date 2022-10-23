@@ -5,7 +5,7 @@ orbs:
 jobs:
   run-integ-tests:
     docker:
-      - image: coteh/si-test-deps:0.0.2
+      - image: coteh/si-test-deps:0.0.3
     steps:
       - checkout
       - restore_cache:
@@ -19,10 +19,14 @@ jobs:
             - "$HOME/.npm"
             - "node_modules"
       - run:
+          name: Create large image test asset
+          command: ./test/scripts/generate_large_image.sh
+      - run:
           name: Run tests
           command: npm run test:ci
           environment:
               MOCHA_FILE: ./junit/simpleimage/test-results.xml
+              FILE_SIZE_LIMIT: "5000000"
       - codecov/upload:
           file: ./coverage/lcov.info
       - store_artifacts:
