@@ -22,7 +22,7 @@
     "watch:client": "webpack -w"
   },
   "dependencies": {
-    "@sentry/browser": "^6.19.7",
+    "@sentry/browser": "^7.17.2",
     "@sentry/tracing": "^6.19.7",
     "@sentry/webpack-plugin": "^1.19.1",
     "bcryptjs": "^2.4.3",
