@@ -1,24 +1,18 @@
-<div id="top-nav">
+<div id="top-nav" class="top-nav">
     <div class="nav-content">
         <nav>
-            <div id="title" class="nav-item">
+            <div id="title" class="nav-item title">
                 <a href="/"><div class="logo"></div></a>
             </div>
-            <% if (user === undefined) { %>
-            <%- include("guest-menu-view") %>
-            <% } else { %>
-            <%- include("user-menu-view",{user}) %>
-            <% } %>
+            <% if (user === undefined) { %> <%- include("guest-menu-view") %> <% } else { %> <%-
+            include("user-menu-view",{user}) %> <% } %>
             <div id="mobile-menu-button" class="nav-item user nav-drawer nav-right-1">
                 <span class="collecticons collecticons-hamburger-menu head-icon"></span>
             </div>
         </nav>
     </div>
     <div id="mobile-menu">
-        <% if (user === undefined) { %>
-        <%- include("guest-mobile-menu-view") %>
-        <% } else { %>
-        <%- include("user-mobile-menu-view",{user}) %>
-        <% } %>
+        <% if (user === undefined) { %> <%- include("guest-mobile-menu-view") %> <% } else { %> <%-
+        include("user-mobile-menu-view",{user}) %> <% } %>
     </div>
 </div>

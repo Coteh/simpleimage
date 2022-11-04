@@ -2,12 +2,21 @@ var uploadPreview;
 var fileSelect;
 var currentFile;
 var isUserLoggedIn = false;
+let numInfoToggles = 0;
+
+// If info section is visible, this will hide it and increase toggle counter by 1 as well if it's currently sticking in place by a toggle click
+const forceHideInfoSection = () => {
+    document.querySelector("#upload-info").classList.add("hidden");
+    if (numInfoToggles % 2 != 0) {
+        numInfoToggles++;
+    }
+};
 
 const showUploadPreview = async function (file) {
     while (uploadPreview.firstChild) {
         uploadPreview.removeChild(uploadPreview.firstChild);
     }
-    uploadPreview.className = "";
+    uploadPreview.classList.remove("selected");
     uploadPreview.style.boxShadow = "";
 
     const imageElem = document.createElement("img");
@@ -20,7 +29,12 @@ const showUploadPreview = async function (file) {
     imageElem.style.transform = "translateY(-90%)";
     imageElem.style.opacity = 1;
 
-    uploadPreview.className = "selected";
+    uploadPreview.classList.add("selected");
+
+    document.querySelector("img.logo").classList.add("obstructed");
+    document.querySelector("#top-nav .logo").classList.add("show");
+
+    forceHideInfoSection();
 };
 
 const onFileSelected = function () {
@@ -99,6 +113,25 @@ $(document).ready(function () {
         performLoggedInAction(evt, function () {
             uploadFile(currentFile);
         });
+    });
+
+    $("#upload-info-button").on("mouseenter", () => {
+        document.querySelector("#upload-info").classList.remove("hidden");
+    });
+
+    $("#upload-info-button").on("click", () => {
+        if (numInfoToggles % 2 == 0) {
+            document.querySelector("#upload-info").classList.remove("hidden");
+        } else {
+            document.querySelector("#upload-info").classList.add("hidden");
+        }
+        numInfoToggles++;
+    });
+
+    $("#upload-info-button").on("mouseleave", () => {
+        if (numInfoToggles % 2 == 0) {
+            document.querySelector("#upload-info").classList.add("hidden");
+        }
     });
 });
 

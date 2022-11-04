@@ -249,4 +249,94 @@ describe("simpleimage homepage", () => {
             assert.isEmpty(file[0].files);
         });
     });
+
+    describe("info toggle", () => {
+        it("shows info element when mouse hovers over it", () => {
+            // move mouse somewhere else - sometimes page loads with info element already appearing, this doesn't happen in normal usage
+            cy.get(".footer").realHover();
+
+            cy.get(".info-bubble").should("not.be.visible");
+
+            cy.get("#upload-info-button").realHover();
+
+            cy.get(".info-bubble").should("be.visible");
+
+            // move mouse somewhere else
+            cy.get(".footer").realHover();
+
+            cy.get(".info-bubble").should("not.be.visible");
+        });
+        it("allows info element to be sticked", () => {
+            cy.get(".info-bubble").should("not.be.visible");
+
+            cy.get("#upload-info-button").realClick();
+
+            cy.get(".info-bubble").should("be.visible");
+
+            // move mouse somewhere else
+            cy.get(".footer").realHover();
+
+            cy.get(".info-bubble").should("be.visible");
+
+            cy.get("#upload-info-button").realClick();
+
+            cy.get(".info-bubble").should("not.be.visible");
+        });
+        it("will hide when stickied and file is selected", () => {
+            // move mouse somewhere else - sometimes page loads with info element already appearing, this doesn't happen in normal usage
+            cy.get(".footer").realHover();
+
+            cy.get(".info-bubble").should("not.be.visible");
+
+            cy.get("#upload-info-button").realClick();
+
+            cy.get(".info-bubble").should("be.visible");
+
+            cy.fixture("image.jpg", "binary")
+                .then(Cypress.Blob.binaryStringToBlob)
+                .then((fileContent) => {
+                    cy.get('input[type="file"]').should("exist").selectFile(
+                        {
+                            contents: "cypress/fixtures/image.jpg",
+                            fileName: "image.jpg",
+                            mimeType: "image/jpeg",
+                        },
+                        {
+                            // needed because the image input element is hidden, skips input element verification which fails for hidden input elements
+                            force: true,
+                        }
+                    );
+
+                    cy.get(".image-preview", {
+                        timeout: 10000,
+                    })
+                        .should("be.visible")
+                        .realHover(); // workaround needed for test to pass, hover on image preview first before proceeding with verifying info element hovering functionality - not needed in normal usage
+
+                    cy.get(".info-bubble").should("not.be.visible");
+
+                    cy.get("#upload-info-button").realHover();
+
+                    cy.get(".info-bubble").should("be.visible");
+
+                    // move mouse somewhere else
+                    cy.get(".footer").realHover();
+
+                    cy.get(".info-bubble").should("not.be.visible");
+
+                    cy.get("#upload-info-button").realClick();
+
+                    cy.get(".info-bubble").should("be.visible");
+
+                    // move mouse somewhere else
+                    cy.get(".footer").realHover();
+
+                    cy.get(".info-bubble").should("be.visible");
+
+                    cy.get("#upload-info-button").realClick();
+
+                    cy.get(".info-bubble").should("not.be.visible");
+                });
+        });
+    });
 });
