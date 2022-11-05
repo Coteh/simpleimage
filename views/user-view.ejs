@@ -15,12 +15,9 @@
         <script src="/assets/js/user.bundle.js"></script>
         <script>
             $(document).ready(function () {
-                requestCommentsUser(
-                    "<%= user.username %>",
-                    function (commentsElement, numOfComments) {
-                        $("#comment-count").text("(" + numOfComments + ")");
-                    }
-                );
+                requestCommentsUser("<%= user.username %>", function (commentsElement, numOfComments) {
+                    $("#comment-count").text("(" + numOfComments + ")");
+                });
                 requestImagesUser("<%= user.username %>", function (imagesElement, numOfImages) {
                     $("#images-count").text("(" + numOfImages + ")");
                 });
@@ -33,7 +30,7 @@
     <body>
         <div id="overlay-backdrop"></div>
         <%- include("top-nav-view", {user:sessionUser}) %>
-        <div id="contents" class="page-contents">
+        <div id="contents" class="contents page">
             <div id="notification-overlay-container"></div>
             <div id="overlay-container"></div>
             <div id="user-container">
@@ -41,11 +38,7 @@
                     <h2><%= user.username %></h2>
                 </div>
                 <div class="user-view">
-                    <span
-                        class="collecticons collecticons-calendar head-icon"
-                        alt="Join Date"
-                        title="Join Date"
-                    ></span>
+                    <span class="collecticons collecticons-calendar head-icon" alt="Join Date" title="Join Date"></span>
                     <span id="join-date"></span>
                 </div>
                 <div>

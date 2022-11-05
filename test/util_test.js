@@ -51,42 +51,50 @@ describe("util", function () {
             it("should return a MIME type string given an extension string", function () {
                 assert.strictEqual(util.extToMimeType("png"), "image/png");
             });
+
             it("should return undefined if undefined passed", function () {
                 assert.strictEqual(util.extToMimeType(undefined), undefined);
             });
         });
+
         describe("mimeTypeToExt", function () {
             it("should return an extension string given a MIME type string", function () {
                 assert.strictEqual(util.mimeTypeToExt("image/png"), "png");
             });
+
             it("should return undefined if undefined passed", function () {
                 assert.strictEqual(util.mimeTypeToExt(undefined), undefined);
             });
         });
+
         describe("isValidImageType", function () {
             it("should return true for a valid image type supported by simpleimage", function () {
                 assert.strictEqual(util.isValidImageType("image/png"), true);
             });
+
             it("should return false if an invalid image type is passed", function () {
                 assert.strictEqual(util.isValidImageType("application/json"), false);
             });
+
             it("should return false if undefined is passed", function () {
                 assert.strictEqual(util.isValidImageType(undefined), false);
             });
         });
+
         describe("getValidImageTypes", function () {
             it("should return the image types supported by simpleimage", function () {
                 var results = util.getValidImageTypes();
-                assert.equal(results.indexOf("png") >= 0, true);
-                assert.equal(results.indexOf("jpg") >= 0, true);
-                assert.equal(results.indexOf("jpeg") >= 0, true);
-                assert.equal(results.indexOf("gif") >= 0, true);
-                assert.equal(results.indexOf("bmp") >= 0, true);
+                assert.equal(results.indexOf(".png") >= 0, true);
+                assert.equal(results.indexOf(".jpg") >= 0, true);
+                assert.equal(results.indexOf(".jpeg") >= 0, true);
+                assert.equal(results.indexOf(".gif") >= 0, true);
+                assert.equal(results.indexOf(".bmp") >= 0, true);
             });
         });
+
         describe("getValidImageTypesString", function () {
             it("should return a string form of the images supported by simpleimage", function () {
-                var supportedTypes = ["png", "jpg", "jpeg", "gif", "bmp"];
+                var supportedTypes = [".png", ".jpg", ".jpeg", ".gif", ".bmp"];
                 var str = util.getValidImageTypesString();
                 var strArr = str.split(/, */);
                 assert.equal(strArr.length === supportedTypes.length, true);
@@ -96,64 +104,130 @@ describe("util", function () {
                 assert.equal(filteredArr.length === 0, true);
             });
         });
+
+        describe("getExpireTimeString", () => {
+            it("should return value of 1 and unit of 'minute' if 60 seconds is specified", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(60, true), "1 minute");
+            });
+
+            it("should return value of 2 and unit of 'minutes' if 120 seconds is specified", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(120, true), "2 minutes");
+            });
+
+            it("should return value of 30 and unit of 'seconds' if 30 seconds is specified", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(30, true), "30 seconds");
+            });
+
+            it("should return value of 1 and unit of 'second' if 1 second is specified", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(1, true), "1 second");
+            });
+
+            it("should return value of 0 and unit of 'seconds' if 0 seconds is specified", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(0, true), "0 seconds");
+            });
+
+            it("should handle seconds that don't evenly divide into a single minute", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(90, true), "1.5 minutes");
+            });
+
+            it("should return null if undefined is specified for seconds", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(undefined, true), null);
+            });
+
+            it("should return null if null is specified for seconds", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(null, true), null);
+            });
+
+            it("should return null if evaluation mode is false", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(60, false), null);
+            });
+        });
+
+        describe("getFileSizeLimitString", () => {
+            it("should return the file size limit in MB", () => {
+                assert.deepStrictEqual(util.getFileSizeLimitString(4000000), "4 MB");
+            });
+
+            it("should handle values that don't evenly divide into 1 MB", () => {
+                assert.deepStrictEqual(util.getFileSizeLimitString(4500000), "4.5 MB");
+            });
+
+            it("should handle 0 bytes", () => {
+                assert.deepStrictEqual(util.getFileSizeLimitString(0), "0 MB");
+            });
+
+            it("should return 'unspecified' if undefined is specified", () => {
+                assert.deepStrictEqual(util.getFileSizeLimitString(undefined), "unspecified");
+            });
+
+            it("should return 'unspecified' if null is specified", () => {
+                assert.deepStrictEqual(util.getFileSizeLimitString(null), "unspecified");
+            });
+        });
+
         describe("escapeOutput", function () {
             it("should escape text with HTML special characters", function () {
                 assert.strictEqual(util.escapeOutput("<>&\"'"), "&lt;&gt;&amp;&quot;&apos;");
             });
+
             it("should return empty string if empty string passed in", function () {
                 assert.strictEqual(util.escapeOutput(""), "");
             });
+
             it("should return empty string if undefined passed in", function () {
                 assert.strictEqual(util.escapeOutput(undefined), "");
             });
         });
+
         describe("getRedirectPath", function () {
             it("should return a relative path string given a production url", function () {
                 var myURL = "https://www.simpleimage.com/images/test";
                 assert.strictEqual(util.getRedirectPath(myURL), "/images/test");
             });
+
             it("should return root path string given undefined as url", function () {
                 assert.strictEqual(util.getRedirectPath(undefined), "/");
             });
+
             it("should return root slash if root slash is given", function () {
                 var path = "/";
                 assert.strictEqual(util.getRedirectPath(path), path);
             });
+
             it("should return the same string if relative path already given", function () {
                 var path = "/my_path";
                 assert.strictEqual(util.getRedirectPath(path), path);
             });
+
             it("should strip out queries from the URL", function () {
-                assert.strictEqual(
-                    util.getRedirectPath("/index.html?query=something"),
-                    "/index.html"
-                );
+                assert.strictEqual(util.getRedirectPath("/index.html?query=something"), "/index.html");
             });
+
             it("should return just the relative path if malicious URL is provided", function () {
-                assert.strictEqual(
-                    util.getRedirectPath("http://evilsite.com/foo/bar?somequery=value"),
-                    "/foo/bar"
-                );
+                assert.strictEqual(util.getRedirectPath("http://evilsite.com/foo/bar?somequery=value"), "/foo/bar");
             });
+
             it("should block relative paths with two (or more) slashes in front", function () {
                 assert.strictEqual(util.getRedirectPath("//google.com"), "/");
             });
+
             it("should block javascript: protocol URLs", function () {
                 assert.strictEqual(util.getRedirectPath("javascript:alert(1)"), "/");
             });
+
             it("should block data: protocol URLs", function () {
-                assert.strictEqual(
-                    util.getRedirectPath("data:text/html,<script>alert(document.domain)</script>"),
-                    "/"
-                );
+                assert.strictEqual(util.getRedirectPath("data:text/html,<script>alert(document.domain)</script>"), "/");
             });
+
             it("should block vbscript: protocol URLs", function () {
                 assert.strictEqual(util.getRedirectPath("vbscript:myfunction(total)"), "/");
             });
+
             it("should block URLs with CRLF characters", function () {
                 assert.strictEqual(util.getRedirectPath("/index\r\nsomething"), "/");
             });
         });
+
         describe("convertImageBinaryToBase64", function () {
             it("should convert binary image data to base64 equivalent", function () {
                 var image = imagesArr[0];
@@ -162,23 +236,22 @@ describe("util", function () {
 
                 var actualImageFileBase64 = util.convertImageBinaryToBase64(imageFile);
 
-                assert.equal(
-                    actualImageFileBase64,
-                    expectedImageFileBase64,
-                    "The base64 strings don't match."
-                );
+                assert.equal(actualImageFileBase64, expectedImageFileBase64, "The base64 strings don't match.");
             });
+
             it("should return undefined if undefined is passed as binary image data", function () {
                 var imageBase64 = util.convertImageBinaryToBase64(undefined);
 
                 assert.equal(imageBase64, undefined);
             });
+
             it("should return undefined if null is passed as binary image data", function () {
                 var imageBase64 = util.convertImageBinaryToBase64(null);
 
                 assert.equal(imageBase64, undefined);
             });
         });
+
         describe("constructBase64ImageArray", function () {
             it("should construct a set of base64 images (data + info) given array of image info from DB", function () {
                 var dbImages = imagesArr.map(function (item, index) {
@@ -201,16 +274,19 @@ describe("util", function () {
                     assert.equal(base64Images[i].id, imagesArr[i].id);
                 }
             });
+
             it("should return undefined if undefined is passed as array of image info", function () {
                 var base64Images = util.constructBase64ImageArray(undefined);
 
                 assert.equal(base64Images, undefined);
             });
+
             it("should return undefined if null is passed as array of image info", function () {
                 var base64Images = util.constructBase64ImageArray(null);
 
                 assert.equal(base64Images, undefined);
             });
+
             it("should return an array of 0 images if an array of 0 image infos is passed in", function () {
                 var base64Images = util.constructBase64ImageArray([]);
 
@@ -227,24 +303,18 @@ describe("util", function () {
                 assert.ok(result.valid);
                 assert.strictEqual(result.error, null);
             });
+
             it("should reject a username that is too long", function () {
                 const oldMaxUsernameLength = process.env.MAX_USERNAME_LENGTH || 24;
                 process.env.MAX_USERNAME_LENGTH = 24;
-                const result = usernameUtil.isValidUsername(
-                    "thisisaveryveryveryveryveryveryverylongusername"
-                );
+                const result = usernameUtil.isValidUsername("thisisaveryveryveryveryveryveryverylongusername");
                 assert.strictEqual(result.valid, false);
                 assert.strictEqual(result.error, usernameUtil.UsernameError.USERNAME_TOO_LONG);
                 process.env.MAX_USERNAME_LENGTH = oldMaxUsernameLength;
             });
+
             it("should reject a username that is not a string", function () {
-                const result = usernameUtil.isValidUsername([
-                    "multiple",
-                    "usernames",
-                    "should",
-                    "not",
-                    "work",
-                ]);
+                const result = usernameUtil.isValidUsername(["multiple", "usernames", "should", "not", "work"]);
                 assert.strictEqual(result.valid, false);
                 assert.strictEqual(result.error, usernameUtil.UsernameError.USERNAME_NOT_STRING);
             });

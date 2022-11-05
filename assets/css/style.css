@@ -33,41 +33,12 @@ input[type="file"] {
     transition: opacity 0.5s ease;
 }
 
-#contents {
+.contents {
     position: relative;
 }
 
-#contents.page-contents {
+.contents.page {
     margin: 120px 40px 20px 40px;
-}
-
-#upload-center {
-    height: 25vh;
-    margin: 0 auto;
-    margin-top: 400px;
-    width: 360px;
-}
-
-#upload-area {
-    display: flex;
-}
-
-#upload-preview {
-    padding: 20px 20px;
-    border-radius: 8px;
-    background-color: #35393b;
-    text-align: center;
-    vertical-align: middle;
-    min-width: 200px;
-    max-height: 20px;
-}
-
-#upload-preview.selected {
-    box-shadow: 0px 3px 25px 0px #df8fff;
-}
-
-#upload-preview.error {
-    box-shadow: 0px 3px 25px 0px red;
 }
 
 .pointer-element {
@@ -106,61 +77,11 @@ input[type="file"] {
     ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
-#select-button {
-    margin: 0;
-    width: 20px;
-    height: 20px;
-    background: yellow; /* Old browsers */
-    background: -moz-linear-gradient(
-        top,
-        yellow 0%,
-        rgb(199, 199, 0) 40%,
-        rgb(100, 100, 0) 100%
-    ); /* FF3.6-15 */
-    background: -webkit-linear-gradient(
-        top,
-        yellow 0%,
-        rgb(199, 199, 0) 40%,
-        rgb(100, 100, 0) 100%
-    ); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(
-        to bottom,
-        yellow 0%,
-        rgb(199, 199, 0) 40%,
-        rgb(100, 100, 0) 100%
-    ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-}
-
-#upload-button {
-    margin: 0;
-    width: 20px;
-    height: 20px;
-    background: rgb(0, 150, 0); /* Old browsers */
-    background: -moz-linear-gradient(
-        top,
-        rgb(0, 150, 0) 0%,
-        rgb(0, 125, 0) 40%,
-        rgb(0, 80, 0) 100%
-    ); /* FF3.6-15 */
-    background: -webkit-linear-gradient(
-        top,
-        rgb(0, 150, 0) 0%,
-        rgb(0, 125, 0) 40%,
-        rgb(0, 80, 0) 100%
-    ); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(
-        to bottom,
-        rgb(0, 150, 0) 0%,
-        rgb(0, 125, 0) 40%,
-        rgb(0, 80, 0) 100%
-    ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-}
-
 .info {
     color: white;
 }
 
-#top-nav {
+.top-nav {
     position: fixed;
     top: 0;
     right: 0;
@@ -174,19 +95,19 @@ input[type="file"] {
     transition-duration: 1s;
 }
 
-#top-nav a,
-#top-nav span {
+.top-nav a,
+.top-nav span {
     color: white;
     text-decoration: none;
     font-size: 24px;
     margin: 0 20px;
 }
 
-#top-nav #title {
+.top-nav .nav-item.title {
     left: 0;
 }
 
-#top-nav #title .logo {
+.top-nav .nav-item.title .logo {
     background: url(/assets/images/logo.svg);
     background-position: center center;
     background-repeat: no-repeat;
@@ -197,7 +118,7 @@ input[type="file"] {
     transition-duration: 1s;
 }
 
-#top-nav .nav-content {
+.top-nav .nav-content {
     margin: 0px 30px;
     position: relative;
     top: 0;
@@ -205,54 +126,54 @@ input[type="file"] {
     transition-duration: 1s;
 }
 
-#top-nav .nav-item {
+.top-nav .nav-item {
     position: absolute;
     cursor: pointer;
     transition: transform 1s, left 1s, right 1s, background-color 0.2s;
 }
 
-#top-nav .nav-item.nav-sub {
+.top-nav .nav-item.nav-sub {
     position: relative;
 }
 
-#top-nav .nav-item.nav-static {
+.top-nav .nav-item.nav-static {
     cursor: default;
 }
 
-#top-nav .nav-item.nav-right-1 {
+.top-nav .nav-item.nav-right-1 {
     right: 0;
     top: 30px;
 }
 
-#top-nav .nav-item.nav-right-2 {
+.top-nav .nav-item.nav-right-2 {
     right: 136px;
     top: 30px;
 }
 
-#top-nav .nav-item.nav-button {
+.top-nav .nav-item.nav-button {
     background-color: #222425;
     border-radius: 8px;
 }
 
-#top-nav .nav-item.nav-button:hover {
+.top-nav .nav-item.nav-button:hover {
     background-color: rgb(182, 182, 0);
 }
 
-#top-nav .nav-composite {
+.top-nav .nav-composite {
     padding: 0 10px;
 }
 
-#top-nav .nav-composite a,
-#top-nav .nav-composite span {
+.top-nav .nav-composite a,
+.top-nav .nav-composite span {
     margin: 0;
 }
 
-#top-nav .nav-item.nav-menu a,
-#top-nav .nav-item.nav-menu span {
+.top-nav .nav-item.nav-menu a,
+.top-nav .nav-item.nav-menu span {
     margin: 0;
 }
 
-#top-nav .nav-menu .nav-menu-items {
+.top-nav .nav-menu .nav-menu-items {
     position: absolute;
     top: 60px;
     z-index: -1;
@@ -266,12 +187,12 @@ input[type="file"] {
     right: 0px;
 }
 
-#top-nav .nav-menu.nav-active .nav-menu-items {
+.top-nav .nav-menu.nav-active .nav-menu-items {
     padding: 20px 20px;
     height: 80px;
 }
 
-#top-nav .nav-item.nav-menu .nav-item.nav-menu-item {
+.top-nav .nav-item.nav-menu .nav-item.nav-menu-item {
     position: relative;
     text-align: center;
     margin-bottom: 8px;
@@ -302,47 +223,47 @@ input[type="file"] {
 }
 
 @media (min-width: 769px) {
-    #top-nav #mobile-menu-button,
+    .top-nav #mobile-menu-button,
     #mobile-menu {
         display: none;
     }
 
-    #top-nav.mini {
+    .top-nav.mini {
         height: 50px;
     }
 
-    #top-nav.mini #title {
+    .top-nav.mini .nav-item.title {
         left: -30px;
     }
 
-    #top-nav.mini #title .logo {
+    .top-nav.mini .nav-item.title .logo {
         transform: scale(0.7);
     }
 
-    #top-nav.mini .nav-item.nav-right-1 {
+    .top-nav.mini .nav-item.nav-right-1 {
         transform: scale(0.7);
         right: -30px;
         top: 30px;
     }
 
-    #top-nav.mini .nav-item.nav-right-2 {
+    .top-nav.mini .nav-item.nav-right-2 {
         transform: scale(0.7);
         right: 68px;
         top: 30px;
     }
 
-    #top-nav.mini .nav-menu .nav-menu-items {
+    .top-nav.mini .nav-menu .nav-menu-items {
         top: 50px;
     }
 
-    #top-nav.mini .nav-content {
+    .top-nav.mini .nav-content {
         top: -20px;
     }
 }
 
 @media (max-width: 768px) {
-    #top-nav #user-menu,
-    #top-nav #guest-menu {
+    .top-nav #user-menu,
+    .top-nav #guest-menu {
         display: none;
     }
 
@@ -355,9 +276,6 @@ input[type="file"] {
         visibility: visible;
         opacity: 1;
     }
-}
-
-#top-nav .nav-item.nav-drawer.nav-active {
 }
 
 .nav-item.nav-menu .nav-menu-item {
@@ -379,8 +297,9 @@ input[type="file"] {
     font-size: 20px;
 }
 
-#footer {
-    margin-top: 40px;
+.footer {
+    margin-top: 20px;
+    margin-bottom: 20px;
     text-align: center;
     color: white;
 }
