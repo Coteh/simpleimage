@@ -130,16 +130,16 @@ describe("util", function () {
                 assert.deepStrictEqual(util.getExpireTimeString(90, true), "1.5 minutes");
             });
 
-            it("should return 'unspecified time' if undefined is specified for seconds", () => {
-                assert.deepStrictEqual(util.getExpireTimeString(undefined, true), "unspecified time");
+            it("should return null if undefined is specified for seconds", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(undefined, true), null);
             });
 
-            it("should return 'unspecified time' if null is specified for seconds", () => {
-                assert.deepStrictEqual(util.getExpireTimeString(null, true), "unspecified time");
+            it("should return null if null is specified for seconds", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(null, true), null);
             });
 
-            it("should return 'unspecified time' if evaluation mode is false", () => {
-                assert.deepStrictEqual(util.getExpireTimeString(60, false), "unspecified time");
+            it("should return null if evaluation mode is false", () => {
+                assert.deepStrictEqual(util.getExpireTimeString(60, false), null);
             });
         });
 
