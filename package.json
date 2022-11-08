@@ -54,7 +54,7 @@
     "winston-mongodb": "^5.1.0"
   },
   "devDependencies": {
-    "chai": "^4.3.6",
+    "chai": "^4.3.7",
     "chai-http": "^4.3.0",
     "cross-fetch": "^3.1.5",
     "cypress": "^10.11.0",
