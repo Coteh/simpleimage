@@ -27,6 +27,7 @@ jobs:
           environment:
               MOCHA_FILE: ./junit/simpleimage/test-results.xml
               FILE_SIZE_LIMIT: "5000000"
+              SESSION_SECRET: "test"
       - codecov/upload:
           file: ./coverage/lcov.info
       - store_artifacts:
