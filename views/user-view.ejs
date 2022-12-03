@@ -1,61 +1,68 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title><%= user.username %> - simpleimage</title>
+        <link rel="stylesheet" href="/assets/css/style.css" />
+        <link rel="stylesheet" href="/assets/css/user-style.css" />
+        <link rel="stylesheet" href="/assets/css/form-style.css" />
+        <link rel="stylesheet" href="/assets/css/comments.css" />
+        <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"
+        ></script>
+        <script src="/assets/js/user.bundle.js"></script>
+        <script>
+            $(document).ready(function () {
+                requestCommentsUser("<%= user.username %>", function (commentsElement, numOfComments) {
+                    $("#comment-count").text("(" + numOfComments + ")");
+                });
+                requestImagesUser("<%= user.username %>", function (imagesElement, numOfImages) {
+                    $("#images-count").text("(" + numOfImages + ")");
+                });
+                $("#join-date").text(timeUTCToLocal("<%= user.join_date %>"));
+            });
+        </script>
+        <%- include("headers") %>
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <title><%= user.username %> - simpleimage</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/user-style.css">
-    <link rel="stylesheet" href="/assets/css/form-style.css">
-    <link rel="stylesheet" href="/assets/css/comments.css">
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
-    <script src="/assets/js/user.bundle.js"></script>
-    <script>
-        requestCommentsUser("<%= user.username %>", function(commentsElement, numOfComments) {
-            $("#comment-count").text("(" + numOfComments + ")");
-        });
-        requestImagesUser("<%= user.username %>", function (imagesElement, numOfImages) {
-            $("#images-count").text("(" + numOfImages + ")");
-        });
-        $(document).ready(function() {
-            $("#join-date").text(timeUTCToLocal("<%= user.join_date %>"));
-        });
-    </script>
-    <%- include("headers") %>
-</head>
-
-<body>
-    <div id="overlay-backdrop">
-    </div>
-    <%- include("top-nav-view", {user:sessionUser}) %>
-    <div id="contents" class="page-contents">
-        <div id="notification-overlay-container">
-        </div>
-        <div id="overlay-container">
-        </div>
-        <div id="user-container">
-            <div>
-                <h2><%= user.username %></h2>
-            </div>
-            <div class="user-view">
-                <span class="collecticons collecticons-calendar head-icon" alt="Join Date" title="Join Date"></span>
-                <span id="join-date"></span>
-            </div>
-            <div>
-                <h2>Uploaded Images <span id="images-count"></span></h2>
-            </div>
-            <div id="images-container">
-                <div id="images-placeholder" class="spinner">
+    <body>
+        <div id="overlay-backdrop"></div>
+        <%- include("top-nav-view", {user:sessionUser}) %>
+        <div id="contents" class="contents page">
+            <div id="notification-overlay-container"></div>
+            <div id="overlay-container"></div>
+            <div id="user-container">
+                <div>
+                    <h2><%= user.username %></h2>
+                </div>
+                <div class="user-view">
+                    <span class="collecticons collecticons-calendar head-icon" alt="Join Date" title="Join Date"></span>
+                    <span id="join-date"></span>
+                </div>
+                <div>
+                    <h2>Uploaded Images <span id="images-count"></span></h2>
+                </div>
+                <div id="images-container">
+                    <div id="images-placeholder">
+                        <div>
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2>Comments <span id="comment-count"></span></h2>
+                </div>
+                <div id="comments-container">
+                    <div id="comments-placeholder">
+                        <div>
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div>
-                <h2>Comments <span id="comment-count"></span></h2>
-            </div>
-            <div id="comments-container"></div>
+            <%- include("footer") %>
         </div>
-        <%- include("footer") %>
-    </div>
-</body>
-
+    </body>
 </html>

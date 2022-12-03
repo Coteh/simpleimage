@@ -11,25 +11,40 @@ build-test:
 bt: build-test
 
 deploy-prod:
-	docker-compose -f docker-compose.yml up
+	docker-compose -f docker-compose.yml up -d
 dp: deploy-prod
 
 deploy-dev:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 dd: deploy-dev
 
 deploy-dev-https:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.https.yml up
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.https.yml up -d
 dds: deploy-dev-https
 
 deploy-dev-debug:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.debug.yml up
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.dev.debug.yml up -d
 ddd: deploy-dev-debug
 
 deploy-test:
 	docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit
 dt: deploy-test
 
+deploy-test-debug:
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml -f docker-compose.test.debug.yml up --abort-on-container-exit
+dtd: deploy-test-debug
+
+deploy-test-server:
+	docker-compose -f docker-compose.yml -f docker-compose.test.yml -f docker-compose.test.e2e.yml up -d
+dts: deploy-test-server
+
+stop:
+	docker-compose stop
+
+rm:
+	docker-compose rm -f
+
 clean:
 	docker ps -a | grep coteh/simpleimage | cut -d' ' -f1 | xargs docker rm
+	docker images | grep coteh/simpleimage | awk '{print $$3}' | xargs docker rmi
 	docker volume rm simpleimage_node_modules

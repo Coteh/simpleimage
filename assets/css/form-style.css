@@ -4,7 +4,8 @@ form input {
     margin: 10px 10px 10px 10px;
 }
 
-.register-view, .login-view {
+.register-view,
+.login-view {
     color: black;
 }
 
@@ -39,7 +40,7 @@ form input {
     bottom: -10px;
     overflow: hidden;
     overflow-wrap: break-word;
-    font-size: .8em;
+    font-size: 0.8em;
     pointer-events: none;
 }
 
@@ -50,6 +51,9 @@ form input {
     opacity: 0;
     transition: opacity 0.25s ease;
     border-radius: 8px;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
 }
 
 #overlay-container.open {
@@ -64,7 +68,6 @@ form input {
 #notification-overlay-container.open {
     position: fixed;
     top: 10vh;
-    left: calc((100vw - 30vw) / 2);
     width: 30vw;
     max-width: 30vw;
     z-index: 301;
@@ -81,9 +84,9 @@ form input {
         for mobile devices */
     #overlay-container.open,
     #notification-overlay-container.open {
-        left: 0 !important;
         width: 100% !important;
         max-width: initial;
+        box-sizing: border-box;
     }
 }
 

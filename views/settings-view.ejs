@@ -13,13 +13,18 @@
     <script src="/assets/js/user.bundle.js"></script>
     <script>
         var onPasswordResetSubmitted = function() {
+            let jsonObj;
+            try {
+                jsonObj = JSON.parse(this.responseText);
+            } catch (err) {
+                handleResponseFailure(this.status);
+                return console.error("[onPasswordResetSubmitted]", "Error occurred when parsing response", err);
+            }
             if (this.status !== 200) {
-                var jsonObj = JSON.parse(this.responseText);
                 showNotification(jsonObj.message, {
                     error: true
                 });
             } else {
-                var jsonObj = JSON.parse(this.responseText);
                 showNotification(jsonObj.message, {
                     error: false
                 });
@@ -27,11 +32,12 @@
         };
 
         var submitPasswordReset = function() {
-            var form = $("form[id='change-password-form']");
-            var req = new XMLHttpRequest();
+            const form = $("form[id='change-password-form']");
+            const action = form.attr("action");
+            const req = new XMLHttpRequest();
 
             req.onload = onPasswordResetSubmitted;
-            req.open("post", "/change_password?type=json");
+            req.open("post", action);
             req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             req.send(form.serialize());
         }
@@ -54,7 +60,7 @@
     <div id="overlay-backdrop">
     </div>
     <%- include("top-nav-view", {user:sessionUser}) %>
-    <div id="contents" class="page-contents">
+    <div id="contents" class="contents page">
         <div id="notification-overlay-container">
         </div>
         <div id="overlay-container">
@@ -65,7 +71,7 @@
             </div>
             <div class="settings-view">
                 <span>Change Password</span><br/>
-                <form action="/change_password?type=html" method="POST" id="change-password-form" class="input-form">
+                <form action="/settings/change_password" method="POST" id="change-password-form" class="input-form">
                     <span>Old Password</span>
                     <input type="password" name="oldPassword"></input><br />
                     <span>New Password</span>
@@ -73,6 +79,7 @@
                     <span>Confirm New Password</span>
                     <input type="password" name="newPasswordConfirm"></input><br />
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>"></input>
+                    <!-- TODO should be a button element -->
                     <span class="button submit-button">Submit</span>
                 </form>
             </div>

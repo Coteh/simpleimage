@@ -11,876 +11,876 @@
  */
 
 @font-face {
-  font-family: "collecticons";
-  src: url('../font/collecticons.woff');
-  src: url('../font/collecticons.woff2');
-  font-weight: normal;
-  font-style: normal;
+    font-family: "collecticons";
+    src: url("../font/collecticons.woff");
+    src: url("../font/collecticons.woff2");
+    font-weight: normal;
+    font-style: normal;
 }
 
 [class^="collecticons-"],
 [class*=" collecticons-"] {
-  speak: none;
-  font-family: "collecticons";
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
+    speak: none;
+    font-family: "collecticons";
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
 
-  /* Better font rendering */
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    /* Better font rendering */
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .collecticons-area:before {
-  content: "\F101";
+    content: "\F101";
 }
 
 .collecticons-arrow-down-left:before {
-  content: "\F102";
+    content: "\F102";
 }
 
 .collecticons-arrow-down-right:before {
-  content: "\F103";
+    content: "\F103";
 }
 
 .collecticons-arrow-down:before {
-  content: "\F104";
+    content: "\F104";
 }
 
 .collecticons-arrow-left:before {
-  content: "\F105";
+    content: "\F105";
 }
 
 .collecticons-arrow-loop:before {
-  content: "\F106";
+    content: "\F106";
 }
 
 .collecticons-arrow-move:before {
-  content: "\F107";
+    content: "\F107";
 }
 
 .collecticons-arrow-return:before {
-  content: "\F108";
+    content: "\F108";
 }
 
 .collecticons-arrow-right:before {
-  content: "\F109";
+    content: "\F109";
 }
 
 .collecticons-arrow-semi-spin-ccw:before {
-  content: "\F10A";
+    content: "\F10A";
 }
 
 .collecticons-arrow-semi-spin-cw:before {
-  content: "\F10B";
+    content: "\F10B";
 }
 
 .collecticons-arrow-spin-ccw:before {
-  content: "\F10C";
+    content: "\F10C";
 }
 
 .collecticons-arrow-spin-cw:before {
-  content: "\F10D";
+    content: "\F10D";
 }
 
 .collecticons-arrow-up-left:before {
-  content: "\F10E";
+    content: "\F10E";
 }
 
 .collecticons-arrow-up-right:before {
-  content: "\F10F";
+    content: "\F10F";
 }
 
 .collecticons-arrow-up:before {
-  content: "\F110";
+    content: "\F110";
 }
 
 .collecticons-bell:before {
-  content: "\F111";
+    content: "\F111";
 }
 
 .collecticons-blow:before {
-  content: "\F112";
+    content: "\F112";
 }
 
 .collecticons-book-bookmark:before {
-  content: "\F113";
+    content: "\F113";
 }
 
 .collecticons-book:before {
-  content: "\F114";
+    content: "\F114";
 }
 
 .collecticons-brand-collecticons:before {
-  content: "\F115";
+    content: "\F115";
 }
 
 .collecticons-brand-development-seed-2:before {
-  content: "\F116";
+    content: "\F116";
 }
 
 .collecticons-brand-development-seed:before {
-  content: "\F117";
+    content: "\F117";
 }
 
 .collecticons-brand-dropbox:before {
-  content: "\F118";
+    content: "\F118";
 }
 
 .collecticons-brand-facebook:before {
-  content: "\F119";
+    content: "\F119";
 }
 
 .collecticons-brand-flickr:before {
-  content: "\F11A";
+    content: "\F11A";
 }
 
 .collecticons-brand-github:before {
-  content: "\F11B";
+    content: "\F11B";
 }
 
 .collecticons-brand-google-plus:before {
-  content: "\F11C";
+    content: "\F11C";
 }
 
 .collecticons-brand-human-rights:before {
-  content: "\F11D";
+    content: "\F11D";
 }
 
 .collecticons-brand-id:before {
-  content: "\F11E";
+    content: "\F11E";
 }
 
 .collecticons-brand-instagram:before {
-  content: "\F11F";
+    content: "\F11F";
 }
 
 .collecticons-brand-lastfm:before {
-  content: "\F120";
+    content: "\F120";
 }
 
 .collecticons-brand-linkedin:before {
-  content: "\F121";
+    content: "\F121";
 }
 
 .collecticons-brand-medium:before {
-  content: "\F122";
+    content: "\F122";
 }
 
 .collecticons-brand-satsummit:before {
-  content: "\F123";
+    content: "\F123";
 }
 
 .collecticons-brand-skype:before {
-  content: "\F124";
+    content: "\F124";
 }
 
 .collecticons-brand-slack:before {
-  content: "\F125";
+    content: "\F125";
 }
 
 .collecticons-brand-soundcloud:before {
-  content: "\F126";
+    content: "\F126";
 }
 
 .collecticons-brand-tumblr:before {
-  content: "\F127";
+    content: "\F127";
 }
 
 .collecticons-brand-twitter:before {
-  content: "\F128";
+    content: "\F128";
 }
 
 .collecticons-brand-youtube:before {
-  content: "\F129";
+    content: "\F129";
 }
 
 .collecticons-briefcase:before {
-  content: "\F12A";
+    content: "\F12A";
 }
 
 .collecticons-calendar-range:before {
-  content: "\F12B";
+    content: "\F12B";
 }
 
 .collecticons-calendar-slot:before {
-  content: "\F12C";
+    content: "\F12C";
 }
 
 .collecticons-calendar:before {
-  content: "\F12D";
+    content: "\F12D";
 }
 
 .collecticons-camera:before {
-  content: "\F12E";
+    content: "\F12E";
 }
 
 .collecticons-chart-bars:before {
-  content: "\F12F";
+    content: "\F12F";
 }
 
 .collecticons-chart-line:before {
-  content: "\F130";
+    content: "\F130";
 }
 
 .collecticons-chart-pie:before {
-  content: "\F131";
+    content: "\F131";
 }
 
 .collecticons-chevron-down--small:before {
-  content: "\F132";
+    content: "\F132";
 }
 
 .collecticons-chevron-down-trail--small:before {
-  content: "\F133";
+    content: "\F133";
 }
 
 .collecticons-chevron-down:before {
-  content: "\F134";
+    content: "\F134";
 }
 
 .collecticons-chevron-left--small:before {
-  content: "\F135";
+    content: "\F135";
 }
 
 .collecticons-chevron-left-trail--small:before {
-  content: "\F136";
+    content: "\F136";
 }
 
 .collecticons-chevron-left:before {
-  content: "\F137";
+    content: "\F137";
 }
 
 .collecticons-chevron-right--small:before {
-  content: "\F138";
+    content: "\F138";
 }
 
 .collecticons-chevron-right-trail--small:before {
-  content: "\F139";
+    content: "\F139";
 }
 
 .collecticons-chevron-right:before {
-  content: "\F13A";
+    content: "\F13A";
 }
 
 .collecticons-chevron-step-backward:before {
-  content: "\F13B";
+    content: "\F13B";
 }
 
 .collecticons-chevron-step-forward:before {
-  content: "\F13C";
+    content: "\F13C";
 }
 
 .collecticons-chevron-up--small:before {
-  content: "\F13D";
+    content: "\F13D";
 }
 
 .collecticons-chevron-up-trail--small:before {
-  content: "\F13E";
+    content: "\F13E";
 }
 
 .collecticons-chevron-up:before {
-  content: "\F13F";
+    content: "\F13F";
 }
 
 .collecticons-circle-exclamation:before {
-  content: "\F140";
+    content: "\F140";
 }
 
 .collecticons-circle-forbidden:before {
-  content: "\F141";
+    content: "\F141";
 }
 
 .collecticons-circle-information:before {
-  content: "\F142";
+    content: "\F142";
 }
 
 .collecticons-circle-pause:before {
-  content: "\F143";
+    content: "\F143";
 }
 
 .collecticons-circle-play-next:before {
-  content: "\F144";
+    content: "\F144";
 }
 
 .collecticons-circle-play:before {
-  content: "\F145";
+    content: "\F145";
 }
 
 .collecticons-circle-question:before {
-  content: "\F146";
+    content: "\F146";
 }
 
 .collecticons-circle-record:before {
-  content: "\F147";
+    content: "\F147";
 }
 
 .collecticons-circle-stop:before {
-  content: "\F148";
+    content: "\F148";
 }
 
 .collecticons-circle-tick:before {
-  content: "\F149";
+    content: "\F149";
 }
 
 .collecticons-circle-xmark:before {
-  content: "\F14A";
+    content: "\F14A";
 }
 
 .collecticons-clipboard-tick:before {
-  content: "\F14B";
+    content: "\F14B";
 }
 
 .collecticons-clipboard:before {
-  content: "\F14C";
+    content: "\F14C";
 }
 
 .collecticons-clock-back:before {
-  content: "\F14D";
+    content: "\F14D";
 }
 
 .collecticons-clock:before {
-  content: "\F14E";
+    content: "\F14E";
 }
 
 .collecticons-code:before {
-  content: "\F14F";
+    content: "\F14F";
 }
 
 .collecticons-cog:before {
-  content: "\F150";
+    content: "\F150";
 }
 
 .collecticons-compass-2:before {
-  content: "\F151";
+    content: "\F151";
 }
 
 .collecticons-compass:before {
-  content: "\F152";
+    content: "\F152";
 }
 
 .collecticons-crosshair-2:before {
-  content: "\F153";
+    content: "\F153";
 }
 
 .collecticons-crosshair:before {
-  content: "\F154";
+    content: "\F154";
 }
 
 .collecticons-disc-dollar:before {
-  content: "\F155";
+    content: "\F155";
 }
 
 .collecticons-disc-xmark:before {
-  content: "\F156";
+    content: "\F156";
 }
 
 .collecticons-download-2:before {
-  content: "\F157";
+    content: "\F157";
 }
 
 .collecticons-download:before {
-  content: "\F158";
+    content: "\F158";
 }
 
 .collecticons-drop:before {
-  content: "\F159";
+    content: "\F159";
 }
 
 .collecticons-ellipsis-horizontal:before {
-  content: "\F15A";
+    content: "\F15A";
 }
 
 .collecticons-ellipsis-vertical:before {
-  content: "\F15B";
+    content: "\F15B";
 }
 
 .collecticons-envelope:before {
-  content: "\F15C";
+    content: "\F15C";
 }
 
 .collecticons-equal--small:before {
-  content: "\F15D";
+    content: "\F15D";
 }
 
 .collecticons-equal:before {
-  content: "\F15E";
+    content: "\F15E";
 }
 
 .collecticons-exclamation--small:before {
-  content: "\F15F";
+    content: "\F15F";
 }
 
 .collecticons-expand-collapse:before {
-  content: "\F160";
+    content: "\F160";
 }
 
 .collecticons-expand-down-left:before {
-  content: "\F161";
+    content: "\F161";
 }
 
 .collecticons-expand-down-right:before {
-  content: "\F162";
+    content: "\F162";
 }
 
 .collecticons-expand-from-left:before {
-  content: "\F163";
+    content: "\F163";
 }
 
 .collecticons-expand-from-right:before {
-  content: "\F164";
+    content: "\F164";
 }
 
 .collecticons-expand-top-left:before {
-  content: "\F165";
+    content: "\F165";
 }
 
 .collecticons-expand-top-right:before {
-  content: "\F166";
+    content: "\F166";
 }
 
 .collecticons-eye-disabled:before {
-  content: "\F167";
+    content: "\F167";
 }
 
 .collecticons-eye:before {
-  content: "\F168";
+    content: "\F168";
 }
 
 .collecticons-face-happy:before {
-  content: "\F169";
+    content: "\F169";
 }
 
 .collecticons-face-sad:before {
-  content: "\F16A";
+    content: "\F16A";
 }
 
 .collecticons-factory:before {
-  content: "\F16B";
+    content: "\F16B";
 }
 
 .collecticons-fence:before {
-  content: "\F16C";
+    content: "\F16C";
 }
 
 .collecticons-flag-pole:before {
-  content: "\F16D";
+    content: "\F16D";
 }
 
 .collecticons-flame:before {
-  content: "\F16E";
+    content: "\F16E";
 }
 
 .collecticons-folder:before {
-  content: "\F16F";
+    content: "\F16F";
 }
 
 .collecticons-gauge:before {
-  content: "\F170";
+    content: "\F170";
 }
 
 .collecticons-git-fork:before {
-  content: "\F171";
+    content: "\F171";
 }
 
 .collecticons-globe:before {
-  content: "\F172";
+    content: "\F172";
 }
 
 .collecticons-grip-vertical:before {
-  content: "\F173";
+    content: "\F173";
 }
 
 .collecticons-hamburger-menu:before {
-  content: "\F174";
+    content: "\F174";
 }
 
 .collecticons-hand-thumbs-down:before {
-  content: "\F175";
+    content: "\F175";
 }
 
 .collecticons-hand-thumbs-up:before {
-  content: "\F176";
+    content: "\F176";
 }
 
 .collecticons-heart:before {
-  content: "\F177";
+    content: "\F177";
 }
 
 .collecticons-house:before {
-  content: "\F178";
+    content: "\F178";
 }
 
 .collecticons-houses:before {
-  content: "\F179";
+    content: "\F179";
 }
 
 .collecticons-iso-stack:before {
-  content: "\F17A";
+    content: "\F17A";
 }
 
 .collecticons-layout-column-2x:before {
-  content: "\F17B";
+    content: "\F17B";
 }
 
 .collecticons-layout-grid-2x2:before {
-  content: "\F17C";
+    content: "\F17C";
 }
 
 .collecticons-layout-grid-3x3:before {
-  content: "\F17D";
+    content: "\F17D";
 }
 
 .collecticons-layout-row-2x:before {
-  content: "\F17E";
+    content: "\F17E";
 }
 
 .collecticons-leaf:before {
-  content: "\F17F";
+    content: "\F17F";
 }
 
 .collecticons-link:before {
-  content: "\F180";
+    content: "\F180";
 }
 
 .collecticons-list-numbered:before {
-  content: "\F181";
+    content: "\F181";
 }
 
 .collecticons-list:before {
-  content: "\F182";
+    content: "\F182";
 }
 
 .collecticons-lock-2-open:before {
-  content: "\F183";
+    content: "\F183";
 }
 
 .collecticons-lock-2:before {
-  content: "\F184";
+    content: "\F184";
 }
 
 .collecticons-lock-open:before {
-  content: "\F185";
+    content: "\F185";
 }
 
 .collecticons-lock:before {
-  content: "\F186";
+    content: "\F186";
 }
 
 .collecticons-login:before {
-  content: "\F187";
+    content: "\F187";
 }
 
 .collecticons-logout:before {
-  content: "\F188";
+    content: "\F188";
 }
 
 .collecticons-magnifier-left:before {
-  content: "\F189";
+    content: "\F189";
 }
 
 .collecticons-magnifier-right:before {
-  content: "\F18A";
+    content: "\F18A";
 }
 
 .collecticons-map:before {
-  content: "\F18B";
+    content: "\F18B";
 }
 
 .collecticons-marker:before {
-  content: "\F18C";
+    content: "\F18C";
 }
 
 .collecticons-minus--small:before {
-  content: "\F18D";
+    content: "\F18D";
 }
 
 .collecticons-minus:before {
-  content: "\F18E";
+    content: "\F18E";
 }
 
 .collecticons-mobile-phone:before {
-  content: "\F18F";
+    content: "\F18F";
 }
 
 .collecticons-options-tick:before {
-  content: "\F190";
+    content: "\F190";
 }
 
 .collecticons-page-cog:before {
-  content: "\F191";
+    content: "\F191";
 }
 
 .collecticons-page-label:before {
-  content: "\F192";
+    content: "\F192";
 }
 
 .collecticons-page-lock-open:before {
-  content: "\F193";
+    content: "\F193";
 }
 
 .collecticons-page-tick:before {
-  content: "\F194";
+    content: "\F194";
 }
 
 .collecticons-page:before {
-  content: "\F195";
+    content: "\F195";
 }
 
 .collecticons-pages:before {
-  content: "\F196";
+    content: "\F196";
 }
 
 .collecticons-pencil:before {
-  content: "\F197";
+    content: "\F197";
 }
 
 .collecticons-pi:before {
-  content: "\F198";
+    content: "\F198";
 }
 
 .collecticons-picture:before {
-  content: "\F199";
+    content: "\F199";
 }
 
 .collecticons-pilcrow:before {
-  content: "\F19A";
+    content: "\F19A";
 }
 
 .collecticons-plus--small:before {
-  content: "\F19B";
+    content: "\F19B";
 }
 
 .collecticons-plus:before {
-  content: "\F19C";
+    content: "\F19C";
 }
 
 .collecticons-pop-down:before {
-  content: "\F19D";
+    content: "\F19D";
 }
 
 .collecticons-pop-up:before {
-  content: "\F19E";
+    content: "\F19E";
 }
 
 .collecticons-printer:before {
-  content: "\F19F";
+    content: "\F19F";
 }
 
 .collecticons-quote-left:before {
-  content: "\F1A0";
+    content: "\F1A0";
 }
 
 .collecticons-quote-right:before {
-  content: "\F1A1";
+    content: "\F1A1";
 }
 
 .collecticons-resize-center-horizontal:before {
-  content: "\F1A2";
+    content: "\F1A2";
 }
 
 .collecticons-resize-center-vertical:before {
-  content: "\F1A3";
+    content: "\F1A3";
 }
 
 .collecticons-resize-in:before {
-  content: "\F1A4";
+    content: "\F1A4";
 }
 
 .collecticons-resize-out:before {
-  content: "\F1A5";
+    content: "\F1A5";
 }
 
 .collecticons-road:before {
-  content: "\F1A6";
+    content: "\F1A6";
 }
 
 .collecticons-rock:before {
-  content: "\F1A7";
+    content: "\F1A7";
 }
 
 .collecticons-rss-feed:before {
-  content: "\F1A8";
+    content: "\F1A8";
 }
 
 .collecticons-share-2:before {
-  content: "\F1A9";
+    content: "\F1A9";
 }
 
 .collecticons-share:before {
-  content: "\F1AA";
+    content: "\F1AA";
 }
 
 .collecticons-shrink-to-left:before {
-  content: "\F1AB";
+    content: "\F1AB";
 }
 
 .collecticons-shrink-to-right:before {
-  content: "\F1AC";
+    content: "\F1AC";
 }
 
 .collecticons-sign-danger:before {
-  content: "\F1AD";
+    content: "\F1AD";
 }
 
 .collecticons-sliders-horizontal:before {
-  content: "\F1AE";
+    content: "\F1AE";
 }
 
 .collecticons-sliders-vertical:before {
-  content: "\F1AF";
+    content: "\F1AF";
 }
 
 .collecticons-sort-asc:before {
-  content: "\F1B0";
+    content: "\F1B0";
 }
 
 .collecticons-sort-desc:before {
-  content: "\F1B1";
+    content: "\F1B1";
 }
 
 .collecticons-sort-none:before {
-  content: "\F1B2";
+    content: "\F1B2";
 }
 
 .collecticons-sort:before {
-  content: "\F1B3";
+    content: "\F1B3";
 }
 
 .collecticons-spark:before {
-  content: "\F1B4";
+    content: "\F1B4";
 }
 
 .collecticons-speech-balloon:before {
-  content: "\F1B5";
+    content: "\F1B5";
 }
 
 .collecticons-square--small:before {
-  content: "\F1B6";
+    content: "\F1B6";
 }
 
 .collecticons-square:before {
-  content: "\F1B7";
+    content: "\F1B7";
 }
 
 .collecticons-star:before {
-  content: "\F1B8";
+    content: "\F1B8";
 }
 
 .collecticons-steam:before {
-  content: "\F1B9";
+    content: "\F1B9";
 }
 
 .collecticons-swap-horizontal:before {
-  content: "\F1BA";
+    content: "\F1BA";
 }
 
 .collecticons-swap-vertical:before {
-  content: "\F1BB";
+    content: "\F1BB";
 }
 
 .collecticons-table:before {
-  content: "\F1BC";
+    content: "\F1BC";
 }
 
 .collecticons-tag:before {
-  content: "\F1BD";
+    content: "\F1BD";
 }
 
 .collecticons-target:before {
-  content: "\F1BE";
+    content: "\F1BE";
 }
 
 .collecticons-text-block:before {
-  content: "\F1BF";
+    content: "\F1BF";
 }
 
 .collecticons-tick--small:before {
-  content: "\F1C0";
+    content: "\F1C0";
 }
 
 .collecticons-tick:before {
-  content: "\F1C1";
+    content: "\F1C1";
 }
 
 .collecticons-trash-bin:before {
-  content: "\F1C2";
+    content: "\F1C2";
 }
 
 .collecticons-triangle-down--small:before {
-  content: "\F1C3";
+    content: "\F1C3";
 }
 
 .collecticons-triangle-down:before {
-  content: "\F1C4";
+    content: "\F1C4";
 }
 
 .collecticons-triangle-left--small:before {
-  content: "\F1C5";
+    content: "\F1C5";
 }
 
 .collecticons-triangle-left:before {
-  content: "\F1C6";
+    content: "\F1C6";
 }
 
 .collecticons-triangle-right--small:before {
-  content: "\F1C7";
+    content: "\F1C7";
 }
 
 .collecticons-triangle-right:before {
-  content: "\F1C8";
+    content: "\F1C8";
 }
 
 .collecticons-triangle-up--small:before {
-  content: "\F1C9";
+    content: "\F1C9";
 }
 
 .collecticons-triangle-up:before {
-  content: "\F1CA";
+    content: "\F1CA";
 }
 
 .collecticons-tumblr-reblog:before {
-  content: "\F1CB";
+    content: "\F1CB";
 }
 
 .collecticons-ufo:before {
-  content: "\F1CC";
+    content: "\F1CC";
 }
 
 .collecticons-upload-2:before {
-  content: "\F1CD";
+    content: "\F1CD";
 }
 
 .collecticons-upload:before {
-  content: "\F1CE";
+    content: "\F1CE";
 }
 
 .collecticons-user-group:before {
-  content: "\F1CF";
+    content: "\F1CF";
 }
 
 .collecticons-user:before {
-  content: "\F1D0";
+    content: "\F1D0";
 }
 
 .collecticons-users:before {
-  content: "\F1D1";
+    content: "\F1D1";
 }
 
 .collecticons-way:before {
-  content: "\F1D2";
+    content: "\F1D2";
 }
 
 .collecticons-wrench:before {
-  content: "\F1D3";
+    content: "\F1D3";
 }
 
 .collecticons-xmark--small:before {
-  content: "\F1D4";
+    content: "\F1D4";
 }
 
 .collecticons-xmark:before {
-  content: "\F1D5";
+    content: "\F1D5";
 }

@@ -6,7 +6,8 @@ body {
     color: white;
 }
 
-.settings-view, .settings-nav-left {
+.settings-view,
+.settings-nav-left {
     background: grey;
     padding: 20px;
     line-height: 20px;

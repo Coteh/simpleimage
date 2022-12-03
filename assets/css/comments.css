@@ -1,5 +1,5 @@
 #comments-container {
-    background-color: #4CAF50;
+    background-color: #4caf50;
     border: 2px solid green;
 }
 
@@ -31,4 +31,15 @@
     .comment-box {
         width: 100%;
     }
+}
+
+#comments-placeholder {
+    display: flex;
+    height: 80px;
+}
+
+#comments-placeholder > div {
+    height: 50px;
+    width: 50px;
+    margin: auto;
 }

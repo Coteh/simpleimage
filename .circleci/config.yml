@@ -1,10 +1,11 @@
 version: 2.1
 orbs:
     codecov: codecov/codecov@1.0.5
+    # cypress: cypress-io/cypress@1
 jobs:
-  build-and-test:
+  run-integ-tests:
     docker:
-      - image: coteh/si-test-deps:0.0.2
+      - image: coteh/si-test-deps:0.0.3
     steps:
       - checkout
       - restore_cache:
@@ -18,17 +19,24 @@ jobs:
             - "$HOME/.npm"
             - "node_modules"
       - run:
+          name: Create large image test asset
+          command: ./test/scripts/generate_large_image.sh
+      - run:
           name: Run tests
-          command: npm run test-ci
+          command: npm run test:ci
           environment:
               MOCHA_FILE: ./junit/simpleimage/test-results.xml
+              FILE_SIZE_LIMIT: "5000000"
+              SESSION_SECRET: "test"
       - codecov/upload:
           file: ./coverage/lcov.info
       - store_artifacts:
           path: ./coverage
       - store_test_results:
           path: ./junit
+  # run-cypress-tests: TODO add Cypress to CircleCI pipeline
 workflows:
     build-and-test:
       jobs:
-        - build-and-test
+        - run-integ-tests
+        # - run-cypress-tests

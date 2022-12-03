@@ -13,6 +13,7 @@ vscode:
   extensions:
     - ms-azuretools.vscode-docker
     - eamodio.gitlens
+    - esbenp.prettier-vscode
 
 github:
   prebuilds:

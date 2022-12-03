@@ -1,9 +1,5 @@
-db.createUser(
-    {
-        user: "si-user",
-        pwd: "hunter2",
-        roles: [
-            { role: "readWrite", db: "simpleimage" }
-        ]
-    }
-);
+db.createUser({
+    user: "si-user",
+    pwd: "hunter2",
+    roles: [{ role: "readWrite", db: "simpleimage" }],
+});
