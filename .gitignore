@@ -92,3 +92,6 @@ cypress/screenshots
 
 # Test assets
 test/assets/images/big_image_test.png
+
+# Test output files
+diff.png

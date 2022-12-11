@@ -66,21 +66,24 @@ module.exports.addUser = (user, password, email) => {
     });
 };
 
-module.exports.addImagesForUser = (imageInfoArr, user) => {
-    return new Promise((resolve, reject) => {
-        const imagesArr = [];
-        imageInfoArr.forEach(function (item) {
-            var imageFile = fs.readFileSync("./test/assets/images/" + item.fileName);
-            imagesArr.push(
-                Object.assign(
-                    {
-                        imageBuffer: imageFile,
-                    },
-                    item
-                )
-            );
-        });
+module.exports.loadTestImages = (imageInfoArr) => {
+    const imagesArr = [];
+    imageInfoArr.forEach(function (item) {
+        var imageFile = fs.readFileSync("./test/assets/images/" + item.fileName);
+        imagesArr.push(
+            Object.assign(
+                {
+                    imageBuffer: imageFile,
+                },
+                item
+            )
+        );
+    });
+    return imagesArr;
+};
 
+module.exports.addImagesForUser = (imagesArr, user) => {
+    return new Promise((resolve) => {
         const imageResultsArr = [];
         let numAdded = 0;
         imagesArr.forEach((image) => {
@@ -107,19 +110,18 @@ module.exports.addImagesForUser = (imageInfoArr, user) => {
     });
 };
 
+module.exports.addImagesForUserFromFile = async (imageInfoArr, user) => {
+    const imagesArr = module.exports.loadTestImages(imageInfoArr);
+    return await module.exports.addImagesForUser(imagesArr, user);
+};
+
 module.exports.assertUserLoggedIn = async (agent) =>
-    agent
-        .get("/user")
-        .then((res) =>
-            assert.isTrue(res.statusCode === 200, "User is not logged in but they should be")
-        );
+    agent.get("/user").then((res) => assert.isTrue(res.statusCode === 200, "User is not logged in but they should be"));
 
 module.exports.assertUserNotLoggedIn = async (agent) =>
     agent
         .get("/user")
-        .then((res) =>
-            assert.isFalse(res.statusCode === 200, "User is logged in but they should not be")
-        );
+        .then((res) => assert.isFalse(res.statusCode === 200, "User is logged in but they should not be"));
 
 module.exports.assertUserLogin = (agent, username, password) => {
     return new Promise((resolve, reject) => {
@@ -190,5 +192,7 @@ module.exports.getImageExt = (mimeType) => {
             return "bmp";
         case "image/gif":
             return "gif";
+        case "image/tiff":
+            return "tiff";
     }
 };

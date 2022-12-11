@@ -7,7 +7,7 @@ const { assert } = chai;
 const { stub } = require("sinon");
 const {
     getServerAgent,
-    addImagesForUser,
+    addImagesForUserFromFile,
     assertUserLogin,
     assertTimestampIsISO8601,
     MongoMemoryTestClient,
@@ -42,7 +42,7 @@ describe("integ", () => {
 
         it("should return comments for an image", async () => {
             // Add test image under test user
-            const uploadedImages = await addImagesForUser(
+            const uploadedImages = await addImagesForUserFromFile(
                 [
                     {
                         fileName: "Black_tea_pot_cropped.jpg",
@@ -54,17 +54,12 @@ describe("integ", () => {
             // Login user
             await assertUserLogin(agent, TEST_USER, "test");
             // Write comment on image
-            const writeResult = await writeComment(
-                agent,
-                TEST_USER,
-                uploadedImages[0].id,
-                COMMENT_TEXT
-            );
+            const writeResult = await writeComment(agent, TEST_USER, uploadedImages[0].id, COMMENT_TEXT);
             if (writeResult.statusCode !== 200) {
                 assert.fail(
-                    `Could not write comment, status code: ${
-                        writeResult.statusCode
-                    }, resp: ${JSON.stringify(writeResult.body)}`
+                    `Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(
+                        writeResult.body
+                    )}`
                 );
             }
             // Verify that comment exists when API request is made
@@ -81,7 +76,7 @@ describe("integ", () => {
 
         it("should return posted timestamp within comment", async () => {
             // Add test image under test user
-            const uploadedImages = await addImagesForUser(
+            const uploadedImages = await addImagesForUserFromFile(
                 [
                     {
                         fileName: "Black_tea_pot_cropped.jpg",
@@ -93,17 +88,12 @@ describe("integ", () => {
             // Login user
             await assertUserLogin(agent, TEST_USER, "test");
             // Write comment on image
-            const writeResult = await writeComment(
-                agent,
-                TEST_USER,
-                uploadedImages[0].id,
-                COMMENT_TEXT
-            );
+            const writeResult = await writeComment(agent, TEST_USER, uploadedImages[0].id, COMMENT_TEXT);
             if (writeResult.statusCode !== 200) {
                 assert.fail(
-                    `Could not write comment, status code: ${
-                        writeResult.statusCode
-                    }, resp: ${JSON.stringify(writeResult.body)}`
+                    `Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(
+                        writeResult.body
+                    )}`
                 );
             }
             // Get posted comment from response
@@ -122,7 +112,7 @@ describe("integ", () => {
 
         it("should return comment text sanitized", async () => {
             // Add test image under test user
-            const uploadedImages = await addImagesForUser(
+            const uploadedImages = await addImagesForUserFromFile(
                 [
                     {
                         fileName: "Black_tea_pot_cropped.jpg",
@@ -142,9 +132,9 @@ describe("integ", () => {
             );
             if (writeResult.statusCode !== 200) {
                 assert.fail(
-                    `Could not write comment, status code: ${
-                        writeResult.statusCode
-                    }, resp: ${JSON.stringify(writeResult.body)}`
+                    `Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(
+                        writeResult.body
+                    )}`
                 );
             }
             // Verify that comment exists and is sanitized
@@ -156,15 +146,12 @@ describe("integ", () => {
             assert.equal(comments.length, 1);
             assert.equal(comments[0].username, TEST_USER);
             assert.equal(comments[0].imageID, uploadedImages[0].id);
-            assert.equal(
-                comments[0].comment,
-                "&lt;script&gt;alert(&quot;Hello World&quot;)&lt;/script&gt;"
-            );
+            assert.equal(comments[0].comment, "&lt;script&gt;alert(&quot;Hello World&quot;)&lt;/script&gt;");
         });
 
         it("should fail to return image comments if fail to retrieve comments from database", async () => {
             // Add test image under test user
-            const uploadedImages = await addImagesForUser(
+            const uploadedImages = await addImagesForUserFromFile(
                 [
                     {
                         fileName: "Black_tea_pot_cropped.jpg",
@@ -176,17 +163,12 @@ describe("integ", () => {
             // Login user
             await assertUserLogin(agent, TEST_USER, "test");
             // Write comment on image
-            const writeResult = await writeComment(
-                agent,
-                TEST_USER,
-                uploadedImages[0].id,
-                COMMENT_TEXT
-            );
+            const writeResult = await writeComment(agent, TEST_USER, uploadedImages[0].id, COMMENT_TEXT);
             if (writeResult.statusCode !== 200) {
                 assert.fail(
-                    `Could not write comment, status code: ${
-                        writeResult.statusCode
-                    }, resp: ${JSON.stringify(writeResult.body)}`
+                    `Could not write comment, status code: ${writeResult.statusCode}, resp: ${JSON.stringify(
+                        writeResult.body
+                    )}`
                 );
             }
             // Stub databaseOps to fail to retrieve comments
@@ -210,7 +192,7 @@ describe("integ", () => {
 
         it("should return empty array when there are no comments on image", async () => {
             // Add test image under test user
-            const uploadedImages = await addImagesForUser(
+            const uploadedImages = await addImagesForUserFromFile(
                 [
                     {
                         fileName: "Black_tea_pot_cropped.jpg",
