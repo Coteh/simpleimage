@@ -60,7 +60,7 @@
     "cypress": "^10.11.0",
     "cypress-real-events": "^1.7.4",
     "husky": "^7.0.4",
-    "mocha": "^10.1.0",
+    "mocha": "^10.2.0",
     "mocha-junit-reporter": "^2.2.0",
     "mongodb-memory-server": "^6.7.0",
     "mongoist": "^2.5.6",
