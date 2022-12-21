@@ -26,7 +26,7 @@
     "@sentry/browser": "^7.23.0",
     "@sentry/tracing": "^7.23.0",
     "@sentry/webpack-plugin": "^1.20.0",
-    "@vingle/bmp-js": "^0.2.5",
+    "@vingle/bmp-js": "0.2.5",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "connect-redis": "^3.3.2",
