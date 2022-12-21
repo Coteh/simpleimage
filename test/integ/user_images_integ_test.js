@@ -8,12 +8,7 @@ const server = require("../../lib/server");
 const { promisify } = require("util");
 const { stub } = require("sinon");
 
-const {
-    getServerAgent,
-    addImagesForUser,
-    getImageExt,
-    MongoMemoryTestClient,
-} = require("./integ_test_utils");
+const { getServerAgent, addImagesForUserFromFile, getImageExt, MongoMemoryTestClient } = require("./integ_test_utils");
 
 chai.use(chaiHTTP);
 chai.should();
@@ -66,10 +61,7 @@ describe("integ", () => {
 
             resImages.forEach((img) => {
                 const image = imagesLookup.get(img.id);
-                assert.strictEqual(
-                    img.imageURL,
-                    `/images/${image.id}.${getImageExt(image.mimetype)}`
-                );
+                assert.strictEqual(img.imageURL, `/images/${image.id}.${getImageExt(image.mimetype)}`);
             });
         });
 
@@ -123,10 +115,7 @@ describe("integ", () => {
 
         it("should fail if database error occurred with retrieving user info", () => {
             // Stub databaseOps.findUser using sinon that calls a callback with an error
-            const findUserStub = stub(databaseOps, "findUser").callsArgWith(
-                1,
-                new Error("Database error occurred")
-            );
+            const findUserStub = stub(databaseOps, "findUser").callsArgWith(1, new Error("Database error occurred"));
             return performUserImageRequest("test-user")
                 .then((res) => {
                     assert.equal(res.statusCode, 500);
@@ -169,7 +158,7 @@ describe("integ", () => {
                         email: "test@test.com",
                     },
                     () => {
-                        addImagesForUser(
+                        addImagesForUserFromFile(
                             [
                                 {
                                     fileName: "Black_tea_pot_cropped.jpg",

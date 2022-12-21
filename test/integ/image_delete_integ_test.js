@@ -8,7 +8,7 @@ const {
     getServerAgent,
     addUser,
     assertUserLogin,
-    addImagesForUser,
+    addImagesForUserFromFile,
     assertBuffers,
     MongoMemoryTestClient,
 } = require("./integ_test_utils");
@@ -249,7 +249,7 @@ describe("integ", () => {
         beforeEach(() => {
             return addUser(TEST_USER, TEST_PASSWORD, "test@test.com")
                 .then(() => {
-                    return addImagesForUser(
+                    return addImagesForUserFromFile(
                         [
                             {
                                 fileName: "Black_tea_pot_cropped.jpg",
