@@ -1,5 +1,8 @@
 name: Deploy to Fly
-on: [push]
+on:
+  push:
+    tags:
+      - deploy
 jobs:
   deploy:
     name: Deploy app
