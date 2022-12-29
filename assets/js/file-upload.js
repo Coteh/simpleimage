@@ -16,7 +16,7 @@ const showUploadPreview = async function (file) {
     while (uploadPreview.firstChild) {
         uploadPreview.removeChild(uploadPreview.firstChild);
     }
-    uploadPreview.classList.remove("selected");
+    uploadPreview.className = "upload-preview";
     uploadPreview.style.boxShadow = "";
 
     const imageElem = document.createElement("img");

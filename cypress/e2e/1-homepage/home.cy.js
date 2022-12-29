@@ -118,11 +118,26 @@ describe("simpleimage homepage", () => {
         cy.getImagesForUser(username).its("length").should("eq", 0);
         cy.login(username, password);
         cy.reload();
+        cy.get("#upload-preview").should("not.have.class", "error");
         performImageUpload("Ingranaggio.png", "image/png")
             // TODO assert on error ID instead of error message
             .then(() => assertImageUploadFailed(500, "Could not upload image due to server error"))
             .then(() => {
                 cy.getImagesForUser(username).its("length").should("eq", 0);
+                cy.get("#upload-preview").should("have.class", "error");
+                // Selecting a new image to upload should make the error style disappear
+                cy.get('input[type="file"]').selectFile(
+                    {
+                        contents: "cypress/fixtures/image.jpg",
+                        fileName: "image.jpg",
+                        mimeType: "image/jpeg",
+                    },
+                    {
+                        // needed because the image input element is hidden, skips input element verification which fails for hidden input elements
+                        force: true,
+                    }
+                );
+                cy.get("#upload-preview").should("not.have.class", "error");
             });
     });
 
