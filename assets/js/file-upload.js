@@ -145,7 +145,7 @@ const checkUserLogin = function (callback) {
 };
 
 const performLoggedInAction = function (evt, callback) {
-    if (isLoginRequired === "true" && !isUserLoggedIn) {
+    if (isLoginRequired && !isUserLoggedIn) {
         evt.preventDefault();
         checkUserLogin(function (status) {
             if (status !== 200) {

@@ -165,14 +165,78 @@ describe("simpleimage homepage", () => {
         cy.get(".register-view").should("exist");
     });
 
-    it.skip("opens login page when file select button is clicked and user is not logged in and LOGIN_TO_UPLOAD is enabled", () => {
+    it("opens login page when file select button is clicked and user is not logged in and login wall is enabled", () => {
+        cy.window().then((win) => {
+            win.isLoginRequired = true;
+        });
+
+        cy.get(".login-view").should("not.exist");
+
         cy.get("#select-button").click();
 
-        assert.fail("TODO set LOGIN_TO_UPLOAD for this test only - then implement the test");
+        cy.get(".login-view").should("be.visible");
     });
 
-    it.skip("should prevent upload of image if login to upload is circumvented despite LOGIN_TO_UPLOAD being enabled", () => {
-        assert.fail("TODO set LOGIN_TO_UPLOAD for this test only - then implement the test");
+    it("opens login page when upload button is clicked and user is not logged in and login wall is enabled", () => {
+        cy.window().then((win) => {
+            win.isLoginRequired = true;
+        });
+
+        cy.get(".login-view").should("not.exist");
+
+        cy.fixture("image.jpg", "binary")
+            .then(Cypress.Blob.binaryStringToBlob)
+            .then((fileContent) => {
+                cy.get('input[type="file"]').should("exist").selectFile(
+                    {
+                        contents: "cypress/fixtures/image.jpg",
+                        fileName: "image.jpg",
+                        mimeType: "image/jpeg",
+                    },
+                    {
+                        // needed because the image input element is hidden, skips input element verification which fails for hidden input elements
+                        force: true,
+                    }
+                );
+            });
+
+        cy.get("#upload-button").click();
+
+        cy.get(".login-view").should("be.visible");
+    });
+
+    // TODO: LOGIN_TO_UPLOAD should be enabled server-side just for this test, not sure how to do that yet
+    // For now, set LOGIN_TO_UPLOAD=true and rerun the docker-compose stack, then run this test
+    it.skip("should prevent upload of image if user is not logged in and login wall is disabled client-side", () => {
+        cy.intercept("/upload").as("uploadReq");
+
+        cy.window().then((win) => {
+            win.isLoginRequired = false;
+        });
+
+        cy.get(".login-view").should("not.exist");
+
+        cy.fixture("image.jpg", "binary")
+            .then(Cypress.Blob.binaryStringToBlob)
+            .then((fileContent) => {
+                cy.get('input[type="file"]').should("exist").selectFile(
+                    {
+                        contents: "cypress/fixtures/image.jpg",
+                        fileName: "image.jpg",
+                        mimeType: "image/jpeg",
+                    },
+                    {
+                        // needed because the image input element is hidden, skips input element verification which fails for hidden input elements
+                        force: true,
+                    }
+                );
+            });
+
+        cy.get("#upload-button").click();
+
+        cy.get(".login-view").should("not.exist");
+
+        assertImageUploadFailed(401, "Cannot upload image. Not signed in.");
     });
 
     it("displays nav menu when hamburger button is clicked on mobile", () => {
