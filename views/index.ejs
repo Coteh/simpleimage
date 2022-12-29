@@ -14,7 +14,7 @@
         <script src="assets/js/home.bundle.js"></script>
         <script type="text/javascript">
             // TODO add dedicated config object so that the environment variable can be mapped nicely to a boolean
-            var isLoginRequired = '<%= process.env.LOGIN_TO_UPLOAD === "true" %>';
+            var isLoginRequired = "<%= process.env.LOGIN_TO_UPLOAD %>" === "true";
         </script>
 
         <%- include("headers") %>
