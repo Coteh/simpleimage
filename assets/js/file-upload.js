@@ -16,7 +16,7 @@ const showUploadPreview = async function (file) {
     while (uploadPreview.firstChild) {
         uploadPreview.removeChild(uploadPreview.firstChild);
     }
-    uploadPreview.classList.remove("selected");
+    uploadPreview.className = "upload-preview";
     uploadPreview.style.boxShadow = "";
 
     const imageElem = document.createElement("img");
@@ -145,7 +145,7 @@ const checkUserLogin = function (callback) {
 };
 
 const performLoggedInAction = function (evt, callback) {
-    if (isLoginRequired === "true" && !isUserLoggedIn) {
+    if (isLoginRequired && !isUserLoggedIn) {
         evt.preventDefault();
         checkUserLogin(function (status) {
             if (status !== 200) {
