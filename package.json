@@ -60,7 +60,7 @@
     "chai": "^4.3.7",
     "chai-http": "^4.3.0",
     "cross-fetch": "^3.1.5",
-    "cypress": "^10.11.0",
+    "cypress": "^12.10.0",
     "cypress-real-events": "^1.7.6",
     "husky": "^7.0.4",
     "mocha": "^10.2.0",
