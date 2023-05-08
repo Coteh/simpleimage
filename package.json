@@ -52,7 +52,7 @@
     "sharp": "^0.32.0",
     "validator": "^13.9.0",
     "webpack": "^5.76.1",
-    "webpack-cli": "^4.10.0",
+    "webpack-cli": "^5.1.0",
     "winston": "^3.8.2",
     "winston-mongodb": "^5.1.1"
   },
