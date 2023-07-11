@@ -5,8 +5,7 @@ updates:
   labels:
       - "dependencies"
   schedule:
-    interval: daily
-    time: "10:00"
+    interval: monthly
   open-pull-requests-limit: 10
   ignore:
   - dependency-name: validator
