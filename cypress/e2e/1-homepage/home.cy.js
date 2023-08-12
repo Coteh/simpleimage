@@ -329,6 +329,27 @@ describe("simpleimage homepage", () => {
         });
     });
 
+    it("should display an error if nothing is selected for upload without sending a request", () => {
+        // Wait a second for all page elements to load and for the document ready handler to clear out selected filename from cache
+        // TODO listen for document ready handler to fire instead
+        cy.wait(1000);
+
+        // Listen for upload request to make sure later that it never fired
+        cy.intercept("POST", "/upload").as("uploadReq");
+
+        // Click upload button without attaching any image
+        cy.get("#upload-button").should("exist").click();
+
+        // TODO assert using an error code or some other form of error ID instead
+        cy.assertErrorMessageContains("Nothing was selected to upload.");
+
+        // Upload request should have never fired
+        cy.get("@uploadReq").should("be.null");
+
+        // Should still be on the homepage
+        cy.url().should("eq", `${Cypress.env("baseUrl")}/`);
+    });
+
     describe("info toggle", () => {
         it("shows info element when mouse hovers over it", () => {
             // move mouse somewhere else - sometimes page loads with info element already appearing, this doesn't happen in normal usage

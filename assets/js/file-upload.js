@@ -111,6 +111,14 @@ $(document).ready(function () {
 
     $("#upload-button").on("click", function (evt) {
         performLoggedInAction(evt, function () {
+            if (currentFile == null) {
+                uploadPreview.style.boxShadow = "";
+                uploadPreview.classList.add("error");
+                showNotification("Nothing was selected to upload.", {
+                    error: true,
+                });
+                return;
+            }
             uploadFile(currentFile);
         });
     });
