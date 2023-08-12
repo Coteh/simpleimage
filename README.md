@@ -39,7 +39,7 @@ GA_TRACKING_ID=<Google Analytics Tracking ID (Universal Analytics)>
 LOGIN_TO_UPLOAD=true  # omit this variable if you don't want to require users to login to upload
 FILE_SIZE_LIMIT=5000000 # omit this variable if you want the default file size limit of 500 MB
 
-EVALUATION_MODE=true # omit this variable to diable automatic removal of images
+EVALUATION_MODE=true # omit this variable to disable automatic removal of images
 EXPIRE_AFTER_SECONDS=300 # set this to set time for the images to be stored in database in evaluation mode (default is 300 if unspecified)
 
 SENTRY_DSN=<Sentry DSN>                     # endpoint to upload Sentry events
