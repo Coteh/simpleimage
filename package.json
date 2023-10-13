@@ -7,7 +7,7 @@
   "author": "James Cote (Coteh)",
   "main": "app.js",
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') throw e}\"",
     "build:client": "webpack",
     "heroku-postbuild": "webpack -p",
     "start": "node app.js",
@@ -61,7 +61,7 @@
     "cross-fetch": "^3.1.5",
     "cypress": "^10.11.0",
     "cypress-real-events": "^1.8.1",
-    "husky": "^7.0.4",
+    "husky": "^8.0.3",
     "mocha": "^10.2.0",
     "mocha-junit-reporter": "^2.2.0",
     "mongodb-memory-server": "^6.7.0",
