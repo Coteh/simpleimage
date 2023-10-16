@@ -17,12 +17,33 @@ describe("change password", () => {
         cy.get("input[name='oldPassword']").type(password);
         cy.get("input[name='newPassword']").type(newPassword);
         cy.get("input[name='newPasswordConfirm']").type(newPassword);
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+
         cy.get(".submit-button").click();
 
         cy.wait("@changePassword").its("response.statusCode").should("eq", 200);
 
         // TODO assert using an success code or some other form of success ID instead
         cy.assertSuccessMessageContains("Password changed");
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
 
         cy.logout();
         cy.login(username, newPassword).its("status").should("eq", 200);
@@ -32,12 +53,33 @@ describe("change password", () => {
 
         cy.get("input[name='newPassword']").type(newPassword);
         cy.get("input[name='newPasswordConfirm']").type(newPassword);
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+
         cy.get(".submit-button").click();
 
         cy.wait("@changePassword").its("response.statusCode").should("eq", 422);
 
         // TODO assert using an error code or some other form of error ID instead
         cy.assertErrorMessageContains("Could not change password. Missing old password.");
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
 
         cy.logout();
         cy.login(username, password).its("status").should("eq", 200);
@@ -48,12 +90,33 @@ describe("change password", () => {
         cy.get("input[name='oldPassword']").type("wrong");
         cy.get("input[name='newPassword']").type(newPassword);
         cy.get("input[name='newPasswordConfirm']").type(newPassword);
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+
         cy.get(".submit-button").click();
 
         cy.wait("@changePassword").its("response.statusCode").should("eq", 400);
 
         // TODO assert using an error code or some other form of error ID instead
         cy.assertErrorMessageContains("Could not change password. Old password is not correct.");
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
 
         cy.logout();
         cy.login(username, password).its("status").should("eq", 200);
@@ -63,12 +126,33 @@ describe("change password", () => {
 
         cy.get("input[name='oldPassword']").type(password);
         cy.get("input[name='newPasswordConfirm']").type(newPassword);
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+
         cy.get(".submit-button").click();
 
         cy.wait("@changePassword").its("response.statusCode").should("eq", 422);
 
         // TODO assert using an error code or some other form of error ID instead
         cy.assertErrorMessageContains("Could not change password. Missing new password.");
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
 
         cy.logout();
         cy.login(username, password).its("status").should("eq", 200);
@@ -78,12 +162,33 @@ describe("change password", () => {
 
         cy.get("input[name='oldPassword']").type(password);
         cy.get("input[name='newPassword']").type(newPassword);
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+
         cy.get(".submit-button").click();
 
         cy.wait("@changePassword").its("response.statusCode").should("eq", 422);
 
         // TODO assert using an error code or some other form of error ID instead
         cy.assertErrorMessageContains("Could not change password. Missing new password confirmation.");
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
 
         cy.logout();
         cy.login(username, password).its("status").should("eq", 200);
@@ -94,12 +199,74 @@ describe("change password", () => {
         cy.get("input[name='oldPassword']").type(password);
         cy.get("input[name='newPassword']").type(newPassword);
         cy.get("input[name='newPasswordConfirm']").type("wrong");
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+
         cy.get(".submit-button").click();
 
         cy.wait("@changePassword").its("response.statusCode").should("eq", 400);
 
         // TODO assert using an error code or some other form of error ID instead
         cy.assertErrorMessageContains("Could not change password. Passwords don't match.");
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
+
+        cy.logout();
+        cy.login(username, password).its("status").should("eq", 200);
+    });
+    it("should not change user password if new password is not strong enough", () => {
+        cy.intercept("POST", "/settings/change_password").as("changePassword");
+
+        const newWeakPassword = "weak";
+
+        cy.get("input[name='oldPassword']").type(password);
+        cy.get("input[name='newPassword']").type(newWeakPassword);
+        cy.get("input[name='newPasswordConfirm']").type(newWeakPassword);
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+
+        cy.get(".submit-button").click();
+
+        cy.wait("@changePassword").then((interception) => {
+            const response = interception.response;
+
+            expect(response.statusCode).to.eql(400);
+            expect(response.body.errorID).to.eql("passwordNotStrong");
+        });
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
 
         cy.logout();
         cy.login(username, password).its("status").should("eq", 200);
@@ -144,5 +311,78 @@ describe("change password", () => {
         cy.logout();
         cy.login(username, password).its("status").should("eq", 401);
         cy.login(username, newPassword).its("status").should("eq", 401);
+    });
+    it("should clear notifications and input fields when attempting to change password multiple times", () => {
+        cy.intercept("POST", "/settings/change_password").as("changePassword");
+
+        cy.get("input[name='oldPassword']").type(password);
+        cy.get("input[name='newPassword']").type(newPassword);
+        cy.get("input[name='newPasswordConfirm']").type("wrong");
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+
+        cy.get(".submit-button").click();
+
+        cy.wait("@changePassword").its("response.statusCode").should("eq", 400);
+
+        cy.assertErrorMessageContains("Could not change password. Passwords don't match.");
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
+
+        cy.get(".submit-button").click();
+
+        cy.wait("@changePassword").its("response.statusCode").should("eq", 400);
+
+        cy.assertErrorMessageContains("Could not change password. Passwords don't match.");
+        cy.assertErrorMessageNotContains(
+            "Could not change password. Passwords don't match.Could not change password. Passwords don't match."
+        );
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("input-field-error");
+        });
+
+        cy.get("input[name='newPasswordConfirm']").clear().type(newPassword);
+
+        cy.get(".submit-button").click();
+
+        cy.wait("@changePassword").its("response.statusCode").should("eq", 200);
+
+        cy.assertSuccessMessageContains("Password changed.");
+        cy.assertSuccessMessageNotContains(
+            "Could not change password. Passwords don't match.Could not change password. Passwords don't match.Password changed."
+        );
+
+        cy.get("input[name='oldPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPassword']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
+        cy.get("input[name='newPasswordConfirm']").should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("input-field-error");
+        });
     });
 });

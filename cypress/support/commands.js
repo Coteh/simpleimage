@@ -45,6 +45,15 @@ Cypress.Commands.add("assertErrorMessageContainsMulti", (messages) => {
     });
 });
 
+Cypress.Commands.add("assertErrorMessageNotContains", (message) => {
+    cy.get("#notification-overlay-container")
+        .should("be.visible")
+        .should("satisfy", (el) => {
+            return Array.from(el[0].classList).includes("error");
+        })
+        .should("not.contain.text", message);
+});
+
 Cypress.Commands.add("assertSuccessMessageContains", (message) => {
     cy.get("#notification-overlay-container")
         .should("be.visible")
@@ -64,6 +73,15 @@ Cypress.Commands.add("assertSuccessMessageContainsMulti", (messages) => {
     messages.forEach((message) => {
         chain.should("contain.text", message);
     });
+});
+
+Cypress.Commands.add("assertSuccessMessageNotContains", (message) => {
+    cy.get("#notification-overlay-container")
+        .should("be.visible")
+        .should("satisfy", (el) => {
+            return !Array.from(el[0].classList).includes("error");
+        })
+        .should("not.contain.text", message);
 });
 
 Cypress.Commands.add("deleteUser", (username) => {
