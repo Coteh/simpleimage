@@ -12,7 +12,7 @@
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="/assets/js/user.bundle.js"></script>
     <script>
-        var onPasswordResetSubmitted = function() {
+        var onPasswordResetSubmitted = function(form) {
             let jsonObj;
             try {
                 jsonObj = JSON.parse(this.responseText);
@@ -20,13 +20,44 @@
                 handleResponseFailure(this.status);
                 return console.error("[onPasswordResetSubmitted]", "Error occurred when parsing response", err);
             }
+
+            // Clear out error style from all input fields.
+            for (const inputFieldIndex in form.elements) {
+                if (form.elements[inputFieldIndex].classList) {
+                    form.elements[inputFieldIndex].classList.remove("input-field-error");
+                }
+            }
+            
             if (this.status !== 200) {
                 showNotification(jsonObj.message, {
-                    error: true
+                    error: true,
+                    clear: true,
                 });
+
+                // If there's an additional info specified with this error,
+                // attempt to grab the field (or fields) property, associate with name
+                // of corresponding input field, and append error style to it.
+                if (jsonObj.additionalInfo) {
+                    var fieldObj = jsonObj.additionalInfo.field || jsonObj.additionalInfo.fields;
+                    var fieldElems;
+                    if (typeof fieldObj === "object") {
+                        fieldElems = fieldObj.reduce(function (obj, field) {
+                            obj.push(form.elements[field]);
+                            return obj;
+                        }, []);
+                    } else {
+                        fieldElems = [form.elements[fieldObj]];
+                    }
+                    fieldElems.forEach(function (fieldElem) {
+                        if (fieldElem) {
+                            fieldElem.classList.add("input-field-error");
+                        }
+                    });
+                }
             } else {
                 showNotification(jsonObj.message, {
-                    error: false
+                    error: false,
+                    clear: true,
                 });
             }
         };
@@ -36,7 +67,9 @@
             const action = form.attr("action");
             const req = new XMLHttpRequest();
 
-            req.onload = onPasswordResetSubmitted;
+            req.onload = function () {
+                onPasswordResetSubmitted.bind(this)(form[0]);
+            };
             req.open("post", action);
             req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             req.send(form.serialize());
