@@ -46,13 +46,7 @@ describe("integ", () => {
         it("should not be able to register user if password confirmation is incorrect", () => {
             return assertUserDoesNotExist(TEST_USER)
                 .then(() => {
-                    return registerUser(
-                        agent,
-                        TEST_USER,
-                        TEST_PASSWORD,
-                        "wrong-password",
-                        TEST_EMAIL
-                    );
+                    return registerUser(agent, TEST_USER, TEST_PASSWORD, "wrong-password", TEST_EMAIL);
                 })
                 .then((res) => {
                     assert.equal(res.status, 400);
@@ -78,13 +72,7 @@ describe("integ", () => {
                     return assertUserEmail(TEST_EMAIL);
                 })
                 .then(() => {
-                    return registerUser(
-                        agent,
-                        TEST_USER,
-                        TEST_PASSWORD,
-                        TEST_PASSWORD,
-                        "not.test.user@example.com"
-                    );
+                    return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, "not.test.user@example.com");
                 })
                 .then((res) => {
                     assert.equal(res.status, 400);
@@ -149,13 +137,7 @@ describe("integ", () => {
         it("should not be able to register user if email is invalid", () => {
             return assertUserDoesNotExist(TEST_USER)
                 .then(() => {
-                    return registerUser(
-                        agent,
-                        TEST_USER,
-                        TEST_PASSWORD,
-                        TEST_PASSWORD,
-                        "invalidemail"
-                    );
+                    return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, "invalidemail");
                 })
                 .then((res) => {
                     assert.equal(res.status, 400);
@@ -166,17 +148,10 @@ describe("integ", () => {
         });
 
         it("should not be able to register user if username is too long", () => {
-            const longUsername =
-                "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallylongusername";
+            const longUsername = "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallylongusername";
             return assertUserDoesNotExist(longUsername)
                 .then(() => {
-                    return registerUser(
-                        agent,
-                        longUsername,
-                        TEST_PASSWORD,
-                        TEST_PASSWORD,
-                        TEST_EMAIL
-                    );
+                    return registerUser(agent, longUsername, TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
                 })
                 .then((res) => {
                     assert.equal(res.status, 400);
@@ -194,7 +169,7 @@ describe("integ", () => {
                 .then((res) => {
                     assert.equal(res.status, 400);
                     assert.equal(res.body.status, "error");
-                    assert.equal(res.body.errorID, "weakPassword");
+                    assert.equal(res.body.errorID, "passwordNotStrong");
                     return assertUserDoesNotExist(TEST_USER);
                 });
         });
@@ -252,10 +227,7 @@ describe("integ", () => {
         });
 
         it("should fail if database cannot add user", () => {
-            const addUserStub = stub(databaseOps, "addUser").callsArgWith(
-                1,
-                new Error("Database error")
-            );
+            const addUserStub = stub(databaseOps, "addUser").callsArgWith(1, new Error("Database error"));
             return assertUserDoesNotExist(TEST_USER)
                 .then(() => {
                     return registerUser(agent, TEST_USER, TEST_PASSWORD, TEST_PASSWORD, TEST_EMAIL);
